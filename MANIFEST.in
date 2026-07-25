@@ -1,0 +1,7 @@
+include README.md
+include LICENSE
+include NOTICE.md
+recursive-include LICENSES *.txt
+recursive-include config *.toml
+recursive-include data *
+recursive-include docs *.md *.rst

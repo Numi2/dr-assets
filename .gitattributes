@@ -1,0 +1,8 @@
+*.glb binary
+*.ply binary
+*.png binary
+*.usd binary
+*.usdc binary
+*.exr binary
+*.hdr binary
+
