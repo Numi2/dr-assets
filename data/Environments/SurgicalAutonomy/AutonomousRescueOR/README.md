@@ -25,9 +25,8 @@ reward.
 
 ## Imitation-learning data path
 
-When this extension is consumed inside a Dr.Anmar checkout, start the live
-room, then start its expert. Expert start resets the room and starts recording
-automatically:
+Start the live room, then start its expert. Expert start resets the room and
+starts recording automatically:
 
 ```bash
 ./dr_anmar_rescue_il.sh room
