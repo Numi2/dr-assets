@@ -369,9 +369,9 @@
       "sha256": "9e7a6a8c636df4b4579e0745fdbaec26876203fe7dca802cd41ba7e79251b45b"
     },
     {
-      "bytes": 206082,
+      "bytes": 144229,
       "path": "scripts/generate_dranmar_safeplane_dissection_robot.py",
-      "sha256": "1d02a55641f299188962c1d94d906d2dbea4df8b9bf9c1b5be4612079caa765f"
+      "sha256": "6e27a5f7bbcd3a513051a10cf31f77732247814f03c61c59dc60fbe5823a9968"
     },
     {
       "bytes": 5789,

@@ -269,9 +269,9 @@
       "sha256": "ddef0ade0bd6646140d98a75bc053e6b778915aa4d83272e16f341582999ec67"
     },
     {
-      "bytes": 132214,
+      "bytes": 100015,
       "path": "scripts/generate_dranmar_adaptive_seal_divide_robot.py",
-      "sha256": "b3b423d18a5d1727d04fb2b4aa98987aeb3a26f5ea94d4df27d0615fc9c492b8"
+      "sha256": "929be8dea981b812618071447d16812f7383144a8fa197a194b98b5a8d976019"
     },
     {
       "bytes": 5719,
