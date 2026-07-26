@@ -5,11 +5,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import math
+from collections.abc import Mapping
+from dataclasses import dataclass
 from types import MappingProxyType
-from typing import Final, Mapping
-
+from typing import Final
 
 CHANNELS: Final = frozenset({"crystalloid", "blood_product", "vasopressor"})
 
@@ -158,31 +158,21 @@ class ResuscitationCalibration:
             if getattr(self, name) <= 0.0:
                 raise ValueError(f"{name} must be positive")
         if self.minimum_line_pressure_kpa > self.maximum_line_pressure_kpa:
-            raise ValueError(
-                "minimum_line_pressure_kpa must not exceed maximum_line_pressure_kpa"
-            )
+            raise ValueError("minimum_line_pressure_kpa must not exceed maximum_line_pressure_kpa")
         if self.hard_line_pressure_kpa <= self.maximum_line_pressure_kpa:
-            raise ValueError(
-                "hard_line_pressure_kpa must exceed maximum_line_pressure_kpa"
-            )
+            raise ValueError("hard_line_pressure_kpa must exceed maximum_line_pressure_kpa")
         if (
             self.ventilation_minimum_airway_pressure_cmh2o
             > self.ventilation_maximum_airway_pressure_cmh2o
         ):
-            raise ValueError(
-                "ventilation minimum pressure must not exceed maximum pressure"
-            )
+            raise ValueError("ventilation minimum pressure must not exceed maximum pressure")
         if (
             self.ventilation_hard_airway_pressure_cmh2o
             <= self.ventilation_maximum_airway_pressure_cmh2o
         ):
-            raise ValueError(
-                "ventilation hard pressure must exceed maximum pressure"
-            )
+            raise ValueError("ventilation hard pressure must exceed maximum pressure")
         if not 0.0 <= self.crystalloid_intravascular_retention_fraction <= 1.0:
-            raise ValueError(
-                "crystalloid_intravascular_retention_fraction must be a fraction"
-            )
+            raise ValueError("crystalloid_intravascular_retention_fraction must be a fraction")
 
 
 @dataclass
@@ -229,11 +219,11 @@ class _PumpAuthority:
 
 
 class PumpEvidenceAdapter:
-    __slots__ = ("_effects", "_authority")
+    __slots__ = ("_authority", "_effects")
 
     def __init__(
         self,
-        effects: "ContactDrivenResuscitationEffects",
+        effects: ContactDrivenResuscitationEffects,
         authority: _PumpAuthority,
     ) -> None:
         self._effects = effects
@@ -309,6 +299,49 @@ class ContactDrivenResuscitationEffects:
             "vasopressor": self.calibration.vasopressor_density_g_ml,
         }[channel_id]
 
+    def _validate_pump_sequence(
+        self,
+        frame: PumpEvidenceFrame,
+        state: PumpChannelState,
+        *,
+        record_rejection: bool,
+    ) -> None:
+        if frame.physics_step <= state.last_physics_step:
+            if record_rejection:
+                self._rejected_frames += 1
+            raise ValueError("pump evidence must use a strictly increasing step per channel")
+        if frame.simulation_time_s <= state.last_simulation_time_s and state.last_physics_step >= 0:
+            if record_rejection:
+                self._rejected_frames += 1
+            raise ValueError("pump evidence must use increasing simulation time per channel")
+
+    def _reservoir_withdrawal_ml(
+        self,
+        frame: PumpEvidenceFrame,
+        state: PumpChannelState,
+    ) -> float:
+        if state.last_reservoir_mass_g is None:
+            return 0.0
+        mass_volume_ml = max(
+            0.0,
+            state.last_reservoir_mass_g - frame.reservoir_mass_g,
+        ) / self._channel_density(frame.channel_id)
+        return min(mass_volume_ml, state.remaining_inventory_ml)
+
+    def projected_reservoir_withdrawal_ml(
+        self,
+        frame: PumpEvidenceFrame,
+    ) -> float:
+        """Preview conserved reservoir withdrawal without mutating state."""
+
+        state = self.channels[frame.channel_id]
+        self._validate_pump_sequence(
+            frame,
+            state,
+            record_rejection=False,
+        )
+        return self._reservoir_withdrawal_ml(frame, state)
+
     def _ingest(
         self,
         frame: PumpEvidenceFrame,
@@ -318,19 +351,11 @@ class ContactDrivenResuscitationEffects:
             self._rejected_frames += 1
             raise PermissionError("resuscitation effects accept scene evidence only")
         state = self.channels[frame.channel_id]
-        if frame.physics_step <= state.last_physics_step:
-            self._rejected_frames += 1
-            raise ValueError(
-                "pump evidence must use a strictly increasing step per channel"
-            )
-        if (
-            frame.simulation_time_s <= state.last_simulation_time_s
-            and state.last_physics_step >= 0
-        ):
-            self._rejected_frames += 1
-            raise ValueError(
-                "pump evidence must use increasing simulation time per channel"
-            )
+        self._validate_pump_sequence(
+            frame,
+            state,
+            record_rejection=True,
+        )
 
         self._physics_step = max(self._physics_step, frame.physics_step)
         self._simulation_time_s = max(
@@ -338,10 +363,7 @@ class ContactDrivenResuscitationEffects:
             frame.simulation_time_s,
         )
         self._evidence_frames += 1
-        if (
-            state.last_plunger_position_m is None
-            or state.last_reservoir_mass_g is None
-        ):
+        if state.last_plunger_position_m is None or state.last_reservoir_mass_g is None:
             state.last_plunger_position_m = frame.plunger_position_m
             state.last_reservoir_mass_g = frame.reservoir_mass_g
             state.last_physics_step = frame.physics_step
@@ -358,13 +380,9 @@ class ContactDrivenResuscitationEffects:
             * self._channel_volume_per_stroke(frame.channel_id)
         )
         flow_volume_ml = frame.downstream_flow_ml_s * frame.dt_s
-        mass_volume_ml = max(
-            0.0,
-            state.last_reservoir_mass_g - frame.reservoir_mass_g,
-        ) / self._channel_density(frame.channel_id)
-        reservoir_withdrawal_ml = min(
-            mass_volume_ml,
-            state.remaining_inventory_ml,
+        reservoir_withdrawal_ml = self._reservoir_withdrawal_ml(
+            frame,
+            state,
         )
         supported_delivery_ml = min(
             plunger_volume_ml,
@@ -393,10 +411,7 @@ class ContactDrivenResuscitationEffects:
         state.remaining_inventory_ml -= reservoir_withdrawal_ml
         if frame.line_pressure_kpa > self.calibration.maximum_line_pressure_kpa:
             overload = _clamp(
-                (
-                    frame.line_pressure_kpa
-                    - self.calibration.maximum_line_pressure_kpa
-                )
+                (frame.line_pressure_kpa - self.calibration.maximum_line_pressure_kpa)
                 / (
                     self.calibration.hard_line_pressure_kpa
                     - self.calibration.maximum_line_pressure_kpa
@@ -422,17 +437,10 @@ class ContactDrivenResuscitationEffects:
         state = self.ventilation
         if frame.physics_step <= state.last_physics_step:
             self._rejected_frames += 1
-            raise ValueError(
-                "ventilation evidence must use a strictly increasing step"
-            )
-        if (
-            frame.simulation_time_s <= state.last_simulation_time_s
-            and state.last_physics_step >= 0
-        ):
+            raise ValueError("ventilation evidence must use a strictly increasing step")
+        if frame.simulation_time_s <= state.last_simulation_time_s and state.last_physics_step >= 0:
             self._rejected_frames += 1
-            raise ValueError(
-                "ventilation evidence must use increasing simulation time"
-            )
+            raise ValueError("ventilation evidence must use increasing simulation time")
         cfg = self.calibration
         self._physics_step = max(self._physics_step, frame.physics_step)
         self._simulation_time_s = max(
@@ -441,21 +449,15 @@ class ContactDrivenResuscitationEffects:
         )
         self._evidence_frames += 1
         state.airway_connected = frame.airway_attachment_count > 0
-        valve_fraction = _clamp(
-            frame.valve_angle_deg / cfg.ventilation_valve_full_open_deg
-        )
+        valve_fraction = _clamp(frame.valve_angle_deg / cfg.ventilation_valve_full_open_deg)
         net_flow_l_min = max(
             0.0,
             frame.inspiratory_flow_l_min - frame.leaked_flow_l_min,
         )
         state.circuit_leak_fraction = _clamp(
-            frame.leaked_flow_l_min
-            / max(frame.inspiratory_flow_l_min, 1.0e-9)
+            frame.leaked_flow_l_min / max(frame.inspiratory_flow_l_min, 1.0e-9)
         )
-        chest_fraction = _clamp(
-            frame.chest_excursion_m
-            / cfg.ventilation_target_chest_excursion_m
-        )
+        chest_fraction = _clamp(frame.chest_excursion_m / cfg.ventilation_target_chest_excursion_m)
         pressure_valid = (
             cfg.ventilation_minimum_airway_pressure_cmh2o
             <= frame.airway_pressure_cmh2o
@@ -466,29 +468,18 @@ class ContactDrivenResuscitationEffects:
             if state.airway_connected and pressure_valid
             else 0.0
         )
-        state.effective_minute_ventilation_l_min = (
-            net_flow_l_min * delivery_fraction
-        )
+        state.effective_minute_ventilation_l_min = net_flow_l_min * delivery_fraction
         state.delivered_fio2_fraction = (
-            0.21
-            + (frame.measured_fio2_fraction - 0.21) * delivery_fraction
+            0.21 + (frame.measured_fio2_fraction - 0.21) * delivery_fraction
         )
         state.airway_pressure_cmh2o = frame.airway_pressure_cmh2o
         state.chest_excursion_m = frame.chest_excursion_m
         state.cumulative_effective_ventilation_l += (
-            state.effective_minute_ventilation_l_min
-            * frame.dt_s
-            / 60.0
+            state.effective_minute_ventilation_l_min * frame.dt_s / 60.0
         )
-        if (
-            frame.airway_pressure_cmh2o
-            > cfg.ventilation_maximum_airway_pressure_cmh2o
-        ):
+        if frame.airway_pressure_cmh2o > cfg.ventilation_maximum_airway_pressure_cmh2o:
             overload = _clamp(
-                (
-                    frame.airway_pressure_cmh2o
-                    - cfg.ventilation_maximum_airway_pressure_cmh2o
-                )
+                (frame.airway_pressure_cmh2o - cfg.ventilation_maximum_airway_pressure_cmh2o)
                 / (
                     cfg.ventilation_hard_airway_pressure_cmh2o
                     - cfg.ventilation_maximum_airway_pressure_cmh2o
@@ -508,15 +499,9 @@ class ContactDrivenResuscitationEffects:
                     {
                         "remaining_inventory_ml": state.remaining_inventory_ml,
                         "delivered_to_patient_ml": state.delivered_to_patient_ml,
-                        "withdrawn_from_reservoir_ml": (
-                            state.withdrawn_from_reservoir_ml
-                        ),
-                        "wasted_or_extravasated_ml": (
-                            state.wasted_or_extravasated_ml
-                        ),
-                        "pressure_damage_fraction": (
-                            state.pressure_damage_fraction
-                        ),
+                        "withdrawn_from_reservoir_ml": (state.withdrawn_from_reservoir_ml),
+                        "wasted_or_extravasated_ml": (state.wasted_or_extravasated_ml),
+                        "pressure_damage_fraction": (state.pressure_damage_fraction),
                         "last_physics_step": state.last_physics_step,
                     }
                 )
@@ -530,19 +515,11 @@ class ContactDrivenResuscitationEffects:
                 "effective_minute_ventilation_l_min": (
                     self.ventilation.effective_minute_ventilation_l_min
                 ),
-                "delivered_fio2_fraction": (
-                    self.ventilation.delivered_fio2_fraction
-                ),
-                "airway_pressure_cmh2o": (
-                    self.ventilation.airway_pressure_cmh2o
-                ),
+                "delivered_fio2_fraction": (self.ventilation.delivered_fio2_fraction),
+                "airway_pressure_cmh2o": (self.ventilation.airway_pressure_cmh2o),
                 "chest_excursion_m": self.ventilation.chest_excursion_m,
-                "circuit_leak_fraction": (
-                    self.ventilation.circuit_leak_fraction
-                ),
-                "pressure_damage_fraction": (
-                    self.ventilation.pressure_damage_fraction
-                ),
+                "circuit_leak_fraction": (self.ventilation.circuit_leak_fraction),
+                "pressure_damage_fraction": (self.ventilation.pressure_damage_fraction),
                 "cumulative_effective_ventilation_l": (
                     self.ventilation.cumulative_effective_ventilation_l
                 ),

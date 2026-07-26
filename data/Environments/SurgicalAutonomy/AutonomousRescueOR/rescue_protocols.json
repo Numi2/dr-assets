@@ -3,7 +3,7 @@
     "abdominal_wall_revision": [
       {
         "action": "closure",
-        "capability": "closure",
+        "capability": "wound_approximation",
         "id": "capture_edges",
         "parameters": {
           "intent": "capture_and_approximate_edges"
@@ -59,8 +59,8 @@
         "id": "leak_test",
         "priority": 92,
         "reversible": true,
-        "station": "assessment",
-        "tool": "perfusion_viability",
+        "station": "primary",
+        "tool": "adaptive_anastomosis",
         "zones": [
           "central_field"
         ]
@@ -93,7 +93,7 @@
       },
       {
         "action": "verify_bile_leak",
-        "capability": "assessment",
+        "capability": "ultrasound",
         "id": "verify_bile_control",
         "priority": 84,
         "reversible": true,
@@ -107,7 +107,7 @@
     "circulatory_stabilization": [
       {
         "action": "scan_patient",
-        "capability": "assessment",
+        "capability": "doppler",
         "id": "identify_bleeding",
         "priority": 95,
         "reversible": true,
@@ -385,7 +385,7 @@
       },
       {
         "action": "count_scan",
-        "capability": "assessment",
+        "capability": "rgb_depth",
         "id": "scan_field",
         "priority": 80,
         "reversible": true,
@@ -564,7 +564,7 @@
       },
       {
         "action": "verify_stump",
-        "capability": "flow_verification",
+        "capability": "doppler",
         "id": "verify_stump",
         "priority": 92,
         "reversible": true,

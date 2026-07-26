@@ -16,6 +16,11 @@ reward.
   blood-loss, and distal-perfusion effects;
 - complication detection and rescue-plan selection that cannot author an
   outcome;
+- contract-backed action admission that rejects duplicate requests, unknown
+  stations or tools, capability mismatches, and misrouted system actions;
+- fail-closed resource accounting that checks conserved pump withdrawal
+  against available blood, crystalloid, or vasopressor inventory before any
+  simulated delivery state can change;
 - transition-based rescue reward with no reward for waiting in a favorable
   state;
 - a contact-gated compression, hold, verification, and release expert that
