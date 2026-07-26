@@ -84,7 +84,11 @@
     "procedure_phase": "integer phase code",
     "sensor_authority": "whether a real post-physics jaw sensor pair was available",
     "tool_position_valid": "per-arm validity mask",
-    "selected_arm": "one-hot arm selected by local contact evidence"
+    "selected_arm": "one-hot arm selected by local contact evidence",
+    "room": "optional endoscope RGB using only the latest frame at or before control time",
+    "room_valid": "zero when no causal frame exists or the selected frame is a sensor dropout",
+    "room_age_s": "non-negative control-time minus selected-camera-time offset",
+    "room_sensor_dropout": "explicit selected-frame dropout flag"
   },
   "reference_promotion": {
     "requires_contact_derived_compression": true,
@@ -92,5 +96,11 @@
     "requires_overload_damage_fraction_at_most": 0.02,
     "requires_release_observed": true,
     "expert_timeout_can_complete": false
+  },
+  "dataset_packaging": {
+    "default_requires_reference_eligible": true,
+    "failed_interrupted_or_unreviewed_runs_rejected_by_default": true,
+    "non_reference_override_must_be_explicit": true,
+    "visual_frame_may_come_from_future": false
   }
 }
