@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.2 — 2026-07-26
+
+- Published the researcher-facing visual showcase using renders of the shipped
+  OpenUSD/GLB assets.
+- Corrected showcase import orientation and area-light scaling at the renderer
+  source.
+- Tightened the seeded rescue-expert and transition-aligned imitation dataset
+  packaging contract.
+- Kept patient effects downstream of post-physics contact, geometry, flow, and
+  physiological evidence rather than policy-writable outcome fields.
+
 ## 0.7.1 — 2026-07-26
 
 - Added the transition-aligned Autonomous Rescue OR imitation-learning

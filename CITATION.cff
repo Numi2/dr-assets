@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use Dr.Anmar Assets in research, please cite this repository."
 title: "Dr.Anmar Assets: Contact-Driven Surgical Robotics Simulation Assets"
 type: software
-version: 0.7.1
+version: 0.7.2
 date-released: 2026-07-26
 authors:
   - name: "Dr.Anmar Project Developers"
