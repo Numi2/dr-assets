@@ -338,6 +338,15 @@ def Xform "DrAnmarDynamicAbdominalPatientRigidProxy" (
                 token outputs:surface
             }
         }
+
+        def Material "TablePhysics" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            float physics:dynamicFriction = 0.4
+            float physics:restitution = 0.01
+            float physics:staticFriction = 0.5
+        }
     }
 
     def Scope "Visuals"
@@ -789,7 +798,7 @@ def Xform "DrAnmarDynamicAbdominalPatientRigidProxy" (
             prepend apiSchemas = ["PhysicsCollisionAPI", "PhysxCollisionAPI", "MaterialBindingAPI"]
         )
         {
-            rel material:binding:physics = </DrAnmarDynamicAbdominalPatientRigidProxy/PhysicsMaterials/TablePhysics> (
+            rel material:binding:physics = </DrAnmarDynamicAbdominalPatientRigidProxy/Looks/TablePhysics> (
                 bindMaterialAs = "weakerThanDescendants"
             )
             bool physics:collisionEnabled = 1
@@ -799,18 +808,6 @@ def Xform "DrAnmarDynamicAbdominalPatientRigidProxy" (
             float3 xformOp:scale = (0.38, 0.54, 0.22)
             double3 xformOp:translate = (0, 0, -0.01)
             uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
-        }
-    }
-
-    def Scope "PhysicsMaterials"
-    {
-        def Material "TablePhysics" (
-            prepend apiSchemas = ["PhysicsMaterialAPI"]
-        )
-        {
-            float physics:dynamicFriction = 0.4
-            float physics:restitution = 0.01
-            float physics:staticFriction = 0.5
         }
     }
 }
