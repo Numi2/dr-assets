@@ -142,9 +142,9 @@
       "sha256": "c2e002a66202f5a9db977296b1b8d51f343ff13b0a135564ee67869a82dd8724"
     },
     {
-      "bytes": 3138717,
+      "bytes": 3138759,
       "path": "assets/Props/Patients/DynamicAbdominalPatient/dranmar_dynamic_abdominal_patient_rigid_proxy.usda",
-      "sha256": "65e175432d55964dd0ee59212fbaf4ee02c4359879bc9631405f3514ab110897"
+      "sha256": "c395ed3a34c4b571fdf1316ca550d0f82666791c74e612ce5f16935e0fc36da8"
     },
     {
       "bytes": 26998,
@@ -482,9 +482,9 @@
       "sha256": "9ce2f01129aebd3c1c2d9a7da73c6cc0135dac3c708cccdd0ebdb817e0881341"
     },
     {
-      "bytes": 8768,
+      "bytes": 9339,
       "path": "scripts/generate_dranmar_dynamic_abdominal_patient_rigid_proxy.py",
-      "sha256": "6edc672e1b2b848d0916844b4ef5192736428469a2ebcd5089f6e291ca3a09bb"
+      "sha256": "a9dcc4e43c56c319eaffe5d31679a8694ba3c2cb612b0449b84cd83f4b35890a"
     },
     {
       "bytes": 3322,

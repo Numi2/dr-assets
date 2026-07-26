@@ -8,7 +8,7 @@
 )
 
 def Xform "DrAnmarDynamicAbdominalPatientRigidProxy" (
-    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI", "PhysxRigidBodyAPI"]
     kind = "component"
 )
 {
@@ -786,7 +786,7 @@ def Xform "DrAnmarDynamicAbdominalPatientRigidProxy" (
     def Scope "Collisions"
     {
         def Cube "TorsoCollider" (
-            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysxCollisionAPI", "MaterialBindingAPI"]
         )
         {
             rel material:binding:physics = </DrAnmarDynamicAbdominalPatientRigidProxy/PhysicsMaterials/TablePhysics> (
