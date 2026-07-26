@@ -1072,9 +1072,11 @@ class PerfusionTimeSeries:
         integrate = getattr(np, "trapezoid", None)
         if integrate is None:
             # Isaac Sim 6 currently ships a NumPy 1.x environment, while
-            # ``numpy.trapezoid`` was introduced in NumPy 2.0.
-            integrate = np.trapz
-        auc = float(integrate(y, t))
+            # ``numpy.trapezoid`` was introduced in NumPy 2.0. Keep the
+            # compatibility path independent of deprecated ``numpy.trapz``.
+            auc = float(np.sum((y[:-1] + y[1:]) * np.diff(t) * 0.5))
+        else:
+            auc = float(integrate(y, t))
         return RegionICGMetrics(arrival, wash_in, float(t[peak_i]), peak, washout, auc)
 
 
