@@ -8,7 +8,10 @@
 
 def Xform "DrAnmarPhysiologicalMonitor" (
     prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI", "SemanticsLabelsAPI:class"]
-    customData = { string drAnmarAssetId = "dranmar-physiological-monitor-v1" bool drAnmarClinicalValidation = false }
+    customData = {
+        string drAnmarAssetId = "dranmar-physiological-monitor-v1"
+        bool drAnmarClinicalValidation = false
+    }
 )
 {
     token[] semantics:labels:class = ["patient_monitor", "physiological_display"]

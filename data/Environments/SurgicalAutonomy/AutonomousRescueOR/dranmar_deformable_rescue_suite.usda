@@ -8,7 +8,10 @@
 )
 
 def Xform "DrAnmarDeformableRescueSuite" (
-    assetInfo = { string name = "DrAnmarDeformableRescueSuite" string version = "0.3.0" }
+    assetInfo = {
+        string name = "DrAnmarDeformableRescueSuite"
+        string version = "0.3.0"
+    }
     kind = "assembly"
     prepend variantSets = "scenario"
     variants = { string scenario = "hemorrhage" }
@@ -46,10 +49,20 @@ def Xform "DrAnmarDeformableRescueSuite" (
         uniform token[] xformOpOrder = ["xformOp:translate"]
     }
     variantSet "scenario" = {
-        "hemorrhage" { custom string drAnmarActiveRescueScenario = "hemorrhage" }
-        "anastomotic_leak" { custom string drAnmarActiveRescueScenario = "anastomotic_leak" }
-        "abdominal_dehiscence" { custom string drAnmarActiveRescueScenario = "abdominal_dehiscence" }
-        "dressing_delamination" { custom string drAnmarActiveRescueScenario = "dressing_delamination" }
-        "all" { custom string drAnmarActiveRescueScenario = "all" }
+        "hemorrhage" {
+            custom string drAnmarActiveRescueScenario = "hemorrhage"
+        }
+        "anastomotic_leak" {
+            custom string drAnmarActiveRescueScenario = "anastomotic_leak"
+        }
+        "abdominal_dehiscence" {
+            custom string drAnmarActiveRescueScenario = "abdominal_dehiscence"
+        }
+        "dressing_delamination" {
+            custom string drAnmarActiveRescueScenario = "dressing_delamination"
+        }
+        "all" {
+            custom string drAnmarActiveRescueScenario = "all"
+        }
     }
 }

@@ -8,7 +8,10 @@
 )
 
 def Xform "DrAnmarRescueBowelAnastomosis" (
-    assetInfo = { string name = "DrAnmarRescueBowelAnastomosis" string version = "0.3.0" }
+    assetInfo = {
+        string name = "DrAnmarRescueBowelAnastomosis"
+        string version = "0.3.0"
+    }
     kind = "component"
     prepend variantSets = "anastomosis_state"
     variants = { string anastomosis_state = "leaking" }
@@ -21622,9 +21625,17 @@ def Xform "DrAnmarRescueBowelAnastomosis" (
         }
     }
     variantSet "anastomosis_state" = {
-        "leaking" { custom string drAnmarAnastomosisState = "leaking" }
-        "aligned" { custom string drAnmarAnastomosisState = "aligned" }
-        "stapled" { custom string drAnmarAnastomosisState = "stapled" }
-        "reinforced" { custom string drAnmarAnastomosisState = "reinforced" }
+        "leaking" {
+            custom string drAnmarAnastomosisState = "leaking"
+        }
+        "aligned" {
+            custom string drAnmarAnastomosisState = "aligned"
+        }
+        "stapled" {
+            custom string drAnmarAnastomosisState = "stapled"
+        }
+        "reinforced" {
+            custom string drAnmarAnastomosisState = "reinforced"
+        }
     }
 }

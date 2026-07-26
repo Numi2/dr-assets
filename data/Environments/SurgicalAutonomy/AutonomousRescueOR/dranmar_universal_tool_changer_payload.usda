@@ -9,7 +9,10 @@
 
 def Xform "DrAnmarUniversalToolChanger" (
     prepend apiSchemas = ["SemanticsLabelsAPI:class"]
-    assetInfo = { string name = "DrAnmarUniversalToolChanger" string version = "0.3.0" }
+    assetInfo = {
+        string name = "DrAnmarUniversalToolChanger"
+        string version = "0.3.0"
+    }
     customData = {
         string drAnmarAssetId = "dranmar-universal-tool-changer-v1"
         bool drAnmarClinicalValidation = false

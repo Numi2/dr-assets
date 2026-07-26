@@ -8,7 +8,10 @@
 )
 
 def Xform "DrAnmarRescueVessel" (
-    assetInfo = { string name = "DrAnmarRescueVessel" string version = "0.3.0" }
+    assetInfo = {
+        string name = "DrAnmarRescueVessel"
+        string version = "0.3.0"
+    }
     kind = "component"
     prepend variantSets = "hemostasis_state"
     variants = { string hemostasis_state = "bleeding" }
@@ -12699,9 +12702,17 @@ def Xform "DrAnmarRescueVessel" (
         }
     }
     variantSet "hemostasis_state" = {
-        "bleeding" { custom string drAnmarHemostasisState = "bleeding" }
-        "compressed" { custom string drAnmarHemostasisState = "compressed" }
-        "clipped" { custom string drAnmarHemostasisState = "clipped" }
-        "patched" { custom string drAnmarHemostasisState = "patched" }
+        "bleeding" {
+            custom string drAnmarHemostasisState = "bleeding"
+        }
+        "compressed" {
+            custom string drAnmarHemostasisState = "compressed"
+        }
+        "clipped" {
+            custom string drAnmarHemostasisState = "clipped"
+        }
+        "patched" {
+            custom string drAnmarHemostasisState = "patched"
+        }
     }
 }

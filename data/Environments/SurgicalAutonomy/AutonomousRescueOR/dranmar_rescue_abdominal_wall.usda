@@ -8,7 +8,10 @@
 )
 
 def Xform "DrAnmarRescueAbdominalWall" (
-    assetInfo = { string name = "DrAnmarRescueAbdominalWall" string version = "0.3.0" }
+    assetInfo = {
+        string name = "DrAnmarRescueAbdominalWall"
+        string version = "0.3.0"
+    }
     kind = "component"
     prepend variantSets = "repair_state"
     variants = { string repair_state = "open" }
@@ -6190,9 +6193,17 @@ def Xform "DrAnmarRescueAbdominalWall" (
         }
     }
     variantSet "repair_state" = {
-        "open" { custom string drAnmarRepairState = "open" }
-        "approximated" { custom string drAnmarRepairState = "approximated" }
-        "stapled" { custom string drAnmarRepairState = "stapled" }
-        "sealed" { custom string drAnmarRepairState = "sealed" }
+        "open" {
+            custom string drAnmarRepairState = "open"
+        }
+        "approximated" {
+            custom string drAnmarRepairState = "approximated"
+        }
+        "stapled" {
+            custom string drAnmarRepairState = "stapled"
+        }
+        "sealed" {
+            custom string drAnmarRepairState = "sealed"
+        }
     }
 }

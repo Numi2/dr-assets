@@ -8,7 +8,10 @@
 )
 
 def Xform "DrAnmarRescueOcclusiveFilm" (
-    assetInfo = { string name = "DrAnmarRescueOcclusiveFilm" string version = "0.3.0" }
+    assetInfo = {
+        string name = "DrAnmarRescueOcclusiveFilm"
+        string version = "0.3.0"
+    }
     kind = "component"
     prepend variantSets = "seal_state"
     variants = { string seal_state = "delaminated" }
@@ -2280,8 +2283,14 @@ def Xform "DrAnmarRescueOcclusiveFilm" (
         }
     }
     variantSet "seal_state" = {
-        "delaminated" { custom string drAnmarSealState = "delaminated" }
-        "partially_bonded" { custom string drAnmarSealState = "partially_bonded" }
-        "sealed" { custom string drAnmarSealState = "sealed" }
+        "delaminated" {
+            custom string drAnmarSealState = "delaminated"
+        }
+        "partially_bonded" {
+            custom string drAnmarSealState = "partially_bonded"
+        }
+        "sealed" {
+            custom string drAnmarSealState = "sealed"
+        }
     }
 }

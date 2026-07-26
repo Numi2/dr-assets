@@ -9,7 +9,10 @@
 
 def Xform "DrAnmarAutonomousRescueOR" (
     prepend apiSchemas = ["SemanticsLabelsAPI:class"]
-    assetInfo = { string name = "DrAnmarAutonomousRescueOR" string version = "0.4.0" }
+    assetInfo = {
+        string name = "DrAnmarAutonomousRescueOR"
+        string version = "0.4.0"
+    }
     customData = {
         string drAnmarAssetId = "dranmar-autonomous-rescue-or-v0.4.0"
         string drAnmarEffectAuthority = "environment_post_physics_scene_evidence"
