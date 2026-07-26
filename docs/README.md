@@ -8,8 +8,10 @@ the ORBIT-Surgical-derived task substrate used by Dr.Anmar. New development,
 release metadata, procedure assets, and patient-effect architecture are owned
 and maintained by Dr.Anmar.
 
-Start with the repository [README](../README.md), [asset catalog](ASSET_CATALOG.md),
-and [contact-driven effects](CONTACT_DRIVEN_EFFECTS.md).
+Start with the repository [README](../README.md),
+[researcher brief](RESEARCHER_BRIEF.md), [visual showcase](SHOWCASE.md),
+[asset catalog](ASSET_CATALOG.md), and
+[contact-driven effects](CONTACT_DRIVEN_EFFECTS.md).
 
 ```python
 from orbit.surgical.assets import asset_path

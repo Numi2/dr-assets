@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Brought contact-owned vessel and bowel state transitions onto the repository
+  front page.
+- Added a compact researcher brief covering implemented authority boundaries,
+  machine-readable interfaces, calibration priorities, and attribution.
+
 ## 0.7.2 — 2026-07-26
 
 - Published the researcher-facing visual showcase using renders of the shipped

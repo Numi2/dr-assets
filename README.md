@@ -4,6 +4,7 @@
 for NVIDIA Isaac Sim and Isaac Lab.**
 
 [![Research software](https://img.shields.io/badge/status-research%20software-5b5bd6)](docs/RESEARCH_BOUNDARIES.md)
+[![Latest release](https://img.shields.io/github/v/release/Numi2/dr-assets?display_name=tag&sort=semver&color=76b900)](https://github.com/Numi2/dr-assets/releases/latest)
 [![OpenUSD](https://img.shields.io/badge/format-OpenUSD-76b900)](https://openusd.org/)
 [![License](https://img.shields.io/badge/license-BSD--3--Clause%20%2B%20Apache--2.0-blue)](NOTICE.md)
 
@@ -33,6 +34,27 @@ damage, and rescue reward are derived from contact forces, geometry,
 attachments, flow, pressure, inventory, dwell, and patient state. This places
 the learning signal downstream of the physical interaction instead of behind a
 success flag an agent can exploit.
+
+**Research review path:** [Researcher brief](docs/RESEARCHER_BRIEF.md) →
+[visual showcase](docs/SHOWCASE.md) →
+[contact-driven effects](docs/CONTACT_DRIVEN_EFFECTS.md) →
+[machine-readable rescue contract](data/Environments/SurgicalAutonomy/AutonomousRescueOR/imitation_dataset_contract.json)
+
+## Patient effects are scene transitions—not reward labels
+
+The shipped inspection states make the physical outcome boundary visible. At
+runtime, the environment may reach these states only through current contact,
+geometry, attachment, flow, pressure, dwell, and physiology evidence.
+
+| Uncontrolled vessel | Temporary compression | Retained repair |
+| --- | --- | --- |
+| [![Uncontrolled vessel](docs/media/effect-vessel-bleeding.png)](data/Environments/SurgicalAutonomy/AutonomousRescueOR/dranmar_rescue_vessel.usda) | [![Compressed vessel](docs/media/effect-vessel-compressed.png)](data/Environments/SurgicalAutonomy/AutonomousRescueOR/dranmar_rescue_vessel.usda) | [![Clipped and patched vessel](docs/media/effect-vessel-repaired.png)](data/Environments/SurgicalAutonomy/AutonomousRescueOR/dranmar_rescue_vessel.usda) |
+| Flow and blood loss remain active. | Benefit expires when bilateral contact evidence disappears. | Benefit persists only while attachment and integrity remain valid. |
+
+| Leaking bowel ends | Repaired anastomosis |
+| --- | --- |
+| [![Leaking bowel ends](docs/media/effect-bowel-leaking.png)](data/Environments/SurgicalAutonomy/AutonomousRescueOR/dranmar_rescue_bowel_anastomosis.usda) | [![Repaired bowel anastomosis](docs/media/effect-bowel-repaired.png)](data/Environments/SurgicalAutonomy/AutonomousRescueOR/dranmar_rescue_bowel_anastomosis.usda) |
+| Alignment alone does not establish integrity. | Repair state is coupled to closure geometry, retention, pressure hold, and leak evidence. |
 
 ## Built as a complete surgical research surface
 
@@ -83,6 +105,15 @@ flowchart LR
 
 See [Contact-driven effects](docs/CONTACT_DRIVEN_EFFECTS.md) for the authority
 boundary and the patient coupling implemented today.
+
+### Evidence ownership at a glance
+
+| Intervention | Environment-owned evidence | Patient effect | Failure remains observable |
+| --- | --- | --- | --- |
+| Compress or clip | Bilateral force, symmetry, separation, placement, speed, retained attachment | Transient or retained flow reduction | Release, migration, overload damage, distal perfusion loss |
+| Patch or anastomose | Distributed contact, closure gap, attachment integrity, pressure-hold dwell, leaked particles | Seal or repair integrity | Delamination, residual leak, stenosis, rupture |
+| Infuse | Plunger travel, outlet flow, reservoir mass loss, access attachment, line pressure | Intravascular or extravasated volume | Disconnection, occlusion, overpressure, extravasation |
+| Ventilate | Airway attachment, valve travel, delivered and leaked flow, pressure, oxygen fraction, chest excursion | Ventilation and oxygenation support | Leak, unsafe pressure, inadequate delivery |
 
 ## Catalog
 
@@ -138,6 +169,10 @@ Dr.Anmar and ORBIT-Surgical-derived tasks. The distributable project name is
 
 For submodule integration, environment overrides, and Isaac for Healthcare
 catalog interoperation, see [Integration](docs/INTEGRATION.md).
+
+For a compact map of the research claims, implemented authority boundaries,
+machine-readable interfaces, and highest-value calibration work, read the
+[researcher brief](docs/RESEARCHER_BRIEF.md).
 
 ## What is calibrated—and what is not
 
