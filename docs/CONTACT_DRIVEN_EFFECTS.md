@@ -52,6 +52,23 @@ physics evidence. Retained mechanical repairs persist only while their
 attachment and integrity state persists. This prevents an agent from touching a
 target once and collecting indefinite benefit.
 
+## Learning-data boundary
+
+Autonomous Rescue OR declares a transition-aligned imitation-learning contract:
+
+```text
+state[i] → Cartesian action[i+1] → state[i+1]
+```
+
+The offset reflects when the workstation samples post-physics state. Robot,
+contact, vessel, vital-sign, and fluid-balance signals are observations.
+Patient-effect fields are never policy actions. Train and validation masks are
+assigned by complete episode so adjacent frames from one rescue do not leak
+across the split.
+
+The machine-readable feature order and promotion criteria are in
+`data/Environments/SurgicalAutonomy/AutonomousRescueOR/imitation_dataset_contract.json`.
+
 ## Damage and tradeoffs
 
 More force is not monotonically better. Asymmetry, excessive speed, overpressure,
@@ -82,4 +99,3 @@ orbit/surgical/assets/resuscitation_effects.py
 orbit/surgical/assets/autonomous_rescue_or.py
 orbit/surgical/assets/dynamic_abdominal_patient.py
 ```
-

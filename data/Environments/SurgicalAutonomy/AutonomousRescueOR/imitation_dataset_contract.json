@@ -1,0 +1,96 @@
+{
+  "schema": "dr.anmar.autonomous-rescue-imitation-contract.v1",
+  "research_only": true,
+  "storage": "HDF5 with Robomimic data/demo_N episode groups",
+  "episode_boundary": "one simulator reset and one complete recording",
+  "split_unit": "complete_episode",
+  "outcome_authority": "post_physics_filtered_local_contact",
+  "policy_can_write_patient_outcome": false,
+  "control_frame_semantics": "The workstation samples robot and patient state after applying the control command stored on that frame.",
+  "transition_alignment": {
+    "observation": "post_action_frame[i]",
+    "action": "cartesian_relative_ik_command[i+1]",
+    "next_observation": "post_action_frame[i+1]",
+    "reward": "contact_owned_reward[i+1]",
+    "done": "termination_or_truncation[i+1], with the final stored transition marked as an episode boundary",
+    "source_frame_offset": 1
+  },
+  "action": {
+    "contract": "dr-anmar-cartesian-ik-relative-v1",
+    "bounds": [
+      -1.0,
+      1.0
+    ],
+    "semantics": "six relative Cartesian IK values and one gripper command per PSM",
+    "patient_effect_fields_allowed": false
+  },
+  "observations": {
+    "joint_pos": "all PSM joint positions in registered articulation order",
+    "joint_vel": "all PSM joint velocities in registered articulation order",
+    "tool_positions_w": "world-frame tool positions with a separate validity mask",
+    "target_relative_tool_positions": "authored compression target minus each world-frame tool position",
+    "rescue_contact": [
+      "left_normal_force_n",
+      "right_normal_force_n",
+      "jaw_separation_m",
+      "tool_speed_m_s",
+      "target_distance_m"
+    ],
+    "rescue_vessel": [
+      "residual_flow_ml_s",
+      "distal_perfusion_fraction",
+      "cumulative_blood_loss_ml",
+      "blood_volume_ml",
+      "transient_compression_fraction",
+      "retained_clip_fraction",
+      "patch_seal_fraction",
+      "overload_damage_fraction",
+      "pressure_challenge_active",
+      "measured_upstream_pressure_mmhg",
+      "hemostasis_verified"
+    ],
+    "rescue_vital_signs": [
+      "heart_rate_bpm",
+      "respiratory_rate_bpm",
+      "systolic_pressure_mmhg",
+      "diastolic_pressure_mmhg",
+      "mean_arterial_pressure_mmhg",
+      "spo2_fraction",
+      "etco2_mmhg",
+      "core_temperature_c",
+      "cardiac_output_l_min",
+      "shock_index",
+      "lactate_mmol_l",
+      "cumulative_blood_loss_ml",
+      "active_blood_loss_ml_min",
+      "urine_output_ml_h",
+      "bile_leak_ml_h",
+      "global_perfusion_fraction"
+    ],
+    "rescue_fluid_balance": [
+      "baseline_blood_volume_ml",
+      "intravascular_volume_ml",
+      "interstitial_volume_ml",
+      "crystalloid_input_ml",
+      "colloid_input_ml",
+      "transfused_red_cell_ml",
+      "cumulative_blood_loss_ml",
+      "urine_output_ml",
+      "bile_output_ml",
+      "suction_output_ml",
+      "irrigation_input_ml",
+      "irrigation_recovered_ml"
+    ],
+    "procedure_phase": "integer phase code",
+    "sensor_authority": "whether a real post-physics jaw sensor pair was available",
+    "tool_position_valid": "per-arm validity mask",
+    "selected_arm": "one-hot arm selected by local contact evidence"
+  },
+  "reference_promotion": {
+    "requires_contact_derived_compression": true,
+    "requires_distal_perfusion_fraction_at_least": 0.52,
+    "requires_overload_damage_fraction_at_most": 0.02,
+    "requires_release_observed": true,
+    "expert_timeout_can_complete": false
+  }
+}

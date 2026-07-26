@@ -18,6 +18,40 @@ reward.
   outcome;
 - transition-based rescue reward with no reward for waiting in a favorable
   state.
+- a contact-gated compression, hold, verification, and release expert that
+  cannot advance on command intent alone;
+- synchronized robot, contact, vessel, vital-sign, and fluid-balance
+  observations exported as transition-aligned Robomimic HDF5 episodes.
+
+## Imitation-learning data path
+
+When this extension is consumed inside a Dr.Anmar checkout, start the live
+room, then start its expert. Expert start resets the room and starts recording
+automatically:
+
+```bash
+./dr_anmar_rescue_il.sh room
+./dr_anmar_rescue_il.sh expert
+```
+
+Each completed recording writes the normal `.npz` evidence package plus a
+`dr.anmar.autonomous-rescue-imitation.v1` HDF5 episode. The HDF5 transition
+uses `state[i] -> Cartesian action[i+1] -> state[i+1]` because the workstation
+samples frame state after physics applies that frame's action. Patient effects
+are observations and rewards only; they never appear in the action contract.
+
+Merge complete episodes and train the low-dimensional rescue policy:
+
+```bash
+./dr_anmar_rescue_il.sh episodes
+./dr_anmar_rescue_il.sh pack rescue_train.hdf5 episode_*.hdf5
+./dr_anmar_rescue_il.sh train rescue_train.hdf5
+```
+
+Train and validation masks are assigned by complete episode, never by
+individual frame. The exact feature order, validity masks, source-frame
+offset, and promotion gates are defined in
+`imitation_dataset_contract.json`.
 
 The large OR USD contains four authored station and tool-change layout frames.
 Those are composition metadata, not four live Franka articulations. A host may

@@ -64,6 +64,9 @@ physical-state inspection assets.
   manifests.
 - **Isaac Lab adapters** — configuration and runtime helpers for Franka,
   dVRK PSM/ECM, STAR, rigid, articulated, particle, and deformable scenes.
+- **Imitation-learning contract** — transition-aligned robot, contact, vessel,
+  vital-sign, and fluid-balance observations with patient effects excluded
+  from the action space and dataset splits kept at complete-episode boundaries.
 
 ## Contact-driven effect architecture
 

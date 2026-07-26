@@ -62,6 +62,7 @@ CONTRACT_FILES: Final = MappingProxyType(
         "complications": "complication_library.json",
         "dependencies": "dependency_manifest.json",
         "episode_schema": "episode_schema.json",
+        "imitation_dataset": "imitation_dataset_contract.json",
         "interaction_frames": "interaction_frames.json",
         "procedure_graphs": "procedure_graphs.json",
         "rescue_protocols": "rescue_protocols.json",

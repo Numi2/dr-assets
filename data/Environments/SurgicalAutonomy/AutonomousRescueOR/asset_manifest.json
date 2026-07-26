@@ -27,7 +27,11 @@
     "host_composition": "scripts/dr_anmar_workstation.py",
     "optional_patient_integration": "Props/Patients/DynamicAbdominalPatient",
     "policy_outcome_injection": false,
-    "scene_evidence_authority": "environment_owned_post_physics_adapter"
+    "scene_evidence_authority": "environment_owned_post_physics_adapter",
+    "imitation_dataset_contract": "imitation_dataset_contract.json",
+    "workstation_export_schema": "dr.anmar.autonomous-rescue-imitation.v1",
+    "transition_alignment": "state[i] -> Cartesian action[i+1] -> state[i+1]",
+    "dataset_split_unit": "complete_episode"
   },
   "live_workstation_effects": [
     "bilateral_contact_derived_temporary_vessel_compression",

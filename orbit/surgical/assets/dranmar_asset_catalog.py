@@ -29,7 +29,7 @@ from typing import Final, Iterable
 
 
 CATALOG_SCHEMA: Final = "dr.anmar.sim-ready-asset-catalog.v1"
-CATALOG_VERSION: Final = "0.7.0"
+CATALOG_VERSION: Final = "0.7.1"
 CATALOG_ROOT_ENV: Final = "DRANMAR_ASSET_DATA_ROOT"
 CATALOG_CACHE_ENV: Final = "DRANMAR_ASSET_CACHE_DIR"
 I4H_REFERENCE_RELEASE: Final = "v0.7.0"
