@@ -1456,18 +1456,40 @@ LAPAROTOMY_LAYERS = (
     "abdominal_wall",
     "peritoneum",
 )
+LAPAROTOMY_INCISED_LAYERS = (
+    "skin",
+    "subcutaneous_fat",
+    "fascia",
+    "peritoneum",
+)
+LAPAROTOMY_LAYER_DEPTH_M = {
+    "skin": 0.105,
+    "subcutaneous_fat": 0.088,
+    "fascia": 0.071,
+    "peritoneum": 0.034,
+}
+LAPAROTOMY_LAYER_HALF_THICKNESS_M = {
+    "skin": 0.003,
+    "subcutaneous_fat": 0.012,
+    "fascia": 0.0015,
+    "peritoneum": 0.0008,
+}
+LAPAROTOMY_LAYER_FORCE_SEEDS_N = {
+    "skin": (4.0, 2.0),
+    "subcutaneous_fat": (2.5, 1.2),
+    "fascia": (5.0, 2.5),
+    "peritoneum": (1.5, 0.8),
+}
 
 
 @dataclass(frozen=True)
 class LaparotomyIncisionCalibration:
     """Research-informed gates for a staged midline laparotomy.
 
-    The force envelope is deliberately identified as a surrogate.  It is based
-    on ex-vivo porcine aorta scalpel experiments reporting 4--12 N break-in
-    force and 2--4 N continuous force (Hu, Sun & Zhang, 2013,
-    doi:10.1016/j.jmbbm.2012.10.017).  The 30 mm/s nominal travel is based on
-    abdominal-skin simulant cutting work.  These values have not been fitted to
-    this patient's abdominal layers and are not clinical limits.
+    The force envelope is deliberately identified as a surrogate. It uses an
+    ex-vivo porcine aorta cutting study only as a broad engineering envelope,
+    not as abdominal-tissue calibration. Layer-specific values are provisional
+    seeds and are not clinical limits.
     """
 
     incision_length_m: float = 0.18
@@ -1480,6 +1502,12 @@ class LaparotomyIncisionCalibration:
     maximum_speed_m_s: float = 0.06
     maximum_alignment_error_deg: float = 20.0
     break_in_distance_m: float = 0.005
+    path_start_m: float = -0.09
+    path_end_m: float = 0.09
+    maximum_lateral_offset_m: float = 0.004
+    additional_depth_tolerance_m: float = 0.002
+    maximum_advancement_error_fraction: float = 0.25
+    maximum_speed_error_fraction: float = 0.35
     source_dois: tuple[str, ...] = (
         "10.1016/j.jmbbm.2012.10.017",
         "10.1088/0957-0233/20/4/045801",
@@ -1499,6 +1527,10 @@ class LaparotomyIncisionCalibration:
             "minimum_speed_m_s": self.minimum_speed_m_s,
             "maximum_speed_m_s": self.maximum_speed_m_s,
             "break_in_distance_m": self.break_in_distance_m,
+            "maximum_lateral_offset_m": self.maximum_lateral_offset_m,
+            "additional_depth_tolerance_m": self.additional_depth_tolerance_m,
+            "maximum_advancement_error_fraction": self.maximum_advancement_error_fraction,
+            "maximum_speed_error_fraction": self.maximum_speed_error_fraction,
         }
         for name, value in positive.items():
             if not math.isfinite(value) or value <= 0.0:
@@ -1515,6 +1547,15 @@ class LaparotomyIncisionCalibration:
             raise ValueError("nominal incision speed is outside its gate")
         if self.bridges_per_layer < 2:
             raise ValueError("bridges_per_layer must be at least two")
+        if not self.path_start_m < self.path_end_m:
+            raise ValueError("incision path must advance from start to end")
+        if not math.isclose(
+            self.path_end_m - self.path_start_m,
+            self.incision_length_m,
+            rel_tol=0.0,
+            abs_tol=1.0e-9,
+        ):
+            raise ValueError("incision path length disagrees with incision_length_m")
 
 
 @dataclass(frozen=True)
@@ -1525,6 +1566,11 @@ class IncisionContactSample:
     advancement_m: float
     speed_m_s: float
     alignment_error_deg: float
+    path_coordinate_m: float | None = None
+    lateral_offset_m: float | None = None
+    blade_tip_z_m: float | None = None
+    dt_s: float | None = None
+    contact_authority: str = "post_physics_blade_contact"
     source_robot: str = "scalpel"
 
 
@@ -1555,12 +1601,13 @@ class PhysicalLaparotomyIncision:
         self.released_bridge_ids: list[str] = []
         self.rejected_samples = 0
         self.overload_samples = 0
+        self.last_path_coordinate_m = self.calibration.path_start_m
 
     @property
     def active_layer(self) -> str | None:
         if self.complete:
             return None
-        return LAPAROTOMY_LAYERS[self.layer_index]
+        return LAPAROTOMY_INCISED_LAYERS[self.layer_index]
 
     @property
     def bridge_length_m(self) -> float:
@@ -1575,8 +1622,16 @@ class PhysicalLaparotomyIncision:
             self.layer_index * self.calibration.bridges_per_layer
             + self.bridge_index
         )
-        total = len(LAPAROTOMY_LAYERS) * self.calibration.bridges_per_layer
+        total = (
+            len(LAPAROTOMY_INCISED_LAYERS)
+            * self.calibration.bridges_per_layer
+        )
         return _clamp(completed / total, 0.0, 1.0)
+
+    @property
+    def active_layer_depth_m(self) -> float | None:
+        layer = self.active_layer
+        return LAPAROTOMY_LAYER_DEPTH_M[layer] if layer is not None else None
 
     def _reject(self, reason: str) -> dict[str, Any]:
         self.rejected_samples += 1
@@ -1604,6 +1659,59 @@ class PhysicalLaparotomyIncision:
         )
         if not sample.blade_contact:
             return self._reject("no_blade_contact")
+        if sample.contact_authority != "post_physics_blade_contact":
+            return self._reject("non_physics_contact_authority")
+        spatial_values = (
+            sample.path_coordinate_m,
+            sample.lateral_offset_m,
+            sample.blade_tip_z_m,
+            sample.dt_s,
+        )
+        if any(value is None for value in spatial_values):
+            return self._reject("missing_spatial_kinematic_evidence")
+        path_coordinate = float(sample.path_coordinate_m)
+        lateral_offset = float(sample.lateral_offset_m)
+        blade_tip_z = float(sample.blade_tip_z_m)
+        dt_s = float(sample.dt_s)
+        if not all(
+            math.isfinite(value)
+            for value in (path_coordinate, lateral_offset, blade_tip_z, dt_s)
+        ) or dt_s <= 0.0:
+            return self._reject("invalid_spatial_kinematic_evidence")
+        if abs(lateral_offset) > self.calibration.maximum_lateral_offset_m:
+            return self._reject("blade_outside_midline_corridor")
+        active_layer = self.active_layer
+        assert active_layer is not None
+        depth_tolerance = (
+            LAPAROTOMY_LAYER_HALF_THICKNESS_M[active_layer]
+            + self.calibration.additional_depth_tolerance_m
+        )
+        if (
+            abs(blade_tip_z - LAPAROTOMY_LAYER_DEPTH_M[active_layer])
+            > depth_tolerance
+        ):
+            return self._reject("blade_outside_active_layer_depth")
+        path_advancement = path_coordinate - self.last_path_coordinate_m
+        if path_advancement <= 0.0:
+            return self._reject("non_monotonic_midline_advancement")
+        if (
+            path_coordinate
+            > self.calibration.path_end_m + self.bridge_length_m * 0.25
+        ):
+            return self._reject("blade_beyond_incision_path")
+        advancement_error = abs(path_advancement - advancement)
+        if advancement_error > max(
+            1.0e-5,
+            self.calibration.maximum_advancement_error_fraction * advancement,
+        ):
+            return self._reject("reported_advancement_inconsistent_with_tool_pose")
+        derived_speed = path_advancement / dt_s
+        if abs(derived_speed - speed) > max(
+            1.0e-4,
+            self.calibration.maximum_speed_error_fraction * speed,
+        ):
+            return self._reject("reported_speed_inconsistent_with_tool_pose")
+        advancement = path_advancement
         if alignment > self.calibration.maximum_alignment_error_deg:
             return self._reject("blade_alignment_outside_gate")
         if not (
@@ -1616,11 +1724,10 @@ class PhysicalLaparotomyIncision:
             return self._reject("no_forward_advancement")
 
         resultant_force = math.hypot(normal_force, tangential_force)
-        force_gate = (
-            self.calibration.initiation_force_n
-            if not self.started
-            else self.calibration.propagation_force_n
-        )
+        layer_initiation, layer_propagation = LAPAROTOMY_LAYER_FORCE_SEEDS_N[
+            active_layer
+        ]
+        force_gate = layer_initiation if not self.started else layer_propagation
         if resultant_force < force_gate:
             return self._reject("cutting_force_below_gate")
         overloaded = (
@@ -1630,6 +1737,7 @@ class PhysicalLaparotomyIncision:
             self.overload_samples += 1
 
         self.break_in_advancement_m += advancement
+        self.last_path_coordinate_m = path_coordinate
         if (
             not self.started
             and self.break_in_advancement_m
@@ -1648,9 +1756,7 @@ class PhysicalLaparotomyIncision:
         self.layer_work_j += tangential_force * advancement
 
         released: list[str] = []
-        work_per_bridge_j = (
-            self.calibration.propagation_force_n * self.bridge_length_m
-        )
+        work_per_bridge_j = layer_propagation * self.bridge_length_m
         distance_limited = int(
             self.layer_advancement_m / self.bridge_length_m
         )
@@ -1662,7 +1768,7 @@ class PhysicalLaparotomyIncision:
         )
         while self.bridge_index < target_bridge_count:
             bridge_id = (
-                f"{LAPAROTOMY_LAYERS[self.layer_index]}:"
+                f"{LAPAROTOMY_INCISED_LAYERS[self.layer_index]}:"
                 f"{self.bridge_index:03d}"
             )
             self.released_bridge_ids.append(bridge_id)
@@ -1671,10 +1777,10 @@ class PhysicalLaparotomyIncision:
 
         completed_layer = None
         if self.bridge_index == self.calibration.bridges_per_layer:
-            completed_layer = LAPAROTOMY_LAYERS[self.layer_index]
+            completed_layer = LAPAROTOMY_INCISED_LAYERS[self.layer_index]
             self.patient.tissue_state.cut(
                 completed_layer,
-                severity=1.0 / len(LAPAROTOMY_LAYERS),
+                severity=1.0 / len(LAPAROTOMY_INCISED_LAYERS),
             )
             self.layer_index += 1
             self.bridge_index = 0
@@ -1682,7 +1788,8 @@ class PhysicalLaparotomyIncision:
             self.layer_work_j = 0.0
             self.break_in_advancement_m = 0.0
             self.started = False
-            if self.layer_index == len(LAPAROTOMY_LAYERS):
+            self.last_path_coordinate_m = self.calibration.path_start_m
+            if self.layer_index == len(LAPAROTOMY_INCISED_LAYERS):
                 self.complete = True
                 self.patient.tissue_state.set_access_state("open")
                 self.patient.set_procedure_stage("access_open")
@@ -1698,6 +1805,10 @@ class PhysicalLaparotomyIncision:
             "resultant_force_n": resultant_force,
             "overload": overloaded,
             "calibration_status": self.calibration.calibration_status,
+            "path_coordinate_m": path_coordinate,
+            "lateral_offset_m": lateral_offset,
+            "blade_tip_z_m": blade_tip_z,
+            "contact_authority": sample.contact_authority,
         }
         if released:
             self.patient.event_bus.emit(
@@ -1724,6 +1835,159 @@ class PhysicalLaparotomyIncision:
             "rejected_samples": self.rejected_samples,
             "overload_samples": self.overload_samples,
             "calibration": asdict(self.calibration),
+            "incised_layers": list(LAPAROTOMY_INCISED_LAYERS),
+            "preserved_midline_muscle": "abdominal_wall",
+            "spatial_evidence_required": True,
+            "clinical_validation": False,
+        }
+
+
+@dataclass(frozen=True)
+class LaparotomyGraspCalibration:
+    minimum_cell_force_n: float = 0.08
+    target_cell_force_n: float = 0.20
+    maximum_cell_force_n: float = 0.75
+    hard_release_force_n: float = 1.20
+    maximum_relative_speed_m_s: float = 0.015
+    maximum_capture_offset_m: float = 0.003
+    maximum_retained_slip_m: float = 0.004
+    capture_dwell_s: float = 0.10
+    calibration_status: str = (
+        "provisional_engineering_seed_pending_wet_tissue_grasp_bench"
+    )
+
+
+@dataclass(frozen=True)
+class WoundEdgeGraspSample:
+    layer: str
+    side: str
+    cell_index: int
+    contact: bool
+    normal_force_n: float
+    relative_speed_m_s: float
+    edge_offset_m: float
+    dt_s: float
+    contact_authority: str = "post_physics_contact_sensor"
+
+
+class PhysicalWoundEdgeGrasp:
+    """Fail-closed capture gate driven by post-physics pad contact evidence."""
+
+    def __init__(
+        self,
+        calibration: LaparotomyGraspCalibration | None = None,
+    ):
+        self.calibration = calibration or LaparotomyGraspCalibration()
+        self.dwell_s: dict[str, float] = {}
+        self.captured_cells: set[str] = set()
+        self.released_cells: list[dict[str, str]] = []
+        self.rejected_samples = 0
+
+    @staticmethod
+    def cell_id(layer: str, side: str, cell_index: int) -> str:
+        return f"{layer}:{side}:{cell_index:02d}"
+
+    def _reject(self, reason: str, cell_id: str) -> dict[str, Any]:
+        self.rejected_samples += 1
+        return {
+            "accepted": False,
+            "reason": reason,
+            "cell_id": cell_id,
+            "capture_requested": False,
+        }
+
+    def observe(self, sample: WoundEdgeGraspSample) -> dict[str, Any]:
+        if sample.layer not in LAPAROTOMY_LAYERS:
+            raise ValueError(f"unsupported laparotomy layer {sample.layer!r}")
+        if sample.side not in {"left", "right"}:
+            raise ValueError("wound-edge grasp side must be left or right")
+        if not 0 <= int(sample.cell_index) < 6:
+            raise ValueError("wound-edge grasp cell index must be in 0..5")
+        cell_id = self.cell_id(sample.layer, sample.side, sample.cell_index)
+        values = (
+            sample.normal_force_n,
+            sample.relative_speed_m_s,
+            sample.edge_offset_m,
+            sample.dt_s,
+        )
+        if not all(math.isfinite(float(value)) for value in values):
+            return self._reject("non_finite_contact_evidence", cell_id)
+        if sample.dt_s <= 0.0:
+            return self._reject("invalid_contact_interval", cell_id)
+        if sample.contact_authority != "post_physics_contact_sensor":
+            return self._reject("non_physics_contact_authority", cell_id)
+
+        force = max(0.0, float(sample.normal_force_n))
+        speed = abs(float(sample.relative_speed_m_s))
+        offset = abs(float(sample.edge_offset_m))
+        if cell_id in self.captured_cells:
+            if (
+                force >= self.calibration.hard_release_force_n
+                or offset > self.calibration.maximum_retained_slip_m
+                or not sample.contact
+            ):
+                self.captured_cells.remove(cell_id)
+                reason = (
+                    "hard_force_release"
+                    if force >= self.calibration.hard_release_force_n
+                    else "contact_or_slip_release"
+                )
+                self.released_cells.append({"cell_id": cell_id, "reason": reason})
+                return {
+                    "accepted": True,
+                    "reason": reason,
+                    "cell_id": cell_id,
+                    "release_requested": True,
+                    "capture_requested": False,
+                }
+            return {
+                "accepted": True,
+                "reason": "capture_retained",
+                "cell_id": cell_id,
+                "capture_requested": False,
+            }
+
+        if not sample.contact:
+            self.dwell_s[cell_id] = 0.0
+            return self._reject("no_pad_edge_contact", cell_id)
+        if force < self.calibration.minimum_cell_force_n:
+            self.dwell_s[cell_id] = 0.0
+            return self._reject("capture_force_below_gate", cell_id)
+        if force > self.calibration.maximum_cell_force_n:
+            self.dwell_s[cell_id] = 0.0
+            return self._reject("capture_force_above_gate", cell_id)
+        if speed > self.calibration.maximum_relative_speed_m_s:
+            self.dwell_s[cell_id] = 0.0
+            return self._reject("capture_speed_above_gate", cell_id)
+        if offset > self.calibration.maximum_capture_offset_m:
+            self.dwell_s[cell_id] = 0.0
+            return self._reject("capture_offset_above_gate", cell_id)
+        self.dwell_s[cell_id] = self.dwell_s.get(cell_id, 0.0) + float(sample.dt_s)
+        if self.dwell_s[cell_id] < self.calibration.capture_dwell_s:
+            return {
+                "accepted": True,
+                "reason": "capture_dwell_accumulating",
+                "cell_id": cell_id,
+                "capture_requested": False,
+                "dwell_s": self.dwell_s[cell_id],
+            }
+        self.captured_cells.add(cell_id)
+        return {
+            "accepted": True,
+            "reason": "capture_qualified",
+            "cell_id": cell_id,
+            "capture_requested": True,
+            "dwell_s": self.dwell_s[cell_id],
+        }
+
+    def snapshot(self) -> dict[str, Any]:
+        return {
+            "authority": "post_physics_contact_sensor",
+            "captured_cells": sorted(self.captured_cells),
+            "released_cells": list(self.released_cells),
+            "rejected_samples": self.rejected_samples,
+            "calibration": asdict(self.calibration),
+            "physical_calibration": False,
             "clinical_validation": False,
         }
 
@@ -2356,6 +2620,7 @@ class DynamicSurgicalPatient:
         organ_ids = [str(c["id"]) for c in self.anatomy["components"]]
         self.tissue_state = TissueStateRegistry(organ_ids)
         self.incision = PhysicalLaparotomyIncision(self)
+        self.wound_grasp = PhysicalWoundEdgeGrasp()
         self.organ_motion = OrganMotionModel(self.anatomy["components"])
         self.damage = DamageRegistry()
         self.perfusion = PerfusionModel(
@@ -2755,6 +3020,7 @@ class DynamicSurgicalPatient:
             "damage": {key: asdict(value) for key, value in self.damage.events.items()},
             "contact_effects": self.contact_effects.snapshot(),
             "incision": self.incision.snapshot(),
+            "wound_grasp": self.wound_grasp.snapshot(),
             "interventions": [asdict(value) for value in self.interventions.history],
             "events": self.event_bus.snapshot(),
             "released_adhesions": sorted(self.released_adhesions),
@@ -3419,13 +3685,16 @@ def capture_laparotomy_wound_edges(
     patient_path: str,
     tool_path: str,
     *,
+    qualified_cells: Iterable[str] | None = None,
+    prepositioned_fixture: bool = False,
     stage=None,
 ) -> list[str]:
     """Capture both full-thickness wound margins with the real exposure pads.
 
     Six independently releasable capture cells are authored per pad and per
-    layer. Local attachment coordinates preserve the current pose, avoiding a
-    discontinuous snap when capture is requested.
+    layer. Contact-gated operation accepts only cell IDs emitted by
+    ``PhysicalWoundEdgeGrasp``. ``prepositioned_fixture`` is retained only for
+    camera demonstrations and must not be treated as grasp qualification.
     """
     if stage is None:
         import omni.usd
@@ -3434,6 +3703,34 @@ def capture_laparotomy_wound_edges(
     normalized_patient = patient_path.rstrip("/")
     normalized_tool = tool_path.rstrip("/")
     paths = laparotomy_wound_edge_paths(normalized_patient)
+    if qualified_cells is not None and prepositioned_fixture:
+        raise ValueError(
+            "choose contact-qualified capture or prepositioned fixture capture"
+        )
+    if qualified_cells is None and not prepositioned_fixture:
+        raise ValueError(
+            "wound-edge capture requires post-physics qualified_cells; "
+            "camera-only scenes may opt into prepositioned_fixture=True"
+        )
+    requested = (
+        {
+            PhysicalWoundEdgeGrasp.cell_id(layer, side, cell)
+            for layer in LAPAROTOMY_LAYERS
+            for side in ("left", "right")
+            for cell in range(6)
+        }
+        if prepositioned_fixture
+        else {str(cell_id) for cell_id in qualified_cells or ()}
+    )
+    valid = {
+        PhysicalWoundEdgeGrasp.cell_id(layer, side, cell)
+        for layer in LAPAROTOMY_LAYERS
+        for side in ("left", "right")
+        for cell in range(6)
+    }
+    unknown = sorted(requested.difference(valid))
+    if unknown:
+        raise ValueError(f"unknown qualified wound-edge capture cells: {unknown}")
     attachments: list[str] = []
     for layer in LAPAROTOMY_LAYERS:
         for side in ("left", "right"):
@@ -3450,6 +3747,9 @@ def capture_laparotomy_wound_edges(
                 ).append(index)
             y_values = sorted(by_y)
             for cell in range(6):
+                cell_id = PhysicalWoundEdgeGrasp.cell_id(layer, side, cell)
+                if cell_id not in requested:
+                    continue
                 begin = cell * len(y_values) // 6
                 end = (cell + 1) * len(y_values) // 6
                 cell_indices = [

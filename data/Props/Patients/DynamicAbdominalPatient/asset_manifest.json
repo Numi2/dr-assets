@@ -452,9 +452,9 @@
       "sha256": "4b39bb760d77be8c7d9b7ec3f417d2510f3d8202e3e2f537586d990ad88616b2"
     },
     {
-      "bytes": 8277,
+      "bytes": 8360,
       "path": "examples/dynamic_abdominal_patient_scene.py",
-      "sha256": "0767c43fcfacd0d38df71c791045176e7159cf755c39d3041ce59cb09fae5e7d"
+      "sha256": "ef5c67170a053e475eb5fd848b4e10e0dd707705dc99fdc2712cb5f294911a04"
     },
     {
       "bytes": 2854,
