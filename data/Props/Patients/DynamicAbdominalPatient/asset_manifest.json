@@ -347,14 +347,14 @@
       "sha256": "7be6131a81a8941f1821495d0bb00a4859204a3fba82890caf886a058d6b05a8"
     },
     {
-      "bytes": 2740,
+      "bytes": 3472,
       "path": "assets/Props/Patients/DynamicAbdominalPatient/mechanics_contract.json",
-      "sha256": "5613f2e746feedfabef3d2a9c7411fbc5dc69105377442277ae9bcb545a0eaf6"
+      "sha256": "2bef859a0c7c87dcf63c42fa97057a6bef9a389e3a1c44be8a0411a0b1efe65b"
     },
     {
-      "bytes": 2450,
+      "bytes": 2540,
       "path": "assets/Props/Patients/DynamicAbdominalPatient/patient_runtime_contract.json",
-      "sha256": "671a9b7d9b29f2813f2edc16ad7f74d57c1fc1c22a34580014fb5153cbf136d0"
+      "sha256": "afea3a0b2c3c79cd48242a92f5f24d3383cedd0f9f03ebc5fc9cd1061e8baca6"
     },
     {
       "bytes": 3786,
