@@ -142,9 +142,9 @@
       "sha256": "c2e002a66202f5a9db977296b1b8d51f343ff13b0a135564ee67869a82dd8724"
     },
     {
-      "bytes": 4530257,
+      "bytes": 3138717,
       "path": "assets/Props/Patients/DynamicAbdominalPatient/dranmar_dynamic_abdominal_patient_rigid_proxy.usda",
-      "sha256": "c2b8c204d44d4ffaf3d56757a2997b53dba285d46f4f612627842f93879cc238"
+      "sha256": "65e175432d55964dd0ee59212fbaf4ee02c4359879bc9631405f3514ab110897"
     },
     {
       "bytes": 26998,
@@ -482,12 +482,37 @@
       "sha256": "9ce2f01129aebd3c1c2d9a7da73c6cc0135dac3c708cccdd0ebdb817e0881341"
     },
     {
+      "bytes": 8768,
+      "path": "scripts/generate_dranmar_dynamic_abdominal_patient_rigid_proxy.py",
+      "sha256": "6edc672e1b2b848d0916844b4ef5192736428469a2ebcd5089f6e291ca3a09bb"
+    },
+    {
       "bytes": 3322,
       "path": "scripts/install_into_dranmar.py",
       "sha256": "4019da6eacfd312047140a2eedde20c7bf6f9c7c028b8a6793198ddc97822925"
+    },
+    {
+      "bytes": 77,
+      "path": "scripts/requirements_dynamic_abdominal_patient_validation.txt",
+      "sha256": "66af095c4e56638c0cca5a5e616ada69d054fdd1afbff73c4352ca0cece6a2de"
+    },
+    {
+      "bytes": 147,
+      "path": "scripts/requirements_openusd_validation.txt",
+      "sha256": "d6a7fa6b3d7b91b4dc03bb9d6074f10bc6c5afeda6a73092e3470f42ca6e784d"
+    },
+    {
+      "bytes": 24950,
+      "path": "scripts/validate_dranmar_dynamic_abdominal_patient.py",
+      "sha256": "e07008fc6d42539bfe255ed64af0aefd46221f81bcb914d908b6aa4b8a8a3891"
+    },
+    {
+      "bytes": 5956,
+      "path": "scripts/validate_openusd_layers.py",
+      "sha256": "a556794fb0b7026adaf177e766e65716f5497d5e1bc5aed3635e7c7eb6e4bf95"
     }
   ],
-  "installed_overlay_entries_refreshed": 86,
+  "installed_overlay_entries_refreshed": 91,
   "installed_overlay_hash_contract": "sha256 of exact current repository file bytes",
   "intended_use": "simulation_training",
   "license": "Apache-2.0",
