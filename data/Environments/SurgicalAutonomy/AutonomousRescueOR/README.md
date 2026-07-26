@@ -17,7 +17,7 @@ reward.
 - complication detection and rescue-plan selection that cannot author an
   outcome;
 - transition-based rescue reward with no reward for waiting in a favorable
-  state.
+  state;
 - a contact-gated compression, hold, verification, and release expert that
   cannot advance on command intent alone;
 - synchronized robot, contact, vessel, vital-sign, and fluid-balance
@@ -38,6 +38,12 @@ Each completed recording writes the normal `.npz` evidence package plus a
 uses `state[i] -> Cartesian action[i+1] -> state[i+1]` because the workstation
 samples frame state after physics applies that frame's action. Patient effects
 are observations and rewards only; they never appear in the action contract.
+
+For seeded expert generation across visual and control perturbations:
+
+```bash
+./dr_anmar_rescue_il.sh collect 2361 30
+```
 
 Merge complete episodes and train the low-dimensional rescue policy:
 
