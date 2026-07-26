@@ -223,7 +223,7 @@ def make_franka_adaptive_seal_divide_robot_cfg(*, prim_path="/World/Robot", cart
     _check(cartridge_state,VALID_CARTRIDGE_STATES,"cartridge_state");_check(saline_state,VALID_SALINE_STATES,"saline_state");_check(collection_state,VALID_COLLECTION_STATES,"collection_state");_check(energy_state,VALID_ENERGY_STATES,"energy_state")
     import isaaclab.sim as sim_utils
     from isaaclab.actuators import ImplicitActuatorCfg
-    from isaaclab.utils import configclass
+    from isaaclab.utils.configclass import configclass
     from isaaclab.utils.assets import ISAAC_NUCLEUS_DIR
     from isaaclab_assets.robots.franka import FRANKA_PANDA_CFG
     @configclass

@@ -389,9 +389,9 @@
       "sha256": "c025dcfd81284d8d61059a5240fba582599f734360463f0413030f81491072de"
     },
     {
-      "bytes": 69468,
+      "bytes": 69480,
       "path": "source/extensions/orbit.surgical.assets/orbit/surgical/assets/safeplane_dissection_robot.py",
-      "sha256": "d84377cfdb3eff384666c26e9967344a62aecfe0e5aa90de6c07395728a4709c"
+      "sha256": "11d8cf536979d57554919db86d19391ff6bb91044a50234a9ffd0e7436c39925"
     },
     {
       "bytes": 8771,

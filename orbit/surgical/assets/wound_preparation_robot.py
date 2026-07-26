@@ -261,7 +261,7 @@ def make_franka_wound_preparation_robot_cfg(
     """Return the Isaac Lab Franka with its stock hand replaced by this tool."""
     import isaaclab.sim as sim_utils
     from isaaclab.actuators import ImplicitActuatorCfg
-    from isaaclab.utils import configclass
+    from isaaclab.utils.configclass import configclass
     from isaaclab.utils.assets import ISAAC_NUCLEUS_DIR
     from isaaclab_assets.robots.franka import FRANKA_PANDA_CFG
 

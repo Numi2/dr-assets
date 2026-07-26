@@ -243,9 +243,9 @@
       "sha256": "787c5acf526fe042379c1992e6b88813418568f748ebf2b3842be1370706d588"
     },
     {
-      "bytes": 2053,
+      "bytes": 2065,
       "path": "examples/franka_wound_preparation_scene.py",
-      "sha256": "a76739d594b3b4085335fbe33cf0b2d3ec805f8858cf3ba4e7081c8378f8df2a"
+      "sha256": "e2ba876c80402f6b711aa9bedb81d4c108635a48e78edd244a297e783261f954"
     },
     {
       "bytes": 10839,
@@ -268,9 +268,9 @@
       "sha256": "1b5807e67acb57d1d81defc52dfd551ec11683a92e938b5fa91bf5a2990756b1"
     },
     {
-      "bytes": 156970,
+      "bytes": 156994,
       "path": "scripts/generate_dranmar_wound_preparation_robot.py",
-      "sha256": "07fa89b72db0b733f1c18e97a1dfd516c64f769f2d5996273f43db0305841c57"
+      "sha256": "96a9216ff097352fb9c9a569539b5556f976adddfa6abc784696c00a09d8eca4"
     },
     {
       "bytes": 5747,
@@ -498,9 +498,9 @@
       "sha256": "f4f2e843c3aeaffa3646991cced6eaa28baa6f63f71568785abfa3a7efb39af4"
     },
     {
-      "bytes": 45934,
+      "bytes": 45946,
       "path": "source/extensions/orbit.surgical.assets/orbit/surgical/assets/wound_preparation_robot.py",
-      "sha256": "5121256dc9128fdff405cb48b1834084303e154321b67352f57928b07860bb23"
+      "sha256": "3b7054073fe724d35de960849458bacfc4e95183f04cc0d9179f158b9165fa80"
     },
     {
       "bytes": 5173,

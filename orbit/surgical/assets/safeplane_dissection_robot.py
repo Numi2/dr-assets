@@ -366,7 +366,7 @@ def make_franka_safeplane_dissection_robot_cfg(
     _check(energy_state, VALID_ENERGY_STATES, "energy_state")
     import isaaclab.sim as sim_utils
     from isaaclab.actuators import ImplicitActuatorCfg
-    from isaaclab.utils import configclass
+    from isaaclab.utils.configclass import configclass
     from isaaclab.utils.assets import ISAAC_NUCLEUS_DIR
     from isaaclab_assets.robots.franka import FRANKA_PANDA_CFG
 

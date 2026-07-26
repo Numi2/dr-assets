@@ -213,9 +213,9 @@
       "sha256": "950cf5c189d5cc936827444c4745d2f850d54c30bef4866e343b7d4f51803f99"
     },
     {
-      "bytes": 1279,
+      "bytes": 1291,
       "path": "examples/franka_atraumatic_exposure_scene.py",
-      "sha256": "3376daf619b7da2fcc542977655594797374333f1eb11edc954e091db4d43b75"
+      "sha256": "573b4ab3619082d79a4d3785b80e4e356e5e99f8857090dae511608be799c9b8"
     },
     {
       "bytes": 12553,
@@ -238,9 +238,9 @@
       "sha256": "5f5dec7d0600dcb0a54bfa7d83cc42d9387f5eb8243d41dbd77f0ad2ea2b1e5d"
     },
     {
-      "bytes": 125860,
+      "bytes": 125884,
       "path": "scripts/generate_dranmar_atraumatic_exposure_robot.py",
-      "sha256": "5dba5ab73a4172e0532dae73787fc138d1f7a4d1370e8721da986dc8a7471191"
+      "sha256": "d20b730787728906a71db05ec2899f5f37965e0b2e8bf33dcc742b2875e53b0c"
     },
     {
       "bytes": 6151,
@@ -428,9 +428,9 @@
       "sha256": "ae3f766da4060405a154428e181eb891d1ad5384275106000525e929e4dca14f"
     },
     {
-      "bytes": 43532,
+      "bytes": 43544,
       "path": "source/extensions/orbit.surgical.assets/orbit/surgical/assets/atraumatic_exposure_robot.py",
-      "sha256": "eb572a8ea27c3192da9ad2c8579ae79da60978e58784fc2d6a2d15fa75405fc7"
+      "sha256": "f659f69ee487b6e18b5e8e2e1d9fbab81e92756f0b2f03a534116bedfab0e94c"
     },
     {
       "bytes": 5404,

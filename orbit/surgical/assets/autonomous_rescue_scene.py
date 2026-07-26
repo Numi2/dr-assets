@@ -112,7 +112,7 @@ def autonomous_rescue_scene_cfg(
 
     try:
         from isaaclab.scene import InteractiveSceneCfg
-        from isaaclab.utils import configclass
+        from isaaclab.utils.configclass import configclass
     except (ImportError, ModuleNotFoundError) as error:
         raise RuntimeError(
             "Isaac Lab is required to compose the Autonomous Rescue OR scene"

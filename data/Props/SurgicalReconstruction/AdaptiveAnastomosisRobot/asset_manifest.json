@@ -229,9 +229,9 @@
       "sha256": "c1af8220156ccbf531f3d1ea2b40f5696afc83c02a5de8b29c4c6979fe20a4c2"
     },
     {
-      "bytes": 787,
+      "bytes": 799,
       "path": "examples/franka_adaptive_anastomosis_scene.py",
-      "sha256": "69fd7ba66024acbbf75346f4a432c6a8e2a9c79a4b7b4c3287bec6ffa54c583c"
+      "sha256": "281396e7b5857da5c34ddb6b940173058fe06c4834dd2b5786710be233acca8b"
     },
     {
       "bytes": 14490,
@@ -254,9 +254,9 @@
       "sha256": "f8032a11e448596589baeaa23f8b0c7b1e5b62f67844ffe4d6885d3a2c72cde5"
     },
     {
-      "bytes": 149562,
+      "bytes": 149586,
       "path": "scripts/generate_dranmar_adaptive_anastomosis_robot.py",
-      "sha256": "4e418bae83eda65782b92a1bc150945e04c2d7c66e9460e2a7435bbea355374c"
+      "sha256": "eefd4cb6e355f181d040d8ab257713cd17d99051e262ca21b02bb367044b7b79"
     },
     {
       "bytes": 5731,
@@ -274,9 +274,9 @@
       "sha256": "b160e6962f8088327dadcb8a8af93a92de6398deae9832d072800f5ff8af6103"
     },
     {
-      "bytes": 58072,
+      "bytes": 58084,
       "path": "source/extensions/orbit.surgical.assets/orbit/surgical/assets/adaptive_anastomosis_robot.py",
-      "sha256": "96329de1f8fdd784493a35d5b9a387b3e342473816a19c2eb7d21993b6353247"
+      "sha256": "950432f66ccc9c38f47665d982cf88569f26afa3c162dd7b9a59f32b2d57d979"
     },
     {
       "bytes": 6595,

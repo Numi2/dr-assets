@@ -476,7 +476,7 @@ def make_franka_perfusion_viability_robot_cfg(
     _check(sensor_state, VALID_SENSOR_STATES, "sensor_state")
     import isaaclab.sim as sim_utils
     from isaaclab.actuators import ImplicitActuatorCfg
-    from isaaclab.utils import configclass
+    from isaaclab.utils.configclass import configclass
     from isaaclab.utils.assets import ISAAC_NUCLEUS_DIR
     from isaaclab_assets.robots.franka import FRANKA_PANDA_CFG
 

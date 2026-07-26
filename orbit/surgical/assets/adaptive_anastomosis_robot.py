@@ -227,7 +227,7 @@ def make_franka_adaptive_anastomosis_robot_cfg(
     _check(collection_state,VALID_COLLECTION_STATES,"collection_state")
     import isaaclab.sim as sim_utils
     from isaaclab.actuators import ImplicitActuatorCfg
-    from isaaclab.utils import configclass
+    from isaaclab.utils.configclass import configclass
     from isaaclab.utils.assets import ISAAC_NUCLEUS_DIR
     from isaaclab_assets.robots.franka import FRANKA_PANDA_CFG
     @configclass

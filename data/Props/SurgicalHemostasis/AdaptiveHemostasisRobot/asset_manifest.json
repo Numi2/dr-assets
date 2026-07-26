@@ -237,9 +237,9 @@
       "sha256": "b178577b0079d59a6c5bd9fca52d802c09b9e57e70cf76665551830ee68072ad"
     },
     {
-      "bytes": 116500,
+      "bytes": 116512,
       "path": "scripts/generate_dranmar_adaptive_hemostasis_robot.py",
-      "sha256": "690b7d9bc6a558bebe98eb12a5ec787387ada45c938a0bb8a386f74aa13f90d2"
+      "sha256": "d6f83df5a03752e42901ec77531b4aa70b680d44f71a36ca0b3b8b67cf86ff99"
     },
     {
       "bytes": 5661,
@@ -257,9 +257,9 @@
       "sha256": "9e5037882451f9d2019123c76d1641814c4d8c1b397a17a72cb0dc92542c4f04"
     },
     {
-      "bytes": 46757,
+      "bytes": 46769,
       "path": "source/extensions/orbit.surgical.assets/orbit/surgical/assets/adaptive_hemostasis_robot.py",
-      "sha256": "7ce8447082abe11c408d66921e177f9a88bfea59efb78b140a86bf0ebec5b599"
+      "sha256": "52709f9f9ee22b292b737f6bc0a053845c310030389c1763743dae4a9e5021e1"
     },
     {
       "bytes": 6527,
