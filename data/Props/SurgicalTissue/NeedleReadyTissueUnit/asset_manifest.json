@@ -1,0 +1,66 @@
+{
+  "schema": "dr.anmar.sim-ready-asset-manifest.v2",
+  "asset_id": "dranmar-needle-ready-tissue-v2",
+  "asset_name": "DrAnmar Needle-Ready Tissue Unit",
+  "asset_version": "2.0.0",
+  "primary_usd": "needle_ready_tissue_unit.usda",
+  "default_lod": "contact",
+  "dependency_complete_directory": true,
+  "generated_geometry": true,
+  "members": {
+    "LICENSE.txt": {
+      "bytes": 569,
+      "sha256": "ae1ce51674ad38ce87569cc28bbce44eff62d60a375b6f3cb12dd9095f901ee8"
+    },
+    "NOTICE.txt": {
+      "bytes": 806,
+      "sha256": "cf786c81bb4b9996b680eacb532457e75437e44234728235d6d36383489cb62c"
+    },
+    "README.md": {
+      "bytes": 1366,
+      "sha256": "5d22035c7b3fa5b5c8cb415e3a4cb63e4896578d72a355a4d0e6cfe702328901"
+    },
+    "geometry_contract.json": {
+      "bytes": 8233,
+      "sha256": "6fcd4ded8193d037ed385522e4b5198a41f5f6d040c3c8b258655b1531e4c721"
+    },
+    "geometry_report.json": {
+      "bytes": 4821,
+      "sha256": "30492295a578eb7311ea905e262f3d49d6cbf03fe47d755159271c97bfeaf0ea"
+    },
+    "interaction_frames.json": {
+      "bytes": 586,
+      "sha256": "17003bdbbef0644e9d1e60defd1b80c51dd451419b3b8ab6a2e3c83a4235255c"
+    },
+    "lod_mapping.json": {
+      "bytes": 51599,
+      "sha256": "aa22f5f45de8812db05899d26188ac0fef7d472619e83798fcf4b58cc5345cb7"
+    },
+    "needle_ready_tissue_contact.usda": {
+      "bytes": 1408882,
+      "sha256": "c92285616d7015d86ed229f16dadc66b3420ca8503e196ae6e380575e5b991f2"
+    },
+    "needle_ready_tissue_training.usda": {
+      "bytes": 293551,
+      "sha256": "cd75a5b29e5d59b3f68b206b819d4d39654b2ebdaf9b0addc06edc3f51bc429c"
+    },
+    "needle_ready_tissue_unit.usda": {
+      "bytes": 1420,
+      "sha256": "cd4478ea4538f63fb771428ec425e416063a124edfa79ecce3a4302e7fde945e"
+    },
+    "needle_ready_tissue_validation.usda": {
+      "bytes": 10577747,
+      "sha256": "d9e3dc508702c04bb9283a17ef9e14c81a3168b89743335b943efb6a97dc2643"
+    },
+    "physics_profile.json": {
+      "bytes": 1452,
+      "sha256": "e55e0262a3f6402ab6089ca8b76c0a64798db8bd5c8aeaedcf9e59bc3a3aeb15"
+    },
+    "qualification_contract.json": {
+      "bytes": 1983,
+      "sha256": "dacaf333198a94b53ebe72ab6abe72ec987e4b984df8154be92a6934c7672e4a"
+    }
+  },
+  "license": "Apache-2.0",
+  "clinical_validation": false
+}

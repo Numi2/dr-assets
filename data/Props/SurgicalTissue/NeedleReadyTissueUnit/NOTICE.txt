@@ -1,0 +1,16 @@
+DrAnmar Needle-Ready Tissue Unit 2.0.0
+
+The geometry, topology, semantic sets, material seeds, OpenUSD authoring code,
+and generated assets in this directory were independently authored by the
+Dr.Anmar project. No third-party patient mesh, tissue mesh, or texture is
+included.
+
+The runtime architecture is designed for NVIDIA Isaac Lab (BSD-3-Clause),
+NVIDIA Newton (Apache-2.0), and NVIDIA Warp (Apache-2.0). NVIDIA
+SoftMimicGen (Apache-2.0) was reviewed for surgical deformable-task
+organization; no SoftMimicGen code or geometry was copied. CRESSim-MPM
+(BSD-3-Clause) is named only as a future topology-capable research backend
+candidate; no CRESSim-MPM code is included here.
+
+This is a research simulation asset. It is not clinically validated and is not
+for patient care or clinical decision-making.

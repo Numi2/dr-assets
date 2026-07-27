@@ -1,0 +1,12 @@
+{
+  "schema": "dr.anmar.interaction-frames.v2",
+  "asset_id": "dranmar-needle-ready-tissue-v2",
+  "root_prim": "/DrAnmarNeedleReadyTissue",
+  "frames": {
+    "tissue_center": "/DrAnmarNeedleReadyTissue/Frames/TissueCenter",
+    "wound_center": "/DrAnmarNeedleReadyTissue/Frames/WoundCenter",
+    "left_safe_bite_seed": "/DrAnmarNeedleReadyTissue/Frames/LeftSafeBiteSeed",
+    "right_safe_bite_seed": "/DrAnmarNeedleReadyTissue/Frames/RightSafeBiteSeed"
+  },
+  "note": "Safe-bite seed frames are deterministic curriculum anchors, not clinical recommendations or fixed policy targets."
+}

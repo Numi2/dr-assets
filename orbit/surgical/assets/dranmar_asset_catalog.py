@@ -29,7 +29,7 @@ from typing import Final, Iterable
 
 
 CATALOG_SCHEMA: Final = "dr.anmar.sim-ready-asset-catalog.v1"
-CATALOG_VERSION: Final = "0.7.2"
+CATALOG_VERSION: Final = "0.8.0"
 CATALOG_ROOT_ENV: Final = "DRANMAR_ASSET_DATA_ROOT"
 CATALOG_CACHE_ENV: Final = "DRANMAR_ASSET_CACHE_DIR"
 I4H_REFERENCE_RELEASE: Final = "v0.7.0"
@@ -71,6 +71,15 @@ class DrAnmarAssetDescriptor:
 
 
 DRANMAR_SIM_READY_ASSETS: Final[dict[str, DrAnmarAssetDescriptor]] = {
+    "needle_ready_tissue": DrAnmarAssetDescriptor(
+        "dranmar-needle-ready-tissue-v2",
+        "Props/SurgicalTissue/NeedleReadyTissueUnit",
+        "needle_ready_tissue_unit.usda",
+        None,
+        None,
+        interaction_frames="interaction_frames.json",
+        physics_profile="physics_profile.json",
+    ),
     "wound_preparation": DrAnmarAssetDescriptor(
         "dranmar-wound-preparation-robot-v1",
         "Props/SurgicalPreparation/WoundPreparationRobot",

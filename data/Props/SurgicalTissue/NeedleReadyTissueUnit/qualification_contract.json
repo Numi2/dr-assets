@@ -1,0 +1,46 @@
+{
+  "schema": "dr.anmar.needle-ready-tissue-qualification-contract.v1",
+  "asset_id": "dranmar-needle-ready-tissue-v2",
+  "version": "2.0.0",
+  "policy": "fail_closed",
+  "required_evidence": {
+    "static_geometry": [
+      "contract and generated count agreement",
+      "positive tetrahedral volumes",
+      "two watertight components",
+      "surface partition completeness",
+      "exact layer conformity",
+      "semantic set completeness",
+      "exact nested LOD mapping",
+      "OpenUSD parse and reference closure",
+      "deterministic hashes"
+    ],
+    "native_newton_vbd": [
+      "finite state for fixture-retraction-release trajectory",
+      "zero inverted tetrahedra",
+      "global volume error reported",
+      "physics step p50 and p95 reported",
+      "final state hash recorded",
+      "software and GPU identity recorded"
+    ],
+    "isaac_lab": [
+      "UsdFileCfg spawn from canonical catalog path",
+      "DeformableObject discovery of exactly one TetMesh",
+      "coupled rigid-soft configuration import and reset smoke"
+    ],
+    "performance": [
+      "training, contact and validation LOD measurements are separate",
+      "environment count is never inferred from rigid-only capacity",
+      "2400-environment policy training requires an explicit measured memory fit"
+    ]
+  },
+  "promotion_blockers": {
+    "puncture": "no qualified topology change or persistent tract",
+    "thread_passage": "no qualified tissue-thread topology coupling",
+    "force_fidelity": "no synchronized physical force-displacement dataset",
+    "damage": "no pullout, cyclic tear or cheese-wire calibration",
+    "clinical_use": "no independent validation for an intended clinical use"
+  },
+  "reward_boundary": "Geometry labels and intermediate states may support curriculum and diagnostics, but task success must be based on externally verifiable physical outcomes and must not treat contact, approach, or height alone as completion.",
+  "clinical_validation": false
+}

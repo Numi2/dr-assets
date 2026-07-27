@@ -1,0 +1,50 @@
+#usda 1.0
+(
+    defaultPrim = "DrAnmarNeedleReadyTissue"
+    doc = "DrAnmar Needle-Ready Tissue Unit: geometry-LOD composition root; not clinically validated."
+    kilogramsPerUnit = 1
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "DrAnmarNeedleReadyTissue" (
+    customData = {
+        string drAnmarAssetId = "dranmar-needle-ready-tissue-v2"
+        string drAnmarAssetName = "DrAnmar Needle-Ready Tissue Unit"
+        string drAnmarAssetVersion = "2.0.0"
+        bool drAnmarClinicalValidation = false
+        string drAnmarStatus = "research_geometry_qualified_separately_from_physics_and_clinical_use"
+    }
+    variants = {
+        string geometryLod = "contact"
+    }
+    prepend variantSets = "geometryLod"
+)
+{
+    def Xform "Geometry"
+    {
+    }
+    variantSet "geometryLod" = {
+        "training" {
+            over "Geometry" (
+                prepend references = @./needle_ready_tissue_training.usda@</DrAnmarNeedleReadyTissue>
+            )
+            {
+            }
+        }
+        "contact" {
+            over "Geometry" (
+                prepend references = @./needle_ready_tissue_contact.usda@</DrAnmarNeedleReadyTissue>
+            )
+            {
+            }
+        }
+        "validation" {
+            over "Geometry" (
+                prepend references = @./needle_ready_tissue_validation.usda@</DrAnmarNeedleReadyTissue>
+            )
+            {
+            }
+        }
+    }
+}
