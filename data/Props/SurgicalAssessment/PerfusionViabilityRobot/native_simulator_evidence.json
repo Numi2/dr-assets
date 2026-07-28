@@ -2,7 +2,9 @@
   "schema": "dranmar.perfusion-viability-native-simulator-evidence.v1",
   "asset": "dranmar-perfusion-viability-robot-v1",
   "version": "0.1.1",
-  "status": "pass",
+  "status": "historical_fixture_execution_record",
+  "current_production_scene_evidence": false,
+  "native_multimodal_scene_bridge_included": false,
   "recorded_date": "2026-07-25",
   "ownership": "DrAnmar",
   "runtime_host": "numi",
@@ -17,7 +19,7 @@
     "device": "cuda:0",
     "nvidia_eula_accepted_by_user": true
   },
-  "static_gates": {
+  "historical_static_checks": {
     "focused_controller_tests": {
       "status": "pass",
       "tests": 25,
@@ -25,7 +27,7 @@
       "scenario_label_invariance": true,
       "latent_flow_field_invariance": true,
       "sensor_depletion_fault_and_registration_abstention": true,
-      "continuous_evidence_based_intervention": true,
+      "continuous_authored_fixture_input_intervention": true,
       "probe_contact_overload_abort": true
     },
     "strict_openusd_parse": {
@@ -149,17 +151,19 @@
       }
     }
   ],
-  "closed_loop_evidence": {
-    "arterial_occlusion_viability_gain": 0.27314355631085574,
-    "venous_congestion_viability_gain": 0.23819023007318396,
-    "anastomotic_stenosis_viability_gain": 0.09214755117731654,
-    "branch_leak_viability_gain": 0.006637273952736722,
-    "retraction_ischemia_viability_gain": 0.057510482050687095,
-    "dressing_compression_viability_gain": 0.03966510418167668,
-    "all_six_blind_diagnoses_correct": true,
-    "all_six_intervention_rescans_improved": true,
-    "intervention_evidence_source": "deterministic_research_fixture",
-    "evidence_free_completion_rejected": true
+  "synthetic_fixture_closed_loop_record": {
+    "arterial_occlusion_relative_index_gain": 0.27314355631085574,
+    "venous_congestion_relative_index_gain": 0.23819023007318396,
+    "anastomotic_stenosis_relative_index_gain": 0.09214755117731654,
+    "branch_leak_relative_index_gain": 0.006637273952736722,
+    "retraction_ischemia_relative_index_gain": 0.057510482050687095,
+    "dressing_compression_relative_index_gain": 0.03966510418167668,
+    "fixture_classifications_matching_authored_labels": 6,
+    "fixture_intervention_rescans_with_positive_relative_index_change": 6,
+    "intervention_fixture_input_source": "deterministic_research_fixture",
+    "evidence_free_fixture_progress_rejected": true,
+    "usable_as_real_scan_or_intervention_evidence": false,
+    "usable_as_viability_patency_recovery_or_completion_evidence": false
   },
   "bench_compositor": {
     "status": "pass",
@@ -198,6 +202,6 @@
     "medical_device": false,
     "patient_care_approved": false,
     "physical_calibration": false,
-    "claims": "Native-simulator evidence for the recorded stack only; rendered images establish camera registration and acquisition in that run, not calibrated modality physics. Real-world optical, thermal, Doppler, ultrasound, tracer, vascular-flow, viability, interventional, payload, contact, diagnostic, and clinical evidence are not established."
+    "claims": "Historical native-simulator fixture evidence for the recorded stack only; rendered images establish camera registration and acquisition in that run, not calibrated modality physics or current production evidence. The run used caller-authored conditions and a deterministic intervention fixture. Real-world optical, thermal, Doppler, ultrasound, tracer, vascular-flow, viability, patency, interventional, recovery, completion, payload, contact, diagnostic, and clinical evidence are not established."
   }
 }

@@ -1,10 +1,12 @@
 {
-  "schema": "dr.anmar.asset-manifest.v1",
+  "schema": "dr.anmar.asset-manifest.v2",
   "id": "dranmar-oncosurgery-cell-v1",
   "name": "DrAnmar OncoSurgery Cell",
   "version": "0.2.0",
   "catalog_subpath": "Props/SurgicalOncology/OncoSurgeryCell",
-  "status": "simulation_training_workcell_with_recorded_native_volume_stability_evidence",
+  "status": "asset_and_task_proxy_with_non_contact_volume_stability_evidence",
+  "outcome_evidence_status": "unavailable_no_oncology_scene_evidence_bridge",
+  "patient_outcome_authoritative": false,
   "clinical_validation": false,
   "ownership": "DrAnmar",
   "license": "Apache-2.0",
@@ -48,7 +50,9 @@
   "resection_bond_count": 96,
   "native_tissue_route": {
     "continuous_mechanics": "dynamic_patient_explicit_tetmesh_gpu_volume_deformable",
-    "irreversible_topology": "registered_discrete_resection_graph",
+    "required_irreversible_topology": "registered_discrete_resection_graph",
+    "irreversible_topology_bound_to_runtime": false,
+    "shared_patient_ledgers_bound_to_runtime": false,
     "maximum_active_deformable_components": 1,
     "arbitrary_runtime_mesh_cutting": false,
     "constitutive_validation": false

@@ -15,6 +15,10 @@ Reference: https://github.com/med-air/SurRoL
 
 Jaw posture and actuator values come only from ``config/psm_foundation.json``.
 Task files must not carry object- or room-specific jaw tuning.
+
+The gains, effort limits, velocity limits, gravity setting, and jaw apertures are
+simulation-control defaults. They are not identified dVRK hardware dynamics,
+manufacturer calibration, force-control limits, or patient-use evidence.
 """
 
 import json

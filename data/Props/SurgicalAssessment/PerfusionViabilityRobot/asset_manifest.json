@@ -2,6 +2,11 @@
   "asset_id": "dranmar-perfusion-viability-robot-v1",
   "catalog_subpath": "Props/SurgicalAssessment/PerfusionViabilityRobot",
   "clinical_validation": false,
+  "native_multimodal_scene_bridge_included": false,
+  "patient_care_approved": false,
+  "production_evidence_contract": "environment-issued causally bound native provider receipt plus prim-bound SceneEvidenceEnvelope, admitted action/target, and exact live patient identity/reset/mutation revision",
+  "current_production_behavior": "abstain_with_zero_confidence_and_completion_false",
+  "synthetic_fixture_outputs_are_runtime_evidence": false,
   "licence": "Apache-2.0",
   "primary_assets": [
     "dranmar_perfusion_viability_tool_standalone.usda",

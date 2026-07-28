@@ -16,6 +16,18 @@ and Isaac Lab.
 - `dranmar_tissue_seal_band.usda` — physical dual-surface stump bond carrier.
 - `dranmar_division_blade_cartridge.usda` — replaceable fresh/spent blade cartridge.
 
+## Evidence status
+
+Compression, conditioning, seal-band mechanics, stump flow, blade state, and
+bridge release are accepted only through the exact
+`dranmar.adaptive-seal-divide.scene-evidence@3.0.0` contract. The native Isaac
+provider for that contract is not implemented, so task completion and physical
+effectiveness remain unverified.
+
 ## Important boundary
 
-This package is not clinically validated, is not a medical device, and is not approved for patient care. Energy, compression, seal strength, tissue response, leakage, and cutting parameters are provisional research values.
+Conditioning is not tissue-fusion or seal-maturity evidence, cohesive
+attachment is not clinical retention, bridge removal is not continuous
+cutting, and low simulated leak is not burst-pressure qualification. This
+package is not clinically validated, is not a medical device, and is not
+approved for patient care.

@@ -1,4 +1,5 @@
 {
+  "clinical_hemostasis_verified": false,
   "clinical_validation": false,
   "failure_modes": [
     "source_not_localized",
@@ -12,6 +13,7 @@
     "vessel_rupture_proxy",
     "suction_overcapture"
   ],
+  "native_scene_evidence_provider": "not_implemented",
   "phases": [
     "inspect",
     "clear",
@@ -25,17 +27,25 @@
     "complete",
     "abort"
   ],
-  "schema": "dranmar.adaptive-hemostasis-task.v1",
-  "success_metrics": [
-    "residual_flow_ml_min",
-    "time_to_temporary_control_s",
-    "time_to_durable_control_s",
-    "clip_retained",
-    "patch_bond_fraction",
-    "compression_force_n",
+  "provisional_task_signals": [
+    "scene_measured_residual_flow_ml_min",
+    "scene_measured_compression_force_n",
+    "mechanically_qualified_clip",
+    "mechanically_qualified_patch",
+    "measured_clip_load_capacity_and_slip",
+    "vessel_mass_balance_residual_m3_s",
     "collected_blood_ml",
     "spilled_blood_ml",
-    "pressure_challenge_pass",
-    "vessel_damage_proxy"
-  ]
+    "provisional_pressure_challenge_result"
+  ],
+  "required_scene_evidence": [
+    "exact_vessel_observation",
+    "exact_bilateral_compression_contacts",
+    "exact_clip_mechanics_and_attachments",
+    "exact_patch_cohesive_interface_and_attachments",
+    "raw_native_record_identity",
+    "episode_environment_topology_step_and_time"
+  ],
+  "schema": "dranmar.adaptive-hemostasis-task.v2",
+  "simulator_task_completion_verified": false
 }

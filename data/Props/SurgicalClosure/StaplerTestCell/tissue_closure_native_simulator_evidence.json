@@ -1,5 +1,6 @@
 {
-  "schema": "dr.anmar.stapler-tissue-closure-native-simulator-evidence.v2",
+  "schema": "dr.anmar.stapler-tissue-closure-native-simulator-evidence.v3",
+  "status": "retention_claim_retracted_source_review_2026-07-27",
   "recorded_at": "2026-07-24T23:37:31Z",
   "hardware": "NVIDIA GeForce RTX 4090",
   "runtime": "Isaac Sim 5.1 / Isaac Lab 2.3.2",
@@ -30,16 +31,16 @@
     "gap_at_press_start_mm": 0.8,
     "trigger_at_press_start_deg": 0.0,
     "outer_fixture_anchor_nodes": 540,
-    "nodes_retained_per_staple": 4
+    "nodes_with_prescribed_kinematic_targets_per_staple": 4
   },
   "threshold_evidence": {
     "deployment_threshold_deg": 24.0,
     "actual_trigger_at_first_deployment_deg": 24.41,
     "deployment_count_before_threshold": 0,
     "deployment_count_after_threshold": 1,
-    "retained_attachments_after_threshold": 1,
-    "retained_nodes_after_threshold": 4,
-    "retention_verified_after_threshold": true
+    "retained_attachments_after_threshold": 0,
+    "nodes_with_prescribed_kinematic_targets_after_threshold": 4,
+    "retention_verified_after_threshold": false
   },
   "partial_stroke": {
     "target_trigger_deg": 20.0,
@@ -50,7 +51,9 @@
     "passes": 1
   },
   "full_closure": {
-    "closure_complete": true,
+    "placement_sequence_complete": true,
+    "prescribed_closure_pose_complete": true,
+    "closure_complete": false,
     "closed_station_indices": [
       1,
       2,
@@ -63,11 +66,12 @@
     "closure_progress_percent": 100.0,
     "deployment_count": 7,
     "magazine_remaining": 28,
-    "retained_attachment_count": 7,
-    "retained_node_count": 28,
-    "retained_verified_count": 7,
-    "retention_state": "retained_complete",
-    "retained_station_gaps_mm": {
+    "retained_attachment_count": 0,
+    "retained_node_count": 0,
+    "retained_verified_count": 0,
+    "retention_state": "unverified_no_load_bearing_attachment",
+    "prescribed_kinematic_node_count": 28,
+    "prescribed_station_gaps_mm": {
       "1": 0.8,
       "2": 0.8,
       "3": 0.8,
@@ -79,7 +83,7 @@
     "station_spacing_mm": 6.0,
     "max_spacing_error_mm": 0.0,
     "tissue_max_displacement_mm": 1.8893,
-    "staple_representation": "formed_staple_rigid_fem_retainer",
+    "staple_representation": "formed_staple_kinematic_visual_with_prescribed_tissue_pose",
     "first_staple_prim_path": "/World/envs/env_0/StaplerClosurePlacements/Staple_01"
   },
   "camera_evidence": {
@@ -87,7 +91,7 @@
     "frame_width_px": 960,
     "frame_height_px": 640,
     "jpeg_bytes": 41834,
-    "visual_review": "seven metal staples visibly bridge the approximated wound while the tissue remains in the fixture"
+    "visual_review": "seven metal staple visuals bridge a prescribed approximated wound pose while the tissue remains kinematically constrained"
   },
   "reset": {
     "verified": true,
@@ -98,5 +102,5 @@
     "retained_attachment_count": 0,
     "restored_gap_mm": 3.7818
   },
-  "evidence_boundary": "simulated FEM approximation and retained rigid-staple attachments only; real-world staple-leg puncture, metal plasticity, calibrated pull-out strength, clinical, sterility, and patient-use evidence are not established"
+  "evidence_boundary": "This record establishes a native FEM scene, trigger sequencing, visual staple placement, and compliance with prescribed nodal closure targets only. It does not establish any staple-tissue attachment or load-bearing retention: no PhysxPhysicsAttachment, staple-leg puncture, forming, pullout, or post-release force path was implemented. Real-world, clinical, sterility, and patient-use evidence are not established."
 }

@@ -1328,9 +1328,12 @@
     "disposal"
   ],
   "runtime_qualification": {
-    "isaac_sim_5_1_isaac_lab_2_3_2_cuda": "not_run",
+    "isaac_sim_5_1_isaac_lab_2_3_2_cuda": "limited_test_cell_mechanism_and_prescribed_closure_evidence_recorded",
     "isaac_sim_6_0_1_isaac_lab_3_0_beta2_cuda": "not_run",
-    "owner": "integrating_user"
+    "owner": "integrating_user",
+    "evidence": "../StaplerTestCell/native_simulator_evidence.json",
+    "tissue_closure_evidence": "../StaplerTestCell/tissue_closure_native_simulator_evidence.json",
+    "boundary": "No standalone physical staple formation, tissue puncture, load-bearing retention, pullout, or closure-strength qualification is recorded."
   },
   "schema_version": 2,
   "staple_geometry_reference": {

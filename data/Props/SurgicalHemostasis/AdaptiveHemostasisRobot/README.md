@@ -1,6 +1,9 @@
 # DrAnmar Adaptive Hemostasis Robot v0.1.0
 
-DrAnmar-owned OpenUSD research system for robotic field clearing, temporary vascular compression, physical clip retention, hemostatic patch reinforcement, and post-seal leak verification. It integrates with NVIDIA Isaac Lab and Isaac Sim while remaining provider-independent at the asset-contract layer.
+DrAnmar-owned OpenUSD research system for robotic field clearing, temporary
+vascular compression, clip and patch mechanics research, and provisional
+residual-flow observation. It integrates with NVIDIA Isaac Lab and Isaac Sim
+while remaining provider-independent at the asset-contract layer.
 
 ## Catalog path
 
@@ -21,4 +24,8 @@ DrAnmar-owned OpenUSD research system for robotic field clearing, temporary vasc
 
 `inspect → clear → compress → temporary control check → clip → release compression → patch → pressure challenge → verify → complete or abort`
 
-All geometry, mechanics, flow, retention, bond, pressure, and damage values are provisional research parameters. This asset is not clinically validated and is not approved for patient care.
+Production control now requires exact vessel, compression, clip, cohesive
+patch, attachment, raw-record, and clock evidence. The native provider is not
+implemented, so no current runtime record qualifies retention, seal, durable
+control, or task completion. All parameters are provisional. This asset is not
+clinically validated and is not approved for patient care.

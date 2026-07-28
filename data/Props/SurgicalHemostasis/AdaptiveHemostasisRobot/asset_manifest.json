@@ -1,5 +1,7 @@
 {
   "asset": "dranmar-adaptive-hemostasis-robot-v1",
+  "integrity_status": "stale_after_source_only_realism_hardening_not_release_qualified",
+  "stale_reason": "reviewed scene-evidence source and contracts changed; deleted caller-authored diagnostic and tests are intentionally absent; hashes were not regenerated because no execution was authorized",
   "files": [
     {
       "bytes": 61,
@@ -217,11 +219,6 @@
       "sha256": "8a6ff84dca81b69feca1c3ad4c2d2398f301f771e146c59a043f2233cedc95f9"
     },
     {
-      "bytes": 13717,
-      "path": "examples/validate_adaptive_hemostasis_runtime.py",
-      "sha256": "14bbdbdbd3273a2cb7495d927170e848a56b74eee1b637b15d66710e34a17899"
-    },
-    {
       "bytes": 1564,
       "path": "physics_next/surgical-hemostasis/dranmar-adaptive-hemostasis-v1.json",
       "sha256": "dcebb79d4d3f8c175237f7ff0ba53cf4e526dca07d0850398192c6da3fe724ab"
@@ -260,11 +257,6 @@
       "bytes": 46769,
       "path": "source/extensions/orbit.surgical.assets/orbit/surgical/assets/adaptive_hemostasis_robot.py",
       "sha256": "52709f9f9ee22b292b737f6bc0a053845c310030389c1763743dae4a9e5021e1"
-    },
-    {
-      "bytes": 6527,
-      "path": "tests/test_adaptive_hemostasis_robot.py",
-      "sha256": "a86e789a0aadafde12181d71fc9bc6949b6b438b586fc2716abb0bbaed0724a7"
     }
   ],
   "installed_overlay_entries_refreshed": 50,

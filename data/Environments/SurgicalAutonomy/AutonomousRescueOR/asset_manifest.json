@@ -39,11 +39,11 @@
     "conserved_blood_loss",
     "shared_dynamic_patient_fluid_balance_and_vital_signs",
     "contact_overload_damage",
-    "contact_owned_transition_reward",
+    "zero_policy_reward_pending_action_bound_complete_evidence",
     "scene_state_derived_complication_detection",
     "interruptible_priority_rescue_planning"
   ],
-  "runtime_supported_when_scene_observed": [
+  "model_paths_not_integrated_as_public_exact_runtime_evidence": [
     "retained_attachment_derived_clip_occlusion",
     "contact_point_and_dwell_derived_patch_seal",
     "measured_upstream_pressure_challenge_residual_flow_verification",
@@ -64,7 +64,7 @@
     "patient_specific_physiology"
   ],
   "parameter_status": "provisional_engineering_seeds",
-  "software_status": "repository_runtime_implemented",
+  "software_status": "source_contract_current_unexecuted_and_native_provider_missing",
   "native_simulator_evidence": "not_recorded_for_v0.4.0",
   "real_world_evidence": "not_established",
   "clinical_validation": false

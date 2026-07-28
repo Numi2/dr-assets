@@ -590,6 +590,9 @@
     }
   ],
   "asset": "dranmar-safeplane-tissue-demo-v1",
+  "clearance_basis": "static_authored_bridge_xy_to_one_authored_midpoint_per_structure_not_live_scene_or_structure_surface_distance",
+  "outcome_evidence_status": "unavailable_no_safeplane_scene_evidence_bridge",
+  "patient_outcome_authoritative": false,
   "protected_structures": {
     "duct": {
       "centerline_m": [
@@ -620,7 +623,7 @@
         ]
       ],
       "nominal_radius_m": 0.0026,
-      "safety_clearance_m": {
+      "centerline_distance_threshold_proxy_m": {
         "blunt": 0.0025,
         "energy": 0.007,
         "hydro": 0.003,
@@ -656,7 +659,7 @@
         ]
       ],
       "nominal_radius_m": 0.0021,
-      "safety_clearance_m": {
+      "centerline_distance_threshold_proxy_m": {
         "blunt": 0.0025,
         "energy": 0.007,
         "hydro": 0.003,
@@ -692,7 +695,7 @@
         ]
       ],
       "nominal_radius_m": 0.0031,
-      "safety_clearance_m": {
+      "centerline_distance_threshold_proxy_m": {
         "blunt": 0.0025,
         "energy": 0.007,
         "hydro": 0.003,
@@ -701,12 +704,14 @@
     }
   },
   "safe_plane": {
-    "completion_rule": "all_target_bridge_continuity_joints_released_and_all_protected_structures_intact",
+    "proposed_completion_rule": "requires_scene_evidenced_target_bridge_disconnects_and_shared_mechanics_evidence_that_all_protected_structures_remain_intact",
     "reference_z_m": 0.025,
     "superficial_surface_path": "Anatomy/SuperficialFlap",
     "target_bed_path": "Anatomy/TargetBed",
     "target_bridge_count": 28
   },
-  "schema": "dranmar.safeplane-dissection-topology.v1",
+  "schema": "dranmar.safeplane-dissection-topology.v2",
+  "threshold_qualification": "three_category_level_private_task_proxy_seed_sets_not_measured_cohesive_failure_hydro_or_thermal_parameters",
+  "topology_kind": "static_authored_proxy_table_not_live_scene_graph_or_topology_revision",
   "units": "metres"
 }

@@ -18,6 +18,11 @@ from typing import Any, Iterable, Mapping, Sequence
 import math
 import random
 
+from .wound_preparation_scene_evidence import (
+    WoundPreparationEvidenceCursor,
+    WoundPreparationSceneEvidence,
+)
+
 CATALOG_SUBPATH = "Props/SurgicalPreparation/WoundPreparationRobot"
 ASSET_DATA_ROOT = Path(__file__).resolve().parents[3] / "data"
 ROOT = ASSET_DATA_ROOT / CATALOG_SUBPATH
@@ -866,12 +871,17 @@ class DebrisBond:
     threshold_j: float
     accumulated_work_j: float = 0.0
     released: bool = False
+    released_reason: str | None = None
 
 
 @dataclass
 class DebridementReleaseController:
-    """Release attached debris after cumulative brush/curette contact work."""
+    """Release debris only from registered post-physics dissipative work."""
+
     bonds: dict[str, DebrisBond] = field(default_factory=dict)
+    evidence_cursor: WoundPreparationEvidenceCursor = field(
+        default_factory=WoundPreparationEvidenceCursor
+    )
 
     def register_demo(self, attachments: Mapping[str, str], *, stage=None) -> None:
         stage = _current_stage(stage)
@@ -887,27 +897,77 @@ class DebridementReleaseController:
             )
             if threshold <= 0.0:
                 raise ValueError("adhesion work threshold must be greater than zero")
+            if debris_path in self.bonds:
+                raise ValueError(f"Debris bond {debris_path!r} is already registered")
             self.bonds[debris_path] = DebrisBond(debris_path, attachment_path, threshold)
 
     def update(
         self, contact_forces_n: Mapping[str, float], tangential_speeds_m_s: Mapping[str, float],
         *, dt: float, stage=None,
     ) -> list[str]:
+        raise RuntimeError(
+            "caller-authored force/speed dictionaries cannot release debris; "
+            "use update_from_scene(WoundPreparationSceneEvidence)"
+        )
+
+    def update_from_scene(
+        self,
+        evidence: WoundPreparationSceneEvidence,
+        *,
+        stage=None,
+    ) -> dict[str, Any]:
+        evidence = self.evidence_cursor.consume(evidence)
         stage = _current_stage(stage)
-        dt = _nonnegative_finite(dt, "dt")
+        registered_paths = set(self.bonds)
+        evidence_paths = {
+            source.debris_prim_path
+            for source in evidence.sources.debris_sources
+        }
+        if registered_paths != evidence_paths:
+            raise ValueError(
+                "scene evidence debris set must exactly match registered bonds"
+            )
         released: list[str] = []
+        externally_missing: list[str] = []
+        interval_work_j: dict[str, float] = {}
         for path, bond in self.bonds.items():
+            sample = evidence.sample_for(path)
+            if sample.source.attachment_prim_path != bond.attachment_path:
+                raise ValueError(
+                    f"debris {path!r} attachment identity disagrees with "
+                    "scene registration"
+                )
             if bond.released:
+                if sample.attachment_present:
+                    raise ValueError(
+                        f"released debris {path!r} reappeared with a live "
+                        "attachment"
+                    )
                 continue
-            force = _nonnegative_finite(contact_forces_n.get(path, 0.0), "contact_force_n")
-            speed = _nonnegative_finite(tangential_speeds_m_s.get(path, 0.0), "tangential_speed_m_s")
-            bond.accumulated_work_j += force * speed * dt
+            if not sample.attachment_present:
+                bond.released = True
+                bond.released_reason = "attachment_absent_in_scene_evidence"
+                externally_missing.append(path)
+                continue
+            work_j = sample.dissipation_power_w * evidence.dt_s
+            interval_work_j[path] = work_j
+            bond.accumulated_work_j += work_j
             if bond.accumulated_work_j >= bond.threshold_j:
                 if stage.GetPrimAtPath(bond.attachment_path).IsValid():
                     stage.RemovePrim(bond.attachment_path)
                 bond.released = True
+                bond.released_reason = "measured_dissipative_work_threshold"
                 released.append(path)
-        return released
+        return {
+            "released": released,
+            "externally_missing": externally_missing,
+            "interval_work_j": interval_work_j,
+            "physics_step": evidence.physics_step,
+            "simulation_time_s": evidence.simulation_time_s,
+            "dt_s": evidence.dt_s,
+            "evidence_digest_sha256": evidence.evidence_digest_sha256,
+            "qualification_scope": "provisional_source_mechanics_only",
+        }
 
     def snapshot(self) -> dict[str, dict[str, Any]]:
         return {
@@ -915,6 +975,7 @@ class DebridementReleaseController:
                 "threshold_j": bond.threshold_j,
                 "accumulated_work_j": bond.accumulated_work_j,
                 "released": bond.released,
+                "released_reason": bond.released_reason,
                 "attachment_path": bond.attachment_path,
             }
             for path, bond in self.bonds.items()

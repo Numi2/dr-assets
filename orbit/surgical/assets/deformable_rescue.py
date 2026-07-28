@@ -66,12 +66,13 @@ def _approach(current: float, target: float, dt_s: float, time_s: float) -> floa
 
 
 @dataclass(frozen=True)
-class PhysicsEvidenceFrame:
-    """Raw post-physics measurements accepted from the scene adapter.
+class _PhysicsEvidenceFrame:
+    """Internal normalized measurements accepted from the scene adapter.
 
-    The frame contains no success, control, seal, patency, or perfusion result.
-    Separation, target distance, and attachment counts must be measured from
-    the live scene.
+    Public callers cannot construct this ingress through the package API.
+    Environment adapters first bind raw observations to a prim-identified,
+    provenance-bearing scene envelope.  The Rescue OR runtime then normalizes
+    that envelope into this private frame.
     """
 
     physics_step: int
@@ -85,7 +86,8 @@ class PhysicsEvidenceFrame:
     separation_m: float
     tool_speed_m_s: float
     target_distance_m: float
-    retained_attachment_count: int = 0
+    evidence_digest_sha256: str
+    retained_attachment_prim_ids: tuple[str, ...] = ()
     patch_contact_point_count: int = 0
     leaked_particle_count: int = 0
     particle_volume_ml: float = 0.002
@@ -98,6 +100,16 @@ class PhysicsEvidenceFrame:
         for name in ("station_id", "tool_id"):
             if not getattr(self, name):
                 raise ValueError(f"{name} must not be empty")
+        if (
+            len(self.evidence_digest_sha256) != 64
+            or any(
+                character not in "0123456789abcdef"
+                for character in self.evidence_digest_sha256
+            )
+        ):
+            raise ValueError(
+                "evidence_digest_sha256 must be a lowercase SHA-256 digest"
+            )
         if self.target_id not in SUPPORTED_TARGETS:
             raise ValueError(f"unsupported rescue target {self.target_id!r}")
         for name in (
@@ -130,13 +142,29 @@ class PhysicsEvidenceFrame:
             )
         if self.dt_s <= 0.0:
             raise ValueError("dt_s must be greater than zero")
-        for name in (
-            "retained_attachment_count",
-            "patch_contact_point_count",
-            "leaked_particle_count",
+        object.__setattr__(
+            self,
+            "retained_attachment_prim_ids",
+            tuple(self.retained_attachment_prim_ids),
+        )
+        if len(set(self.retained_attachment_prim_ids)) != len(
+            self.retained_attachment_prim_ids
         ):
+            raise ValueError("retained attachment prim IDs must be unique")
+        if any(
+            not path.startswith("/")
+            for path in self.retained_attachment_prim_ids
+        ):
+            raise ValueError(
+                "retained attachment prim IDs must be absolute scene paths"
+            )
+        for name in ("patch_contact_point_count", "leaked_particle_count"):
             if getattr(self, name) < 0:
                 raise ValueError(f"{name} must be nonnegative")
+
+    @property
+    def retained_attachment_count(self) -> int:
+        return len(self.retained_attachment_prim_ids)
 
 
 @dataclass(frozen=True)
@@ -171,7 +199,6 @@ class RescueEffectCalibration:
     film_maximum_verified_leak_ml_s: float = 0.05
     film_verification_window_s: float = 1.0
     film_minimum_verification_frames: int = 20
-    baseline_blood_volume_ml: float = 5000.0
     particle_leak_blend: float = 0.25
     parameter_status: str = "provisional_engineering_seeds"
 
@@ -206,9 +233,9 @@ class VesselRescueState:
     overload_damage_fraction: float = 0.0
     residual_flow_ml_s: float = 0.0
     distal_perfusion_fraction: float = 1.0
-    cumulative_blood_loss_ml: float = 0.0
-    blood_volume_ml: float = 5000.0
+    modeled_cumulative_leak_volume_ml: float = 0.0
     pressure_challenge_active: bool = False
+    flow_evidence_available: bool = False
     measured_upstream_pressure_mmhg: float | None = None
     challenge_elapsed_s: float = 0.0
     challenge_frame_count: int = 0
@@ -220,6 +247,8 @@ class VesselRescueState:
     clip_maturity_fraction: float = 0.0
     patch_maturity_fraction: float = 0.0
     last_retained_attachment_count: int = 0
+    last_attachment_prim_ids: tuple[str, ...] = ()
+    last_evidence_digest_sha256: str | None = None
 
 
 @dataclass
@@ -240,14 +269,16 @@ class RepairState:
     verification_frame_count: int = 0
     last_physics_step: int = -1
     last_simulation_time_s: float = -1.0
+    last_attachment_prim_ids: tuple[str, ...] = ()
+    last_evidence_digest_sha256: str | None = None
 
 
 @dataclass(frozen=True)
 class RescueEffectsSnapshot:
     physics_step: int
     simulation_time_s: float
-    vessel: Mapping[str, float | int | bool | None]
-    repairs: Mapping[str, Mapping[str, float | int | bool]]
+    vessel: Mapping[str, object]
+    repairs: Mapping[str, Mapping[str, object]]
     evidence_frames: int
     rejected_frames: int
 
@@ -256,7 +287,7 @@ class _SceneAuthority:
     __slots__ = ()
 
 
-class SceneEvidenceAdapter:
+class _SceneEvidenceAdapter:
     """Environment-owned ingress for raw Isaac/PhysX observations."""
 
     __slots__ = ("_effects", "_authority")
@@ -269,7 +300,7 @@ class SceneEvidenceAdapter:
         self._effects = effects
         self._authority = authority
 
-    def publish(self, frame: PhysicsEvidenceFrame) -> RescueEffectsSnapshot:
+    def publish(self, frame: _PhysicsEvidenceFrame) -> RescueEffectsSnapshot:
         return self._effects._ingest(frame, self._authority)
 
     def finalize_interval(
@@ -319,13 +350,12 @@ class ContactDrivenRescueEffects:
             vessel_radius_m=radius,
             injury_fraction=injury,
             collateral_flow_fraction=collateral,
-            blood_volume_ml=self.calibration.baseline_blood_volume_ml,
         )
 
-    def create_scene_adapter(self) -> SceneEvidenceAdapter:
+    def _create_scene_adapter(self) -> _SceneEvidenceAdapter:
         """Create the adapter that must remain on the environment side."""
 
-        return SceneEvidenceAdapter(self, self._authority)
+        return _SceneEvidenceAdapter(self, self._authority)
 
     def reset(self, *, seed: int | None = None) -> RescueEffectsSnapshot:
         if seed is not None:
@@ -348,11 +378,13 @@ class ContactDrivenRescueEffects:
             state.verification_frame_count = 0
             state.last_physics_step = -1
             state.last_simulation_time_s = -1.0
+            state.last_attachment_prim_ids = ()
+            state.last_evidence_digest_sha256 = None
         return self.snapshot()
 
     def _ingest(
         self,
-        frame: PhysicsEvidenceFrame,
+        frame: _PhysicsEvidenceFrame,
         authority: _SceneAuthority,
     ) -> RescueEffectsSnapshot:
         if authority is not self._authority:
@@ -423,7 +455,7 @@ class ContactDrivenRescueEffects:
 
     def _bilateral_contact_quality(
         self,
-        frame: PhysicsEvidenceFrame,
+        frame: _PhysicsEvidenceFrame,
         target_force_n: float,
         maximum_asymmetry_n: float,
     ) -> float:
@@ -450,7 +482,7 @@ class ContactDrivenRescueEffects:
         )
         return force * symmetry * speed * spatial
 
-    def _update_vessel(self, frame: PhysicsEvidenceFrame) -> None:
+    def _update_vessel(self, frame: _PhysicsEvidenceFrame) -> None:
         cfg = self.calibration
         state = self.vessel
         quality = self._bilateral_contact_quality(
@@ -507,6 +539,10 @@ class ContactDrivenRescueEffects:
             else 0.0
         )
         state.last_retained_attachment_count = frame.retained_attachment_count
+        state.last_attachment_prim_ids = (
+            frame.retained_attachment_prim_ids
+        )
+        state.last_evidence_digest_sha256 = frame.evidence_digest_sha256
 
         if frame.patch_contact_point_count >= 3 and quality > 0.45:
             state.patch_contact_dwell_s += frame.dt_s
@@ -533,49 +569,63 @@ class ContactDrivenRescueEffects:
         state.measured_upstream_pressure_mmhg = (
             frame.measured_upstream_pressure_mmhg
         )
-        pressure_mmhg = (
-            frame.measured_upstream_pressure_mmhg
-            if frame.measured_upstream_pressure_mmhg is not None
-            else cfg.nominal_upstream_pressure_mmhg
+        state.flow_evidence_available = bool(
+            frame.measured_upstream_pressure_mmhg is not None
         )
         state.pressure_challenge_active = bool(
-            frame.measured_upstream_pressure_mmhg is not None
+            state.flow_evidence_available
+            and frame.measured_upstream_pressure_mmhg is not None
             and frame.measured_upstream_pressure_mmhg
             >= (
                 cfg.nominal_upstream_pressure_mmhg
                 * cfg.pressure_challenge_multiplier
             )
         )
-        pressure_pa = max(
-            0.0,
-            (pressure_mmhg - cfg.downstream_pressure_mmhg) * MMHG_TO_PA,
-        )
-        defect_area_m2 = (
-            math.pi
-            * state.vessel_radius_m**2
-            * state.injury_fraction
-            * (1.0 - effective_control) ** 2
-        )
-        model_flow_ml_s = (
-            state.discharge_coefficient
-            * defect_area_m2
-            * math.sqrt(2.0 * pressure_pa / BLOOD_DENSITY_KG_M3)
-            * M3_TO_ML
-        )
-        particle_flow_ml_s = (
-            frame.leaked_particle_count
-            * frame.particle_volume_ml
-            / frame.dt_s
-        )
-        blend = cfg.particle_leak_blend if frame.leaked_particle_count else 0.0
-        state.residual_flow_ml_s = (
-            (1.0 - blend) * model_flow_ml_s + blend * particle_flow_ml_s
-        )
-        state.cumulative_blood_loss_ml += state.residual_flow_ml_s * frame.dt_s
-        state.blood_volume_ml = max(
-            0.0,
-            state.blood_volume_ml - state.residual_flow_ml_s * frame.dt_s,
-        )
+        if frame.measured_upstream_pressure_mmhg is None:
+            # Zero here is a neutral numeric placeholder, explicitly paired
+            # with ``flow_evidence_available=False``.  It must not be read as
+            # evidence of hemostasis or used to debit the patient.
+            state.residual_flow_ml_s = 0.0
+        else:
+            pressure_pa = max(
+                0.0,
+                (
+                    frame.measured_upstream_pressure_mmhg
+                    - cfg.downstream_pressure_mmhg
+                )
+                * MMHG_TO_PA,
+            )
+            defect_area_m2 = (
+                math.pi
+                * state.vessel_radius_m**2
+                * state.injury_fraction
+                * (1.0 - effective_control) ** 2
+            )
+            model_flow_ml_s = (
+                state.discharge_coefficient
+                * defect_area_m2
+                * math.sqrt(
+                    2.0 * pressure_pa / BLOOD_DENSITY_KG_M3
+                )
+                * M3_TO_ML
+            )
+            particle_flow_ml_s = (
+                frame.leaked_particle_count
+                * frame.particle_volume_ml
+                / frame.dt_s
+            )
+            blend = (
+                cfg.particle_leak_blend
+                if frame.leaked_particle_count
+                else 0.0
+            )
+            state.residual_flow_ml_s = (
+                (1.0 - blend) * model_flow_ml_s
+                + blend * particle_flow_ml_s
+            )
+            state.modeled_cumulative_leak_volume_ml += (
+                state.residual_flow_ml_s * frame.dt_s
+            )
 
         axial_occlusion = max(
             state.retained_clip_fraction,
@@ -587,7 +637,7 @@ class ContactDrivenRescueEffects:
             * (1.0 - axial_occlusion)
             - 0.35 * state.overload_damage_fraction
         )
-        if state.pressure_challenge_active:
+        if state.pressure_challenge_active and state.flow_evidence_available:
             state.challenge_elapsed_s += frame.dt_s
             state.challenge_frame_count += 1
             stable = (
@@ -606,7 +656,7 @@ class ContactDrivenRescueEffects:
         state.last_physics_step = frame.physics_step
         state.last_simulation_time_s = frame.simulation_time_s
 
-    def _update_repair(self, frame: PhysicsEvidenceFrame) -> None:
+    def _update_repair(self, frame: _PhysicsEvidenceFrame) -> None:
         state = self.repairs[frame.target_id]
         geometric = 1.0 - _clamp(
             (frame.separation_m - state.target_separation_m)
@@ -639,8 +689,12 @@ class ContactDrivenRescueEffects:
             )
         state.last_physics_step = frame.physics_step
         state.last_simulation_time_s = frame.simulation_time_s
+        state.last_attachment_prim_ids = (
+            frame.retained_attachment_prim_ids
+        )
+        state.last_evidence_digest_sha256 = frame.evidence_digest_sha256
 
-    def _update_film(self, frame: PhysicsEvidenceFrame) -> None:
+    def _update_film(self, frame: _PhysicsEvidenceFrame) -> None:
         """Derive film integrity only from live bonds, contact, and pressure."""
 
         cfg = self.calibration
@@ -700,6 +754,10 @@ class ContactDrivenRescueEffects:
         )
         state.last_physics_step = frame.physics_step
         state.last_simulation_time_s = frame.simulation_time_s
+        state.last_attachment_prim_ids = (
+            frame.retained_attachment_prim_ids
+        )
+        state.last_evidence_digest_sha256 = frame.evidence_digest_sha256
 
     def policy_observation(self) -> Mapping[str, object]:
         """Return immutable outcomes; no mutation handles or authority objects."""
@@ -719,8 +777,9 @@ class ContactDrivenRescueEffects:
             {
                 "residual_flow_ml_s": self.vessel.residual_flow_ml_s,
                 "distal_perfusion_fraction": self.vessel.distal_perfusion_fraction,
-                "cumulative_blood_loss_ml": self.vessel.cumulative_blood_loss_ml,
-                "blood_volume_ml": self.vessel.blood_volume_ml,
+                "modeled_cumulative_leak_volume_ml": (
+                    self.vessel.modeled_cumulative_leak_volume_ml
+                ),
                 "transient_compression_fraction": (
                     self.vessel.transient_compression_fraction
                 ),
@@ -730,11 +789,20 @@ class ContactDrivenRescueEffects:
                 "pressure_challenge_active": (
                     self.vessel.pressure_challenge_active
                 ),
+                "flow_evidence_available": (
+                    self.vessel.flow_evidence_available
+                ),
                 "measured_upstream_pressure_mmhg": (
                     self.vessel.measured_upstream_pressure_mmhg
                 ),
                 "hemostasis_verified": self.vessel.hemostasis_verified,
                 "last_physics_step": self.vessel.last_physics_step,
+                "attachment_prim_ids": (
+                    self.vessel.last_attachment_prim_ids
+                ),
+                "evidence_digest_sha256": (
+                    self.vessel.last_evidence_digest_sha256
+                ),
             }
         )
         repairs = MappingProxyType(
@@ -754,6 +822,12 @@ class ContactDrivenRescueEffects:
                         "seal_quality": state.seal_quality,
                         "seal_verified": state.seal_verified,
                         "last_physics_step": state.last_physics_step,
+                        "attachment_prim_ids": (
+                            state.last_attachment_prim_ids
+                        ),
+                        "evidence_digest_sha256": (
+                            state.last_evidence_digest_sha256
+                        ),
                     }
                 )
                 for name, state in self.repairs.items()
@@ -771,10 +845,8 @@ class ContactDrivenRescueEffects:
 
 __all__ = [
     "ContactDrivenRescueEffects",
-    "PhysicsEvidenceFrame",
     "RepairState",
     "RescueEffectCalibration",
     "RescueEffectsSnapshot",
-    "SceneEvidenceAdapter",
     "VesselRescueState",
 ]

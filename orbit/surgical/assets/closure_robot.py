@@ -4,14 +4,15 @@ This module intentionally keeps the closure mechanics in the simulator:
 
 * the payload is fixed directly to ``panda_link8`` before the articulation
   view is initialized;
-* tissue capture, retained staple legs, and adhesive bonds are native PhysX
-  deformable attachments;
+* tissue capture, staple-leg, and fresh-bead regions create native PhysX
+  deformable attachment prims;
 * tissue transforms and nodal positions are never rewritten to imitate a
   closure.
 
-This is an executable simulation-training mechanism with disclosed engineering
-parameters. Nothing in this module models staple penetration, metal plasticity,
-adhesive chemistry, biological healing, or clinically calibrated failure
+Attachment existence is not treated as proof of load-bearing retention.  This
+is an executable mechanism sequence with disclosed engineering parameters.
+Nothing in this module verifies staple penetration, metal plasticity, pullout,
+adhesive cure, cohesive damage, biological healing, or calibrated failure
 strength; real-world and clinical evidence are not established.
 """
 
@@ -832,7 +833,7 @@ def anchor_tissue_outer_edges(
 
 
 def release_tissue_capture(stage: Any, attachment_paths: Iterable[str]) -> None:
-    """Remove only temporary jaw attachments; retained closure bonds remain."""
+    """Remove temporary jaw attachments; repair prims may remain unverified."""
 
     _remove_paths(stage, attachment_paths)
 
@@ -906,26 +907,15 @@ def deploy_formed_staple(
 
 @dataclass
 class StapleRetentionController:
+    """Deploy staple proxies; retention remains unverified without mechanics."""
+
     stage: Any
-    provisional_pullout_threshold_n: float = 18.0
     deployments: list[dict[str, Any]] = field(default_factory=list)
 
     def deploy(self, **kwargs: Any) -> dict[str, Any]:
         deployment = deploy_formed_staple(self.stage, **kwargs)
         self.deployments.append(deployment)
         return deployment
-
-    def report_load(self, index: int, resultant_load_n: float) -> bool:
-        load = float(resultant_load_n)
-        if not math.isfinite(load) or load < 0.0:
-            raise ValueError("resultant_load_n must be finite and non-negative")
-        deployment = self.deployments[index]
-        if load <= self.provisional_pullout_threshold_n:
-            return False
-        _remove_paths(self.stage, deployment["attachment_paths"])
-        deployment["pulled_out"] = True
-        deployment["pullout_load_n"] = load
-        return True
 
     def reset(self) -> None:
         for item in self.deployments:
@@ -937,11 +927,11 @@ class StapleRetentionController:
 
 @dataclass
 class AdhesiveBondController:
+    """Deploy fresh bead proxies; cure and failure require cohesive evidence."""
+
     stage: Any
     left_tissue_path: str
     right_tissue_path: str
-    provisional_fresh_failure_n: float = 2.0
-    provisional_cured_failure_n: float = 12.0
     beads: list[dict[str, Any]] = field(default_factory=list)
 
     def deposit(
@@ -980,72 +970,13 @@ class AdhesiveBondController:
         bead = {
             "prim_path": str(root.GetPath()),
             "cure_fraction": 0.0,
+            "cure_verified": False,
+            "mechanically_qualified": False,
             "stage": "fresh",
             "attachment_paths": paths,
         }
         self.beads.append(bead)
         return bead
-
-    def set_cure_fraction(self, bead_index: int, cure_fraction: float) -> dict[str, Any]:
-        fraction = min(max(float(cure_fraction), 0.0), 1.0)
-        bead = self.beads[bead_index]
-        root = bead["prim_path"]
-        attachment_root = f"{root}/RuntimeAttachments"
-        if fraction >= 0.5 and bead["stage"] == "fresh":
-            for side, tissue in (
-                ("Left", self.left_tissue_path),
-                ("Right", self.right_tissue_path),
-            ):
-                bead["attachment_paths"].append(
-                    _attachment(
-                        self.stage,
-                        f"{attachment_root}/{side}LeadingCure",
-                        tissue,
-                        f"{root}/Collisions/{side}BondCureLeading",
-                        overlap_offset_m=0.0015,
-                    )
-                )
-            bead["stage"] = "leading_cure"
-        if fraction >= 1.0 and bead["stage"] != "cured":
-            for side, tissue in (
-                ("Left", self.left_tissue_path),
-                ("Right", self.right_tissue_path),
-            ):
-                bead["attachment_paths"].append(
-                    _attachment(
-                        self.stage,
-                        f"{attachment_root}/{side}TrailingCure",
-                        tissue,
-                        f"{root}/Collisions/{side}BondCureTrailing",
-                        overlap_offset_m=0.0015,
-                    )
-                )
-            prim = self.stage.GetPrimAtPath(root)
-            prim.GetVariantSets().GetVariantSet("state").SetVariantSelection("cured")
-            bead["stage"] = "cured"
-        bead["cure_fraction"] = fraction
-        bead["attachment_count"] = len(bead["attachment_paths"])
-        return bead
-
-    def report_load(self, bead_index: int, resultant_load_n: float) -> bool:
-        load = float(resultant_load_n)
-        if not math.isfinite(load) or load < 0.0:
-            raise ValueError("resultant_load_n must be finite and non-negative")
-        bead = self.beads[bead_index]
-        threshold = (
-            self.provisional_fresh_failure_n
-            + bead["cure_fraction"]
-            * (
-                self.provisional_cured_failure_n
-                - self.provisional_fresh_failure_n
-            )
-        )
-        if load <= threshold:
-            return False
-        _remove_paths(self.stage, bead["attachment_paths"])
-        bead["failed"] = True
-        bead["failure_load_n"] = load
-        return True
 
     def reset(self) -> None:
         for bead in self.beads:

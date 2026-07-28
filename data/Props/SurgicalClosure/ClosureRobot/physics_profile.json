@@ -594,7 +594,7 @@
   },
   "mechanism": {
     "adhesive": {
-      "bond_model": "fresh bead begins with two central tack attachments; cure progression adds leading and trailing attachment zones on both wound sides, ramps the provisional bridge strength, changes the visual/contact state, and releases all active bonds on overload",
+      "bond_model": "fresh bead creates two central attachment prims; cure progression, cohesive traction, load transfer, damage and overload failure are not implemented",
       "chemistry_model": "not simulated",
       "deploy_joint": "adhesive_deploy_joint",
       "deploy_travel_m": 0.03,
@@ -616,12 +616,13 @@
       "attach_formed_staple_to_tissue",
       "release_capture_jaws",
       "deploy_adhesive_nozzle",
-      "deposit_and_cure_bond_segments"
+      "deposit_fresh_bead_attachment_prims",
+      "stop_before_unverified_cure_or_retention_claim"
     ],
     "stapler": {
       "driver_joint": "staple_driver_joint",
       "formed_state": "B-like inward-curled legs",
-      "holding_model": "rigid formed staple attached to one or two deformable tissue actors through overlap-generated deformable attachments",
+      "holding_model": "rigid formed staple with one or two overlap-generated deformable attachment prims; existence does not verify load-bearing retention or pullout resistance",
       "magazine_capacity": 12,
       "staple_crown_width_m": 0.0068,
       "staple_wire_diameter_m": 0.00046,

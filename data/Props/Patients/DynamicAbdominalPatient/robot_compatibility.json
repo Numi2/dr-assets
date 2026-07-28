@@ -1,5 +1,5 @@
 {
-  "integration_policy": "robot modules remain optional; exposure and hemostasis patient effects accept only post-physics contact observations",
+  "integration_policy": "robot modules remain optional; patient mutation requires the owning workcell's exact post-physics SceneEvidence route; unsupported routes fail closed",
   "patient_asset_id": "dranmar-dynamic-abdominal-patient-v1",
   "intended_use": "simulation_training",
   "robots": [
@@ -7,58 +7,66 @@
       "asset_id": "dranmar-atraumatic-exposure-robot-v1",
       "capability": "retraction",
       "optional_dependency": true,
-      "patient_adapter": "patient.contacts.observe(PatientContactFrame interaction=exposure)",
+      "patient_effect_route": "patient.contacts.observe_scene_evidence(PatientContactSceneEvidence interaction=exposure)",
+      "runtime_status": "contract_present_native_provider_not_integrated",
       "python_module": "atraumatic_exposure_robot"
     },
     {
       "asset_id": "dranmar-safeplane-dissection-robot-v1",
       "capability": "dissection",
       "optional_dependency": true,
-      "patient_adapter": "patient.robot.dissection",
+      "patient_effect_route": null,
+      "runtime_status": "disabled_pending_exact_safeplane_to_patient_evidence_bridge",
       "python_module": "safeplane_dissection_robot"
     },
     {
       "asset_id": "dranmar-wound-preparation-robot-v1",
       "capability": "wound_preparation",
       "optional_dependency": true,
-      "patient_adapter": "patient.robot.wound_preparation",
+      "patient_effect_route": null,
+      "runtime_status": "disabled_pending_exact_wound_to_patient_evidence_bridge",
       "python_module": "wound_preparation_robot"
     },
     {
       "asset_id": "dranmar-adaptive-hemostasis-robot-v1",
       "capability": "hemostasis",
       "optional_dependency": true,
-      "patient_adapter": "patient.contacts.observe(PatientContactFrame interaction=hemostasis)",
+      "patient_effect_route": "patient.contacts.observe_scene_evidence(PatientContactSceneEvidence interaction=hemostasis)",
+      "runtime_status": "contract_present_native_provider_not_integrated",
       "python_module": "adaptive_hemostasis_robot"
     },
     {
       "asset_id": "dranmar-adaptive-seal-divide-robot-v1",
       "capability": "seal_and_divide",
       "optional_dependency": true,
-      "patient_adapter": "patient.robot.seal_and_divide",
+      "patient_effect_route": null,
+      "runtime_status": "disabled_pending_exact_seal_divide_to_patient_evidence_bridge",
       "python_module": "adaptive_seal_divide_robot"
     },
     {
       "asset_id": "dranmar-adaptive-anastomosis-robot-v1",
       "capability": "anastomosis",
       "optional_dependency": true,
-      "patient_adapter": "patient.robot.anastomosis",
+      "patient_effect_route": null,
+      "runtime_status": "disabled_pending_exact_anastomosis_to_patient_evidence_bridge",
       "python_module": "adaptive_anastomosis_robot"
     },
     {
       "asset_id": "dranmar-closure-robot-v1",
       "capability": "closure",
       "optional_dependency": true,
-      "patient_adapter": "patient.robot.close_wound",
+      "patient_effect_route": null,
+      "runtime_status": "disabled_pending_exact_closure_to_patient_evidence_bridge",
       "python_module": "closure_robot"
     },
     {
       "asset_id": "dranmar-perfusion-viability-robot-v1",
       "capability": "physiology_assessment",
       "optional_dependency": true,
-      "patient_adapter": "patient.robot.perfusion_scan",
+      "patient_effect_route": null,
+      "runtime_status": "assessment_only_production_abstains_without_causally_bound_native_provider",
       "python_module": "perfusion_viability_robot"
     }
   ],
-  "schema": "dr.anmar.robot-patient-compatibility.v1"
+  "schema": "dr.anmar.robot-patient-compatibility.v2"
 }

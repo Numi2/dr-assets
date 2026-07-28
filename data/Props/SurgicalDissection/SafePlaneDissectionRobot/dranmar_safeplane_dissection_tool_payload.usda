@@ -1,7 +1,7 @@
 #usda 1.0
 (
     defaultPrim = "DrAnmarSafePlaneDissectionTool"
-    doc = "DrAnmar SafePlane Dissection Robot: bilateral traction, blunt spreading, hydrodissection, guarded cutting, energy dissection, protected-structure monitoring, and connectivity verification."
+    doc = "DrAnmar SafePlane research mechanism geometry and physical-setup asset; dissection outcomes and protected-structure safety are unavailable without a scene-evidence/shared-mechanics bridge."
     kilogramsPerUnit = 1
     metersPerUnit = 1
     upAxis = "Z"
@@ -22,11 +22,14 @@ def Xform "DrAnmarSafePlaneDissectionTool" (
         string drAnmarAssetVersion = "0.1.0"
         bool drAnmarClinicalValidation = false
         bool drAnmarMedicalDevice = false
-        string drAnmarStatus = "simulation_training_workcell"
+        string drAnmarStatus = "research_asset_and_physical_setup_only"
         string drAnmarMount = "replaces_panda_hand_at_panda_link8"
         int drAnmarTractionCellCount = 8
         int drAnmarDissectionModalityCount = 4
-        bool drAnmarProtectedStructureInterlock = true
+        bool drAnmarProtectedStructureInterlock = false
+        string drAnmarInterlockStatus = "unavailable_no_safeplane_scene_evidence_bridge"
+        string drAnmarOutcomeEvidenceStatus = "unavailable_no_safeplane_scene_evidence_bridge"
+        bool drAnmarPatientOutcomeAuthoritative = false
     }
 )
 {

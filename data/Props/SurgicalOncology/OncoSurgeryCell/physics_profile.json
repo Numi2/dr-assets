@@ -1,8 +1,10 @@
 {
-  "schema": "dr.anmar.oncosurgery-physics-profile.v1",
+  "schema": "dr.anmar.oncosurgery-physics-profile.v2",
   "id": "dranmar-oncosurgery-cell-v1",
   "version": "0.2.0",
-  "status": "simulation_training_model_with_recorded_native_volume_stability_evidence",
+  "status": "non_authoritative_task_proxy_with_recorded_non_contact_volume_stability_evidence",
+  "outcome_evidence_status": "unavailable_no_oncology_scene_evidence_bridge",
+  "patient_outcome_authoritative": false,
   "openusd_structure": {
     "interface_pattern": "reference_payload",
     "interface_layers": [
@@ -28,7 +30,8 @@
     "self_collision": false,
     "solver_position_iterations": 20,
     "solver_velocity_iterations": 6,
-    "contact_sensors": true
+    "contact_sensor_activation_requested": true,
+    "post_physics_contact_bridge": false
   },
   "tumor_field": {
     "grid_shape": [
@@ -45,15 +48,18 @@
     "constitutive_model": "not_claimed"
   },
   "resection_topology": {
+    "authority": "private_task_proxy_only",
     "bond_count": 96,
     "parenchymal_bonds": 79,
     "fibrous_bands": 5,
     "vascular_pedicles": 7,
     "bile_duct_pedicles": 5,
-    "protected_pedicle_interlock": "seal_confirmation_required_before_division",
-    "detachment_rule": "all_boundary_bonds_released_and_all_pedicles_sealed"
+    "provisional_interlock_rule": "seal_confirmation_required_before_division",
+    "provisional_detachment_rule": "all_boundary_bonds_released_and_all_pedicles_sealed",
+    "bound_to_shared_mechanics_and_scene_evidence": false
   },
   "sensors": {
+    "scene_evidence_bridge": false,
     "registered_modalities": [
       "rgb_depth",
       "nir_fluorescence",
@@ -81,9 +87,9 @@
     ],
     "task_phases": 16,
     "policy_observation_terms": 12,
-    "domain_randomization": "bounded_per_episode_reset_parameters",
-    "reward": "dense_progress_with_safety_tissue_loss_sensor_and_fluid_penalties",
-    "termination": "contract_gated_final_margin_report_or_external_timeout"
+    "domain_randomization": "sampler_only_not_applied_to_scene_or_mechanics",
+    "reward": "unavailable_no_oncology_scene_evidence_bridge",
+    "termination": "external_timeout_only_until_scene_evidence_bridge_exists"
   },
   "dynamic_patient_boundary": {
     "demo_liver": "registered_visual_and_topology_substrate",
@@ -105,10 +111,11 @@
       "maximum_active_deformable_components": 1,
       "constitutive_validation": false
     },
-    "irreversible_topology": {
+    "required_irreversible_topology": {
       "backend": "registered_discrete_resection_graph",
       "bond_count": 96,
-      "reason": "PhysX_deformables_do_not_mutate_mesh_topology_during_runtime"
+      "reason": "PhysX_deformables_do_not_mutate_mesh_topology_during_runtime",
+      "bound_to_runtime": false
     }
   },
   "native_simulator_evidence": {
@@ -138,6 +145,7 @@
     "no validated tissue constitutive model",
     "no native arbitrary cutting or FEM topology mutation claim",
     "no validated vessel sealing or bile-duct sealing dose",
+    "no oncology SceneEvidenceEnvelope or shared-mechanics outcome bridge",
     "no physical payload, contact, sensor, margin, or specimen calibration",
     "no medical-device or patient-care use"
   ]

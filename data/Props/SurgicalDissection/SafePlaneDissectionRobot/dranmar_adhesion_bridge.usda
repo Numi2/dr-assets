@@ -13,7 +13,8 @@ def Xform "DrAnmarAdhesionBridge" (
     customData = {
         string drAnmarAssetId = "dranmar-adhesion-bridge-v1"
         bool drAnmarClinicalValidation = false
-        string drAnmarReleaseContract = "remove_or_deactivate_continuity_joint"
+        string drAnmarReleaseContract = "asset_level_fixed_joint_variant_only_public_controller_release_unavailable_without_scene_evidence"
+        string drAnmarOutcomeEvidenceStatus = "unavailable_no_safeplane_scene_evidence_bridge"
     }
 )
 {

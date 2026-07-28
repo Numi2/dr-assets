@@ -24,7 +24,9 @@
   ],
   "nested_articulation_in_payload": false,
   "parent_link": "panda_link8",
+  "payload_dynamics_calibrated": false,
   "payload_link": "DrAnmarSafePlaneDissectionTool/Links/Mount",
-  "schema": "dranmar.franka-hand-replacement.v1",
+  "runtime_validation_status": "no_current_safeplane_native_diagnostic_record_in_repository",
+  "schema": "dranmar.franka-hand-replacement.v2",
   "standalone_articulation_available": true
 }

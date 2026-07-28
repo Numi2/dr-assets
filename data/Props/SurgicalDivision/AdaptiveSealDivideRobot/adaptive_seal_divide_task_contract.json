@@ -1,27 +1,34 @@
 {
+  "clinical_seal_or_division_verified": false,
   "clinical_validation": false,
   "failure_modes": [
     "off_center_capture",
     "insufficient_compression",
     "excess_compression",
-    "seal_underenergy",
-    "seal_overtemperature",
+    "conditioning_underenergy_proxy",
+    "overtemperature",
     "impedance_fault",
-    "blade_before_seal",
+    "cohesive_damage_or_failure",
+    "seal_attachment_loss",
+    "blade_before_mechanical_qualification",
+    "blade_without_registered_contact",
+    "bridge_release_ahead_of_authorized_blade_progress",
     "incomplete_division",
-    "seal_band_delamination",
     "stump_leak",
-    "tissue_crush_proxy"
+    "insufficient_pressure_challenge",
+    "vessel_wall_damage"
   ],
   "interlocks": [
-    "tissue_centered",
-    "compression_within_window",
-    "left_seal_mature",
-    "right_seal_mature",
-    "predicted_stump_flow_below_limit",
-    "blade_guard_retracted",
-    "no_overtemperature_fault"
+    "scene_measured_tissue_centering",
+    "bilateral_contact_compression_within_window",
+    "provisional_conditioning_proxy_without_fault",
+    "cohesive_integrity_and_exact_live_seal_attachments",
+    "observed_stump_leak_below_limit_at_pressure",
+    "blade_guard_retracted_from_registered_joint_state",
+    "registered_blade_contact_and_position_consistency",
+    "bridge_release_not_ahead_of_authorized_blade_progress"
   ],
+  "native_scene_evidence_provider": "not_implemented",
   "phases": [
     "inspect",
     "center",
@@ -35,17 +42,25 @@
     "complete",
     "abort"
   ],
-  "schema": "dranmar.adaptive-seal-divide-task.v1",
-  "success_metrics": [
-    "left_seal_maturity",
-    "right_seal_maturity",
-    "left_stump_flow_ml_min",
-    "right_stump_flow_ml_min",
-    "peak_jaw_force_n",
-    "energy_j",
-    "blade_interlock_violations",
-    "bridge_cells_released",
-    "division_complete",
-    "seal_band_retained"
-  ]
+  "provisional_task_signals": [
+    "scene_measured_bilateral_contact_force_area_and_slip",
+    "provisional_temperature_impedance_and_electrical_conditioning",
+    "exact_cohesive_interface_integrity_damage_and_failure",
+    "exact_live_seal_attachment_identity",
+    "shared_vessel_observed_stump_leak_pressure_and_wall_damage",
+    "registered_guard_blade_tip_joint_and_contact_state",
+    "scene_observed_bridge_attachment_topology",
+    "mass_balance_and_raw_record_identity"
+  ],
+  "required_scene_evidence": [
+    "exact_zone_contact_and_vessel_prim_pairs",
+    "exact_cohesive_and_vessel_mechanics_identity",
+    "exact_compression_seal_and_bridge_attachment_identity",
+    "registered_temperature_impedance_and_electrical_sources",
+    "registered_guard_blade_joint_tip_contact_and_alignment_sources",
+    "raw_native_record_identity_for_every_source",
+    "episode_environment_topology_step_and_physics_time"
+  ],
+  "schema": "dranmar.adaptive-seal-divide-task.v2",
+  "simulator_task_completion_verified": false
 }

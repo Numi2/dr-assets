@@ -1,20 +1,21 @@
 # Copyright (c) 2026, DrAnmar Project Developers.
 # SPDX-License-Identifier: Apache-2.0
-"""DrAnmar surgical-oncology assets and executable research mechanics.
+"""DrAnmar surgical-oncology assets and non-authoritative task proxies.
 
 The OpenUSD layers provide the articulated tool, liver/tumor substrate,
 specimen system, semantic frames, and a three-station workcell.  This module
-adds the part that a visual asset package cannot provide by itself:
+provides:
 
 * Isaac Lab configuration factories for standalone and Franka-mounted use;
-* registered multimodal fusion with disagreement and stale-data abstention;
-* discrete resection bonds with a fail-closed pedicle-seal interlock;
-* volumetric tumor, healthy-tissue, and margin accounting;
-* specimen containment and orientation state;
-* a deterministic procedure controller and RL-facing observations/reward.
+* provisional, caller-independent configuration contracts;
+* private task-proxy algorithms for future workcell integration.
 
-All tissue, sensing, energy, and task thresholds are provisional research
-parameters.  Native simulation qualification is not clinical validation.
+There is currently no oncology-specific bridge from post-physics
+``SceneEvidenceEnvelope`` records and shared tissue/vessel/duct mechanics into
+irreversible resection, seal, injury, loss, specimen, fusion, reward, or success
+state.  Public patient-outcome mutation and success paths therefore fail
+closed.  All thresholds remain provisional research parameters.  Native
+simulation qualification is not clinical validation.
 """
 from __future__ import annotations
 
@@ -25,7 +26,7 @@ import math
 from pathlib import Path
 import random
 import sys
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Iterable, Mapping, NoReturn, Sequence
 
 
 CATALOG_SUBPATH = "Props/SurgicalOncology/OncoSurgeryCell"
@@ -168,6 +169,16 @@ TASK_PHASES = (
     "corrective_resection",
     "hemostasis_and_bile_check",
     "final_margin_report",
+)
+
+OUTCOME_EVIDENCE_STATUS = "unavailable_no_oncology_scene_evidence_bridge"
+REQUIRED_OUTCOME_EVIDENCE = (
+    "one exact same-step SceneEvidenceEnvelope",
+    "registered source prim paths and raw sample IDs",
+    "stable episode, environment, adapter, and topology identities",
+    "shared tissue, cohesive, vessel, and duct mechanics observations",
+    "shared dynamic-patient blood and bile ledgers",
+    "live specimen/bag attachment and containment prim identities",
 )
 
 
@@ -746,17 +757,16 @@ def make_franka_oncology_robot_cfg(
 def dynamic_patient_oncology_binding(
     patient_prim_path: str = "/World/DrAnmarDynamicPatient",
 ) -> dict[str, Any]:
-    """Describe the explicit whole-patient integration boundary.
+    """Describe, but do not apply, the whole-patient integration boundary.
 
-    The returned contract prevents silently stacking the demo liver over the
-    dynamic patient's liver.  A compositor must deactivate the demo substrate,
-    bind oncology state to the patient's liver/tumor prims, and preserve the
-    patient's global blood and bile ledgers.
+    This is a required-binding manifest only.  It does not connect oncology
+    state, shared mechanics, loss ledgers, or scene evidence.  A future
+    workcell-owned compositor must perform and verify those connections.
     """
 
     base = patient_prim_path.rstrip("/")
     return {
-        "schema": "dr.anmar.dynamic-patient-oncology-binding.v2",
+        "schema": "dr.anmar.dynamic-patient-oncology-binding.v3",
         "patient_root": base,
         "liver_prim": f"{base}/Anatomy/liver",
         "tumor_prim": f"{base}/Anatomy/liver_tumor",
@@ -765,16 +775,19 @@ def dynamic_patient_oncology_binding(
         "demo_liver_active": False,
         "native_deformable_component": "liver",
         "deformable_representation": "gpu_volume_tetmesh",
-        "irreversible_topology_representation": (
+        "required_irreversible_topology_representation": (
             "registered_discrete_resection_graph"
         ),
         "maximum_active_deformable_components": 1,
-        "shared_ledgers": ("blood", "bile"),
+        "required_shared_ledgers": ("blood", "bile"),
         "required_registration_frames": (
             "tumor_mapping_tcp",
             "resection_tcp",
             "cavity_scan_reference",
         ),
+        "runtime_binding_applied": False,
+        "patient_outcome_authoritative": False,
+        "outcome_evidence_status": OUTCOME_EVIDENCE_STATUS,
         "clinical_validation": False,
     }
 
@@ -813,9 +826,10 @@ def spawn_oncology_volume_liver(
 ) -> dict[str, Any]:
     """Spawn the Dynamic Patient liver as a native GPU volume deformable.
 
-    Its explicit TetMesh supplies continuous deformation. The registered
-    resection graph remains authoritative for irreversible cutting and
-    detachment because PhysX does not mutate deformable topology at runtime.
+    Its explicit TetMesh supplies continuous deformation only.  This function
+    does not connect the discrete resection graph, shared mechanics, scene
+    evidence, or patient loss ledgers, so no irreversible patient outcome is
+    authoritative here.
     """
 
     if not str(prim_path).startswith("/"):
@@ -863,7 +877,11 @@ def spawn_oncology_volume_liver(
         {
             "oncology_binding": "standalone_dynamic_patient_liver",
             "continuous_mechanics": "native_gpu_volume_deformable",
-            "irreversible_topology": "registered_discrete_resection_graph",
+            "required_irreversible_topology": (
+                "registered_discrete_resection_graph"
+            ),
+            "patient_outcome_authoritative": False,
+            "outcome_evidence_status": OUTCOME_EVIDENCE_STATUS,
             "constitutive_validation": False,
         }
     )
@@ -922,7 +940,11 @@ def activate_dynamic_patient_oncology_liver(
         {
             "oncology_binding": binding,
             "continuous_mechanics": "native_gpu_volume_deformable",
-            "irreversible_topology": "registered_discrete_resection_graph",
+            "required_irreversible_topology": (
+                "registered_discrete_resection_graph"
+            ),
+            "patient_outcome_authoritative": False,
+            "outcome_evidence_status": OUTCOME_EVIDENCE_STATUS,
             "constitutive_validation": False,
         }
     )
@@ -965,10 +987,14 @@ def attach_camera_prims(stage: Any, tool_path: str) -> dict[str, str]:
 
 
 def sensor_runtime_contract(tool_path: str) -> dict[str, Any]:
-    """Return the version-neutral host contract for oncology sensors."""
+    """Return requirements for a future oncology sensor host bridge."""
 
     return {
-        "schema": "dr.anmar.oncology-sensor-runtime.v1",
+        "schema": "dr.anmar.oncology-sensor-runtime.v2",
+        "runtime_bridge_applied": False,
+        "patient_outcome_authoritative": False,
+        "outcome_evidence_status": OUTCOME_EVIDENCE_STATUS,
+        "required_evidence": REQUIRED_OUTCOME_EVIDENCE,
         "rtx_cameras": {
             name: {
                 "frame": frame_path(tool_path, name),
@@ -984,7 +1010,7 @@ def sensor_runtime_contract(tool_path: str) -> dict[str, Any]:
         },
         "oct": {
             "origin_frame": frame_path(tool_path, "oct_beam_origin"),
-            "output": "registered_surface_depth_and_margin_probability",
+            "required_output": "registered_surface_depth_and_margin_probability",
             "calibration": "proxy_pending_physical_calibration",
         },
         "ultrasound": {
@@ -995,11 +1021,13 @@ def sensor_runtime_contract(tool_path: str) -> dict[str, Any]:
             "recommended_bridge": (
                 "isaac_for_healthcare_robotic_ultrasound_or_validated_proxy"
             ),
-            "output": "registered_b_mode_and_protected_structure_probability",
+            "required_output": (
+                "registered_b_mode_and_protected_structure_probability"
+            ),
         },
         "raman": {
             "contact_frame": frame_path(tool_path, "raman_contact"),
-            "output": "registered_contact_margin_probability",
+            "required_output": "registered_contact_margin_probability",
             "calibration": "proxy_pending_physical_calibration",
         },
         "fusion": {
@@ -1007,7 +1035,7 @@ def sensor_runtime_contract(tool_path: str) -> dict[str, Any]:
             "maximum_timestamp_skew_s": 0.050,
             "maximum_sample_age_s": 0.250,
             "maximum_registration_error_m": 0.003,
-            "buffering": "timestamped_common-time_interpolation",
+            "required_buffering": "timestamped_common-time_interpolation",
             "failure_policy": "abstain",
         },
     }
@@ -1015,6 +1043,15 @@ def sensor_runtime_contract(tool_path: str) -> dict[str, Any]:
 
 class SafetyInterlockError(RuntimeError):
     """Raised when a protected oncologic action is rejected fail-closed."""
+
+
+def _require_oncology_scene_evidence_bridge(action: str) -> NoReturn:
+    requirements = "; ".join(REQUIRED_OUTCOME_EVIDENCE)
+    raise SafetyInterlockError(
+        f"{action} is unavailable: {OUTCOME_EVIDENCE_STATUS}. "
+        "Patient-outcome mutation requires a workcell-owned bridge proving "
+        f"{requirements}."
+    )
 
 
 def _probability(value: float, label: str) -> float:
@@ -1026,6 +1063,8 @@ def _probability(value: float, label: str) -> float:
 
 @dataclass(frozen=True)
 class SensorReading:
+    """Caller-authored task-proxy reading; never patient-outcome evidence."""
+
     modality: str
     tumor_probability: float
     margin_probability: float
@@ -1066,7 +1105,7 @@ class FusionResult:
 
 @dataclass
 class MultimodalOncologyFusion:
-    """Registration-aware fusion that abstains on disagreement or stale data."""
+    """Non-authoritative fusion proxy that publicly abstains without evidence."""
 
     modality_weights: Mapping[str, float] = field(
         default_factory=lambda: {
@@ -1091,6 +1130,19 @@ class MultimodalOncologyFusion:
         *,
         reference_time_s: float | None = None,
     ) -> FusionResult:
+        """Abstain until a workcell-owned scene-evidence bridge exists."""
+
+        _ = readings, reference_time_s
+        return self._abstain(OUTCOME_EVIDENCE_STATUS)
+
+    def _fuse_task_proxy(
+        self,
+        readings: Iterable[SensorReading],
+        *,
+        reference_time_s: float | None = None,
+    ) -> FusionResult:
+        """Evaluate authored samples for offline proxy analysis only."""
+
         samples = tuple(readings)
         if not samples:
             return self._abstain("no_sensor_samples")
@@ -1194,7 +1246,7 @@ class TumorCell:
 
 @dataclass
 class TumorFieldModel:
-    """Mutable episode state backed by the package's 3-D tumor field."""
+    """Non-authoritative task proxy backed by the package's 3-D tumor field."""
 
     cells: dict[str, TumorCell]
     spacing_m: tuple[float, float, float]
@@ -1209,6 +1261,17 @@ class TumorFieldModel:
     ) -> "TumorFieldModel":
         payload = json.loads(Path(path).read_text(encoding="utf-8"))
         raw_cells = payload["cells"]
+        preauthored = [
+            item["id"]
+            for item in raw_cells
+            if bool(item.get("removed", False))
+            or bool(item.get("ablated", False))
+        ]
+        if preauthored:
+            raise SafetyInterlockError(
+                "tumor_field.json may not pre-author removed or ablated "
+                f"patient outcomes: {preauthored[:5]}"
+            )
         cells = {
             item["id"]: TumorCell(
                 id=item["id"],
@@ -1224,8 +1287,6 @@ class TumorFieldModel:
                 sensor_uncertainty=_probability(
                     item["sensor_uncertainty"], "sensor_uncertainty"
                 ),
-                removed=bool(item.get("removed", False)),
-                ablated=bool(item.get("ablated", False)),
             )
             for item in raw_cells
         }
@@ -1259,6 +1320,12 @@ class TumorFieldModel:
         )
 
     def remove(self, cell_ids: Iterable[str]) -> int:
+        _ = cell_ids
+        _require_oncology_scene_evidence_bridge("tumor-cell removal")
+
+    def _remove_task_proxy(self, cell_ids: Iterable[str]) -> int:
+        """Apply authored cell state for private offline proxy analysis."""
+
         changed = 0
         for cell_id in dict.fromkeys(cell_ids):
             try:
@@ -1273,6 +1340,12 @@ class TumorFieldModel:
         return changed
 
     def ablate(self, cell_ids: Iterable[str]) -> int:
+        _ = cell_ids
+        _require_oncology_scene_evidence_bridge("tumor-cell ablation")
+
+    def _ablate_task_proxy(self, cell_ids: Iterable[str]) -> int:
+        """Apply authored ablation state for private offline proxy analysis."""
+
         changed = 0
         for cell_id in dict.fromkeys(cell_ids):
             try:
@@ -1402,7 +1475,7 @@ class ResectionBond:
 
 @dataclass
 class ResectionTopologyModel:
-    """Discrete topology with a hard interlock on unsealed pedicles."""
+    """Non-authoritative discrete-topology task proxy."""
 
     bonds: dict[str, ResectionBond]
     unsafe_attempts: int = 0
@@ -1414,6 +1487,17 @@ class ResectionTopologyModel:
         cls, path: str | Path = RESECTION_TOPOLOGY_JSON
     ) -> "ResectionTopologyModel":
         payload = json.loads(Path(path).read_text(encoding="utf-8"))
+        preauthored = [
+            item["id"]
+            for item in payload["bonds"]
+            if bool(item.get("released", False))
+            or bool(item.get("sealed", False))
+        ]
+        if preauthored:
+            raise SafetyInterlockError(
+                "resection_topology.json may not pre-author released or sealed "
+                f"patient outcomes: {preauthored[:5]}"
+            )
         bonds = {
             item["id"]: ResectionBond(
                 id=item["id"],
@@ -1432,8 +1516,6 @@ class ResectionTopologyModel:
                     "nearest_protected_structure"
                 ),
                 seal_required=bool(item["seal_required"]),
-                released=bool(item.get("released", False)),
-                sealed=bool(item.get("sealed", False)),
             )
             for item in payload["bonds"]
         }
@@ -1454,6 +1536,18 @@ class ResectionTopologyModel:
         compression_force_n: float,
         energy_j: float,
     ) -> bool:
+        _ = bond_id, compression_force_n, energy_j
+        _require_oncology_scene_evidence_bridge("pedicle seal")
+
+    def _seal_task_proxy(
+        self,
+        bond_id: str,
+        *,
+        compression_force_n: float,
+        energy_j: float,
+    ) -> bool:
+        """Apply authored seal inputs for private offline proxy analysis."""
+
         bond = self._bond(bond_id)
         if not bond.seal_required:
             raise ValueError(f"{bond_id} does not require energy sealing")
@@ -1485,6 +1579,19 @@ class ResectionTopologyModel:
         mechanical_work_j: float = 0.0,
         aspiration_energy_j: float = 0.0,
     ) -> bool:
+        _ = bond_id, modality, mechanical_work_j, aspiration_energy_j
+        _require_oncology_scene_evidence_bridge("resection-bond release")
+
+    def _release_task_proxy(
+        self,
+        bond_id: str,
+        *,
+        modality: str,
+        mechanical_work_j: float = 0.0,
+        aspiration_energy_j: float = 0.0,
+    ) -> bool:
+        """Apply authored release inputs for private offline proxy analysis."""
+
         bond = self._bond(bond_id)
         if bond.released:
             return False
@@ -1515,6 +1622,16 @@ class ResectionTopologyModel:
         return True
 
     def record_protected_structure_injury(self, structure: str) -> None:
+        _ = structure
+        _require_oncology_scene_evidence_bridge(
+            "protected-structure injury accounting"
+        )
+
+    def _record_protected_structure_injury_task_proxy(
+        self, structure: str
+    ) -> None:
+        """Apply authored injury state for private offline proxy analysis."""
+
         if structure == "vessel":
             self.vessel_injury_count += 1
         elif structure == "duct":
@@ -1546,15 +1663,30 @@ ORIENTATION_MARKERS = frozenset(
 
 @dataclass
 class SpecimenWorkflow:
+    """Non-authoritative specimen task proxy."""
+
     deployed: bool = False
     captured: bool = False
     closed: bool = False
     orientation_markers: set[str] = field(default_factory=set)
 
     def deploy(self) -> None:
+        _require_oncology_scene_evidence_bridge("specimen-bag deployment")
+
+    def _deploy_task_proxy(self) -> None:
+        """Apply authored deployment state for private offline proxy analysis."""
+
         self.deployed = True
 
     def capture(self, *, specimen_detached: bool) -> None:
+        _ = specimen_detached
+        _require_oncology_scene_evidence_bridge(
+            "specimen attachment and containment"
+        )
+
+    def _capture_task_proxy(self, *, specimen_detached: bool) -> None:
+        """Apply authored containment state for private offline proxy analysis."""
+
         if not self.deployed:
             raise SafetyInterlockError("Specimen capture requires a deployed bag")
         if not specimen_detached:
@@ -1564,11 +1696,22 @@ class SpecimenWorkflow:
         self.captured = True
 
     def close(self) -> None:
+        _require_oncology_scene_evidence_bridge("specimen-bag closure")
+
+    def _close_task_proxy(self) -> None:
+        """Apply authored closure state for private offline proxy analysis."""
+
         if not self.captured:
             raise SafetyInterlockError("Bag closure requires contained specimen")
         self.closed = True
 
     def mark_orientation(self, marker: str) -> None:
+        _ = marker
+        _require_oncology_scene_evidence_bridge("specimen orientation marking")
+
+    def _mark_orientation_task_proxy(self, marker: str) -> None:
+        """Apply authored marker state for private offline proxy analysis."""
+
         if not self.closed:
             raise SafetyInterlockError(
                 "Orientation marking requires a closed specimen bag"
@@ -1626,7 +1769,7 @@ def sample_domain_parameters(
 
 @dataclass
 class OncologicResectionEpisode:
-    """Deterministic oncology task state suitable for scripted or RL control."""
+    """Non-authoritative task proxy; public patient outcomes fail closed."""
 
     tumor_field: TumorFieldModel = field(default_factory=TumorFieldModel.from_json)
     topology: ResectionTopologyModel = field(
@@ -1653,6 +1796,12 @@ class OncologicResectionEpisode:
         return TASK_PHASES[self.phase_index]
 
     def register(self, error_m: float) -> None:
+        _ = error_m
+        _require_oncology_scene_evidence_bridge("patient registration")
+
+    def _register_task_proxy(self, error_m: float) -> None:
+        """Apply authored registration state for private offline analysis."""
+
         value = float(error_m)
         if not math.isfinite(value) or value < 0.0:
             raise ValueError("registration error must be finite and non-negative")
@@ -1665,6 +1814,19 @@ class OncologicResectionEpisode:
         reference_time_s: float | None = None,
     ) -> FusionResult:
         self.latest_fusion = self.fusion.fuse(
+            readings, reference_time_s=reference_time_s
+        )
+        return self.latest_fusion
+
+    def _map_sensors_task_proxy(
+        self,
+        readings: Iterable[SensorReading],
+        *,
+        reference_time_s: float | None = None,
+    ) -> FusionResult:
+        """Fuse authored samples for private offline proxy analysis."""
+
+        self.latest_fusion = self.fusion._fuse_task_proxy(
             readings, reference_time_s=reference_time_s
         )
         return self.latest_fusion
@@ -1683,11 +1845,24 @@ class OncologicResectionEpisode:
         self.planned_cell_ids = set(selected)
 
     def confirm_traction_capture(self) -> None:
+        _require_oncology_scene_evidence_bridge("traction capture")
+
+    def _confirm_traction_capture_task_proxy(self) -> None:
+        """Apply authored traction state for private offline proxy analysis."""
+
         self.traction_captured = True
 
     def resect_cells(
         self, cell_ids: Iterable[str], *, corrective: bool = False
     ) -> int:
+        _ = cell_ids, corrective
+        _require_oncology_scene_evidence_bridge("tumor-cell resection")
+
+    def _resect_cells_task_proxy(
+        self, cell_ids: Iterable[str], *, corrective: bool = False
+    ) -> int:
+        """Apply authored resection state for private offline proxy analysis."""
+
         selected = tuple(dict.fromkeys(cell_ids))
         if not corrective:
             outside = set(selected) - self.planned_cell_ids
@@ -1695,7 +1870,7 @@ class OncologicResectionEpisode:
                 raise SafetyInterlockError(
                     "Primary resection rejected outside the accepted plan"
                 )
-        changed = self.tumor_field.remove(selected)
+        changed = self.tumor_field._remove_task_proxy(selected)
         if corrective and changed:
             self.correction_count += 1
         return changed
@@ -1706,7 +1881,18 @@ class OncologicResectionEpisode:
         *,
         reference_time_s: float | None = None,
     ) -> FusionResult:
-        result = self.map_sensors(
+        _ = readings, reference_time_s
+        _require_oncology_scene_evidence_bridge("cavity sensor fusion")
+
+    def _record_cavity_scan_task_proxy(
+        self,
+        readings: Iterable[SensorReading],
+        *,
+        reference_time_s: float | None = None,
+    ) -> FusionResult:
+        """Apply authored scan state for private offline proxy analysis."""
+
+        result = self._map_sensors_task_proxy(
             readings, reference_time_s=reference_time_s
         )
         if not result.actionable:
@@ -1717,6 +1903,14 @@ class OncologicResectionEpisode:
         return result
 
     def record_losses(self, *, blood_ml: float, bile_ml: float) -> None:
+        _ = blood_ml, bile_ml
+        _require_oncology_scene_evidence_bridge("blood and bile loss accounting")
+
+    def _record_losses_task_proxy(
+        self, *, blood_ml: float, bile_ml: float
+    ) -> None:
+        """Apply authored losses for private offline proxy analysis."""
+
         blood = float(blood_ml)
         bile = float(bile_ml)
         if (
@@ -1730,6 +1924,13 @@ class OncologicResectionEpisode:
         self.bile_loss_ml += bile
 
     def confirm_hemostasis_and_bile_check(self) -> None:
+        _require_oncology_scene_evidence_bridge(
+            "hemostasis and bile-leak confirmation"
+        )
+
+    def _confirm_hemostasis_and_bile_check_task_proxy(self) -> None:
+        """Apply authored check state for private offline proxy analysis."""
+
         self.hemostasis_checked = True
 
     def _current_gate(self) -> tuple[bool, str | None]:
@@ -1791,6 +1992,11 @@ class OncologicResectionEpisode:
         return self.finalized, "final_report_not_recorded"
 
     def advance(self) -> str:
+        _require_oncology_scene_evidence_bridge("oncology phase progression")
+
+    def _advance_task_proxy(self) -> str:
+        """Advance authored proxy state for private offline analysis."""
+
         if self.phase_index >= len(TASK_PHASES) - 1:
             raise RuntimeError("Episode is already at the final phase")
         allowed, reason = self._current_gate()
@@ -1802,6 +2008,13 @@ class OncologicResectionEpisode:
         return self.phase
 
     def finalize(self) -> dict[str, Any]:
+        _require_oncology_scene_evidence_bridge(
+            "final oncologic outcome publication"
+        )
+
+    def _finalize_task_proxy(self) -> dict[str, Any]:
+        """Finalize proxy state without creating an authoritative outcome."""
+
         if self.phase != "final_margin_report":
             raise SafetyInterlockError(
                 "Final report is only available in final_margin_report phase"
@@ -1810,8 +2023,10 @@ class OncologicResectionEpisode:
         return self.report()
 
     def report(self) -> dict[str, Any]:
-        metrics: dict[str, Any] = self.tumor_field.metrics()
-        metrics.update(
+        """Return explicitly non-authoritative task-proxy diagnostics."""
+
+        task_proxy_metrics: dict[str, Any] = self.tumor_field.metrics()
+        task_proxy_metrics.update(
             {
                 "vessel_injury_count": self.topology.vessel_injury_count,
                 "duct_injury_count": self.topology.duct_injury_count,
@@ -1837,13 +2052,16 @@ class OncologicResectionEpisode:
                 "unsafe_action_attempts": self.topology.unsafe_attempts,
             }
         )
-        success_checks = {
+        task_proxy_checks = {
             "residual_tumor_clear": (
-                metrics["residual_tumor_volume_mm3"] <= 0.0
+                task_proxy_metrics["residual_tumor_volume_mm3"] <= 0.0
             ),
-            "minimum_margin": metrics["minimum_margin_m"] >= 0.010,
+            "minimum_margin": (
+                task_proxy_metrics["minimum_margin_m"]
+                >= self.tumor_field.planned_margin_m
+            ),
             "protected_structures_intact": (
-                metrics["protected_structure_injury_count"] <= 0
+                task_proxy_metrics["protected_structure_injury_count"] <= 0
             ),
             "blood_loss_bounded": self.blood_loss_ml <= 5.0,
             "bile_loss_bounded": self.bile_loss_ml <= 0.2,
@@ -1854,15 +2072,23 @@ class OncologicResectionEpisode:
             "hemostasis_checked": self.hemostasis_checked,
         }
         return {
-            "schema": "dr.anmar.oncologic-resection-result.v1",
+            "schema": "dr.anmar.oncologic-resection-task-proxy.v1",
             "phase": self.phase,
-            "metrics": metrics,
-            "success_checks": success_checks,
-            "success": all(success_checks.values()),
+            "task_proxy_metrics": task_proxy_metrics,
+            "task_proxy_checks": task_proxy_checks,
+            "outcome_evidence_status": OUTCOME_EVIDENCE_STATUS,
+            "required_evidence": REQUIRED_OUTCOME_EVIDENCE,
+            "patient_outcome_authoritative": False,
+            "success": False,
             "clinical_validation": False,
         }
 
     def observation(self) -> tuple[float, ...]:
+        _require_oncology_scene_evidence_bridge("oncology RL observation")
+
+    def _observation_task_proxy(self) -> tuple[float, ...]:
+        """Return authored proxy features for private offline analysis."""
+
         initial_tumor = max(
             1.0,
             len(self.tumor_field.tumor_cell_ids)
@@ -1880,7 +2106,11 @@ class OncologicResectionEpisode:
             self.topology.sealed_fraction,
             self.tumor_field.residual_tumor_volume_mm3 / initial_tumor,
             self.tumor_field.healthy_removed_volume_mm3 / planned_volume,
-            min(self.tumor_field.minimum_margin_m / 0.010, 2.0),
+            min(
+                self.tumor_field.minimum_margin_m
+                / max(self.tumor_field.planned_margin_m, 1.0e-9),
+                2.0,
+            ),
             min(self.blood_loss_ml / 5.0, 2.0),
             min(self.bile_loss_ml / 0.2, 2.0),
             latest.sensor_disagreement if latest else 1.0,
@@ -1890,9 +2120,12 @@ class OncologicResectionEpisode:
         )
 
     def reward(self) -> float:
-        """Dense bounded task reward; success remains report-gated."""
+        _require_oncology_scene_evidence_bridge("oncology RL reward")
 
-        observation = self.observation()
+    def _reward_task_proxy(self) -> float:
+        """Return a non-authoritative private task-proxy reward."""
+
+        observation = self._observation_task_proxy()
         reward = (
             1.5 * observation[0]
             + 1.0 * observation[1]
@@ -1909,3 +2142,59 @@ class OncologicResectionEpisode:
         if self.finalized and self.report()["success"]:
             reward += 5.0
         return reward
+
+
+__all__ = [
+    "CATALOG_SUBPATH",
+    "ASSET_DATA_ROOT",
+    "ROOT",
+    "TOOL_STANDALONE_USD",
+    "TOOL_PAYLOAD_USD",
+    "TOOL_RIGID_PROXY_USD",
+    "LIVER_DEMO_USD",
+    "SPECIMEN_BAG_USD",
+    "WORKCELL_USD",
+    "RESECTION_CELL_USD",
+    "MARGIN_MARKER_USD",
+    "MARGIN_INK_PARTICLE_USD",
+    "TUMOR_TRACER_PARTICLE_USD",
+    "TUMOR_FIELD_JSON",
+    "RESECTION_TOPOLOGY_JSON",
+    "TASK_CONTRACT_JSON",
+    "SENSOR_MODALITIES_JSON",
+    "INTERACTION_FRAMES_JSON",
+    "DYNAMIC_PATIENT_ROOT",
+    "DYNAMIC_PATIENT_USD",
+    "DYNAMIC_PATIENT_LIVER_USD",
+    "VALID_INSTRUMENT_STATES",
+    "VALID_BAG_STATES",
+    "VALID_TRACER_STATES",
+    "VALID_COLLECTION_STATES",
+    "VALID_LIVER_STATES",
+    "VALID_PATHOLOGY_STATES",
+    "TOOL_JOINTS",
+    "TOOL_FRAME_PATHS",
+    "REGISTERED_CAMERA_FRAMES",
+    "TASK_PHASES",
+    "PHASE_TARGETS",
+    "OUTCOME_EVIDENCE_STATUS",
+    "REQUIRED_OUTCOME_EVIDENCE",
+    "phase_targets",
+    "frame_path",
+    "tensor_value",
+    "make_tool_cfg",
+    "make_rigid_proxy_cfg",
+    "make_liver_demo_cfg",
+    "make_specimen_bag_cfg",
+    "make_workcell_cfg",
+    "spawn_franka_with_oncology_tool",
+    "make_franka_oncology_robot_cfg",
+    "dynamic_patient_oncology_binding",
+    "spawn_oncology_volume_liver",
+    "activate_dynamic_patient_oncology_liver",
+    "attach_camera_prims",
+    "sensor_runtime_contract",
+    "SafetyInterlockError",
+    "OncologyDomainParameters",
+    "sample_domain_parameters",
+]

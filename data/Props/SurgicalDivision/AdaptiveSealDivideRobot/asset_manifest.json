@@ -1,28 +1,10 @@
 {
   "asset": "dranmar-adaptive-seal-divide-robot-v1",
   "catalog_subpath": "Props/SurgicalDivision/AdaptiveSealDivideRobot",
-  "file_count": 59,
+  "integrity_status": "stale_after_source_only_realism_hardening_not_release_qualified",
+  "recorded_file_count_before_hardening": 59,
+  "stale_reason": "scene evidence, contracts, profiles, and documentation changed; obsolete caller-driven diagnostic and tests were deleted; hashes were not regenerated because no execution was authorized",
   "files": [
-    {
-      "bytes": 37,
-      "path": ".pytest_cache/.gitignore",
-      "sha256": "3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd"
-    },
-    {
-      "bytes": 191,
-      "path": ".pytest_cache/CACHEDIR.TAG",
-      "sha256": "37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4"
-    },
-    {
-      "bytes": 302,
-      "path": ".pytest_cache/README.md",
-      "sha256": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad"
-    },
-    {
-      "bytes": 740,
-      "path": ".pytest_cache/v/cache/nodeids",
-      "sha256": "a04de3a93655a0c8a290a54f5f64d0e6290b75f9413c8f8f3a34ad5404d6de13"
-    },
     {
       "bytes": 61,
       "path": "assets/Props/SurgicalDivision/AdaptiveSealDivideRobot/LICENSE.txt",
@@ -249,11 +231,6 @@
       "sha256": "6c0b1b82c077a7a513aa74cc91de3b0100e8bf05a07766bee69bf6aa36ebc7b7"
     },
     {
-      "bytes": 27790,
-      "path": "examples/validate_adaptive_seal_divide_runtime.py",
-      "sha256": "c77c2d6e19082e31444e4c657bf329c5d2f51d4126618ef34927d82cdc8ddfc7"
-    },
-    {
       "bytes": 2043,
       "path": "physics_next/surgical-division/dranmar-adaptive-seal-divide-v1.json",
       "sha256": "1b75904dfde70280b3325941bb30e13dd1c2ae365af4b152d75c362e0a7874c6"
@@ -292,11 +269,6 @@
       "bytes": 46944,
       "path": "source/extensions/orbit.surgical.assets/orbit/surgical/assets/adaptive_seal_divide_robot.py",
       "sha256": "a2368224fa8be536838c7c40d824dba95062251917d3b809e983321e62150200"
-    },
-    {
-      "bytes": 6821,
-      "path": "tests/test_adaptive_seal_divide_robot.py",
-      "sha256": "6d14f1a715714a06416fa815fc8e025b032f3c727d998d7d14796d6ad2cdaae9"
     }
   ],
   "installed_overlay_entries_refreshed": 52,

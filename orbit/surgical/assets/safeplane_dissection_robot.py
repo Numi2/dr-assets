@@ -1,11 +1,15 @@
 # Copyright (c) 2026, DrAnmar Project Developers.
 # SPDX-License-Identifier: Apache-2.0
-"""Isaac Lab integration for the DrAnmar SafePlane Dissection Robot.
+"""Isaac Lab asset integration and non-authoritative SafePlane task proxies.
 
 The module provides a Franka hand-replacement spawner, layered tissue
-substrate integration, distributed traction, four dissection modalities,
-protected-structure safety state, particle-fluid helpers, and a topology-
-based completion verifier. All parameters are provisional research values.
+substrate setup, attachment authoring, and particle-fluid helpers.  There is
+currently no SafePlane-specific bridge from exact same-step
+``SceneEvidenceEnvelope`` records and shared tissue/protected-structure
+mechanics into traction release, adhesion division, hydro dose, energy dose,
+injury, complications, or completion.  Public patient-outcome mutation and
+clinical-completion paths therefore fail closed.  All parameters are
+provisional research values.
 """
 from __future__ import annotations
 
@@ -14,7 +18,7 @@ import math
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 
 CATALOG_SUBPATH = "Props/SurgicalDissection/SafePlaneDissectionRobot"
 ASSET_DATA_ROOT = Path(__file__).resolve().parents[3] / "data"
@@ -35,6 +39,17 @@ VALID_FLUID_STATES = frozenset({"full", "empty"})
 VALID_COLLECTION_STATES = frozenset({"empty", "partial", "full"})
 VALID_ENERGY_STATES = frozenset({"ready", "fault"})
 PROTECTED_STRUCTURES = ("vessel", "nerve", "duct")
+OUTCOME_EVIDENCE_STATUS = "unavailable_no_safeplane_scene_evidence_bridge"
+REQUIRED_OUTCOME_EVIDENCE = (
+    "one exact same-step SceneEvidenceEnvelope",
+    "registered source prim paths, raw sample IDs, adapter version, and scene epoch",
+    "physics step time and a monotonic topology-revision cursor",
+    "shared layered-tissue and cohesive-interface mechanics observations",
+    "live attachment prim identities and force-disconnect evidence",
+    "registered tool contact, hydro deposition, scissor crossing, and energy-delivery evidence",
+    "shared vessel, duct, and nerve mechanics",
+    "same-step patient blood-loss and bile-leak ledger binding",
+)
 
 TOOL_JOINTS = {
     "left_traction": "left_traction_joint",
@@ -134,6 +149,19 @@ def _finite_nonnegative(value: float, label: str) -> float:
     if result < 0.0:
         raise ValueError(f"{label} must be nonnegative")
     return result
+
+
+class SafePlaneEvidenceError(RuntimeError):
+    """Raised when SafePlane patient-outcome evidence is unavailable."""
+
+
+def _require_safeplane_scene_evidence_bridge(action: str) -> NoReturn:
+    requirements = "; ".join(REQUIRED_OUTCOME_EVIDENCE)
+    raise SafePlaneEvidenceError(
+        f"{action} is unavailable: {OUTCOME_EVIDENCE_STATUS}. "
+        "Patient-outcome mutation requires a workcell-owned bridge proving "
+        f"{requirements}."
+    )
 
 
 def make_tool_cfg(
@@ -609,14 +637,14 @@ def create_deformable_attachment(deformable_path: str, target_path: str, attachm
             ) from legacy_error
 
 
-def remove_prims(paths: Iterable[str], *, stage=None):
+def _remove_prims(paths: Iterable[str], *, stage=None):
     stage = _current_stage(stage)
     for path in paths:
         if stage.GetPrimAtPath(path).IsValid():
             stage.RemovePrim(path)
 
 
-def remove_or_deactivate_prim(path: str, *, stage=None) -> bool:
+def _remove_or_deactivate_prim(path: str, *, stage=None) -> bool:
     """Disable physics authored through either a local spec or a reference."""
     stage = _current_stage(stage)
     prim = stage.GetPrimAtPath(path)
@@ -656,7 +684,7 @@ def anchor_target_bed(root_path: str, *, stage=None) -> list[str]:
             )
             created.append(attachment)
     except Exception:
-        remove_prims(created, stage=stage)
+        _remove_prims(created, stage=stage)
         raise
     return created
 
@@ -675,6 +703,8 @@ class TractionCell:
 
 @dataclass
 class BilateralTractionController:
+    """Physical setup plus private, non-authoritative traction task proxy."""
+
     tool_path: str
     tissue_root: str
     cells: list[TractionCell] = field(default_factory=list)
@@ -699,22 +729,38 @@ class BilateralTractionController:
                     created.append(attachment)
                     cells.append(TractionCell(side, index, attachment))
         except Exception:
-            remove_prims(created, stage=stage)
+            _remove_prims(created, stage=stage)
             raise
         self.cells = cells
         return list(cells)
 
     def release_side(self, side: str, *, stage=None):
+        _ = side, stage
+        _require_safeplane_scene_evidence_bridge("traction attachment release")
+
+    def _release_side_task_proxy(self, side: str, *, stage=None):
+        """Release authored proxy attachments for private offline analysis."""
+
         stage = _current_stage(stage)
         released = []
         for cell in self.cells:
             if cell.side == side and not cell.released:
-                remove_prims([cell.attachment_path], stage=stage)
+                _remove_prims([cell.attachment_path], stage=stage)
                 cell.released = True
                 released.append(cell.index)
         return released
 
     def update_force(self, left_force_n: float, right_force_n: float, *, stage=None):
+        _ = left_force_n, right_force_n, stage
+        _require_safeplane_scene_evidence_bridge(
+            "traction force and attachment-failure accounting"
+        )
+
+    def _update_force_task_proxy(
+        self, left_force_n: float, right_force_n: float, *, stage=None
+    ):
+        """Apply authored force scalars for private task-proxy analysis."""
+
         stage = _current_stage(stage)
         events = []
         for side, force in (
@@ -724,20 +770,31 @@ class BilateralTractionController:
             active = [cell for cell in self.cells if cell.side == side and not cell.released]
             if force >= self.hard_force_limit_n:
                 for cell in active:
-                    remove_prims([cell.attachment_path], stage=stage)
+                    _remove_prims([cell.attachment_path], stage=stage)
                     cell.released = True
                 events.append({"side": side, "event": "hard_release", "force_n": force})
             elif force >= self.soft_force_limit_n and active:
                 cell = sorted(active, key=lambda value: abs(value.index - 1.5), reverse=True)[0]
-                remove_prims([cell.attachment_path], stage=stage)
+                _remove_prims([cell.attachment_path], stage=stage)
                 cell.released = True
                 events.append({"side": side, "event": "peripheral_cell_release", "cell": cell.index, "force_n": force})
         return events
 
     def snapshot(self):
         return {
-            side: {"active_cells": [cell.index for cell in self.cells if cell.side == side and not cell.released]}
-            for side in ("left", "right")
+            "state_scope": "task_proxy_not_scene_attachment_evidence",
+            "outcome_evidence_status": OUTCOME_EVIDENCE_STATUS,
+            "patient_outcome_authoritative": False,
+            "sides": {
+                side: {
+                    "active_cells": [
+                        cell.index
+                        for cell in self.cells
+                        if cell.side == side and not cell.released
+                    ]
+                }
+                for side in ("left", "right")
+            },
         }
 
 
@@ -762,6 +819,8 @@ class BridgeRuntimeState:
 
 @dataclass
 class AdhesionBridgeController:
+    """Physical setup plus private, non-authoritative adhesion task proxy."""
+
     tissue_root: str
     states: dict[int, BridgeRuntimeState] = field(default_factory=dict)
 
@@ -803,17 +862,23 @@ class AdhesionBridgeController:
                     created.append(attachment)
                 state.attachment_paths = paths
         except Exception:
-            remove_prims(created, stage=stage)
+            _remove_prims(created, stage=stage)
             raise
         return self.snapshot()
 
     def release(self, index: int, mode: str, *, stage=None):
+        _ = index, mode, stage
+        _require_safeplane_scene_evidence_bridge("adhesion-bridge release")
+
+    def _release_task_proxy(self, index: int, mode: str, *, stage=None):
+        """Release an authored bridge for private task-proxy analysis."""
+
         state = self.states[int(index)]
         if state.released:
             return False
         stage = _current_stage(stage)
         joint_path = f"{self.tissue_root.rstrip('/')}/AdhesionBridges/Bridge_{index:02d}/ContinuityJoint"
-        remove_or_deactivate_prim(joint_path, stage=stage)
+        _remove_or_deactivate_prim(joint_path, stage=stage)
         state.released = True
         state.release_mode = str(mode)
         return True
@@ -827,6 +892,21 @@ class AdhesionBridgeController:
         return max(0.0, 1.0 - distance / max(radius, 1.0e-9))
 
     def apply_blunt_work(self, local_position: Sequence[float], work_j: float, *, radius_m: float = 0.018, stage=None):
+        _ = local_position, work_j, radius_m, stage
+        _require_safeplane_scene_evidence_bridge(
+            "blunt mechanical-work accumulation"
+        )
+
+    def _apply_blunt_work_task_proxy(
+        self,
+        local_position: Sequence[float],
+        work_j: float,
+        *,
+        radius_m: float = 0.018,
+        stage=None,
+    ):
+        """Apply authored work for private task-proxy analysis."""
+
         released = []
         for state in self.states.values():
             if state.released:
@@ -838,11 +918,28 @@ class AdhesionBridgeController:
             state.mechanical_work_j += _finite_nonnegative(work_j, "work_j") * weight * class_scale
             hydration_scale = max(0.28, 1.0 - 0.72 * state.hydro_volume_ml / max(state.hydro_threshold_ml, 1.0e-9))
             if state.mechanical_work_j >= state.mechanical_threshold_j * hydration_scale:
-                if self.release(state.index, "blunt_spreading", stage=stage):
+                if self._release_task_proxy(
+                    state.index, "blunt_spreading", stage=stage
+                ):
                     released.append(state.index)
         return released
 
     def apply_hydro_volume(self, local_position: Sequence[float], volume_ml: float, *, radius_m: float = 0.024, stage=None):
+        _ = local_position, volume_ml, radius_m, stage
+        _require_safeplane_scene_evidence_bridge(
+            "hydrodissection deposition and release"
+        )
+
+    def _apply_hydro_volume_task_proxy(
+        self,
+        local_position: Sequence[float],
+        volume_ml: float,
+        *,
+        radius_m: float = 0.024,
+        stage=None,
+    ):
+        """Apply authored hydro volume for private task-proxy analysis."""
+
         released = []
         for state in self.states.values():
             if state.released:
@@ -853,11 +950,28 @@ class AdhesionBridgeController:
             class_scale = 1.0 if state.bridge_class == "loose_connective_fibre" else 0.62 if state.bridge_class == "vascularized_adhesion" else 0.22
             state.hydro_volume_ml += _finite_nonnegative(volume_ml, "volume_ml") * weight * class_scale
             if state.hydro_volume_ml >= state.hydro_threshold_ml and state.bridge_class != "dense_fibrous_band":
-                if self.release(state.index, "hydrodissection", stage=stage):
+                if self._release_task_proxy(
+                    state.index, "hydrodissection", stage=stage
+                ):
                     released.append(state.index)
         return released
 
     def apply_energy(self, local_position: Sequence[float], energy_j: float, *, radius_m: float = 0.012, stage=None):
+        _ = local_position, energy_j, radius_m, stage
+        _require_safeplane_scene_evidence_bridge(
+            "dissection energy-dose accumulation"
+        )
+
+    def _apply_energy_task_proxy(
+        self,
+        local_position: Sequence[float],
+        energy_j: float,
+        *,
+        radius_m: float = 0.012,
+        stage=None,
+    ):
+        """Apply authored energy for private task-proxy analysis."""
+
         released = []
         for state in self.states.values():
             if state.released:
@@ -867,7 +981,9 @@ class AdhesionBridgeController:
                 continue
             state.energy_dose_j += _finite_nonnegative(energy_j, "energy_j") * weight
             if state.energy_dose_j >= state.energy_threshold_j:
-                if self.release(state.index, "low_energy_dissection", stage=stage):
+                if self._release_task_proxy(
+                    state.index, "low_energy_dissection", stage=stage
+                ):
                     released.append(state.index)
         return released
 
@@ -885,6 +1001,19 @@ class AdhesionBridgeController:
         return state if distance <= radius_m else None
 
     def cut_nearest(self, local_position: Sequence[float], *, guard_retracted: bool, blade_closed: bool, stage=None):
+        _ = local_position, guard_retracted, blade_closed, stage
+        _require_safeplane_scene_evidence_bridge("guarded-scissor division")
+
+    def _cut_nearest_task_proxy(
+        self,
+        local_position: Sequence[float],
+        *,
+        guard_retracted: bool,
+        blade_closed: bool,
+        stage=None,
+    ):
+        """Apply authored scissor state for private task-proxy analysis."""
+
         if not guard_retracted:
             return {"released": False, "reason": "scissor_guard_not_retracted"}
         if not blade_closed:
@@ -892,7 +1021,9 @@ class AdhesionBridgeController:
         state = self.nearest_unreleased(local_position)
         if state is None:
             return {"released": False, "reason": "no_bridge_in_cut_volume"}
-        released = self.release(state.index, "guarded_scissors", stage=stage)
+        released = self._release_task_proxy(
+            state.index, "guarded_scissors", stage=stage
+        )
         return {"released": released, "bridge_index": state.index, "bridge_class": state.bridge_class}
 
     @property
@@ -903,6 +1034,9 @@ class AdhesionBridgeController:
 
     def snapshot(self):
         return {
+            "state_scope": "private_task_proxy_not_scene_topology_evidence",
+            "outcome_evidence_status": OUTCOME_EVIDENCE_STATUS,
+            "patient_outcome_authoritative": False,
             "release_fraction": self.release_fraction,
             "released_count": sum(state.released for state in self.states.values()),
             "total_count": len(self.states),
@@ -944,6 +1078,8 @@ class ProtectedStructureState:
 
 @dataclass
 class ProtectedStructureController:
+    """Physical setup plus private, non-authoritative safety task proxy."""
+
     tissue_root: str
     states: dict[str, ProtectedStructureState] = field(
         default_factory=lambda: {name: ProtectedStructureState(name) for name in PROTECTED_STRUCTURES}
@@ -967,7 +1103,7 @@ class ProtectedStructureController:
                     create_deformable_attachment(target, f"{root}/Links/{segment}", attachment, stage=stage)
                     created.append(attachment)
         except Exception:
-            remove_prims(created, stage=stage)
+            _remove_prims(created, stage=stage)
             raise
         self.attachments = created
         return list(created)
@@ -985,6 +1121,16 @@ class ProtectedStructureController:
         return name, values[name], values
 
     def evaluate_action(self, local_position: Sequence[float], modality: str):
+        _ = local_position, modality
+        _require_safeplane_scene_evidence_bridge(
+            "protected-structure action authorization"
+        )
+
+    def _evaluate_action_task_proxy(
+        self, local_position: Sequence[float], modality: str
+    ):
+        """Evaluate authored geometry for private task-proxy analysis."""
+
         clearances = {
             "blunt": 0.0025,
             "hydro": 0.0030,
@@ -1010,6 +1156,14 @@ class ProtectedStructureController:
         }
 
     def injure(self, structure: str, mechanism: str, *, stage=None):
+        _ = structure, mechanism, stage
+        _require_safeplane_scene_evidence_bridge(
+            "protected-structure injury mutation"
+        )
+
+    def _injure_task_proxy(self, structure: str, mechanism: str, *, stage=None):
+        """Apply authored injury for private task-proxy analysis."""
+
         if structure not in self.states:
             raise KeyError(structure)
         state = self.states[structure]
@@ -1018,7 +1172,7 @@ class ProtectedStructureController:
         stage = _current_stage(stage)
         root = f"{self.tissue_root.rstrip('/')}/ProtectedStructures/{structure.title()}"
         joint = f"{root}/Joints/ContinuityJoint"
-        remove_or_deactivate_prim(joint, stage=stage)
+        _remove_or_deactivate_prim(joint, stage=stage)
         prim = stage.GetPrimAtPath(root)
         if prim and prim.IsValid():
             variants = prim.GetVariantSets().GetVariantSet("integrity")
@@ -1031,6 +1185,20 @@ class ProtectedStructureController:
         return True
 
     def update_complication(self, dt: float, *, pressure_pa: float = 12000.0, duct_pressure_pa: float = 900.0):
+        _ = dt, pressure_pa, duct_pressure_pa
+        _require_safeplane_scene_evidence_bridge(
+            "blood-loss and duct-leak complication accounting"
+        )
+
+    def _update_complication_task_proxy(
+        self,
+        dt: float,
+        *,
+        pressure_pa: float = 12000.0,
+        duct_pressure_pa: float = 900.0,
+    ):
+        """Apply authored pressure/time for private task-proxy analysis."""
+
         dt = _finite_nonnegative(dt, "dt")
         pressure_pa = _finite_nonnegative(pressure_pa, "pressure_pa")
         duct_pressure_pa = _finite_nonnegative(duct_pressure_pa, "duct_pressure_pa")
@@ -1044,19 +1212,26 @@ class ProtectedStructureController:
 
     def snapshot(self):
         return {
-            name: {
-                "intact": state.intact,
-                "injury_mechanism": state.injury_mechanism,
-                "blood_loss_ml": state.blood_loss_ml,
-                "duct_leak_ml": state.duct_leak_ml,
-                "nerve_conduction_fraction": state.nerve_conduction_fraction,
-            }
-            for name, state in self.states.items()
+            "state_scope": "private_task_proxy_not_patient_or_scene_evidence",
+            "outcome_evidence_status": OUTCOME_EVIDENCE_STATUS,
+            "patient_outcome_authoritative": False,
+            "structures": {
+                name: {
+                    "intact": state.intact,
+                    "injury_mechanism": state.injury_mechanism,
+                    "blood_loss_ml": state.blood_loss_ml,
+                    "duct_leak_ml": state.duct_leak_ml,
+                    "nerve_conduction_fraction": state.nerve_conduction_fraction,
+                }
+                for name, state in self.states.items()
+            },
         }
 
 
 @dataclass
 class FluidLedger:
+    """Command/particle inventory, not evidence of tissue deposition or loss."""
+
     reservoir_capacity_ml: float = 35.0
     reservoir_ml: float = 35.0
     collection_capacity_ml: float = 55.0
@@ -1084,19 +1259,47 @@ class FluidLedger:
         return amount
 
     def aspirate(self, requested_ml: float) -> float:
+        _ = requested_ml
+        _require_safeplane_scene_evidence_bridge(
+            "aspirated-fluid outcome accounting"
+        )
+
+    def _aspirate_scene_particles(self, measured_ml: float) -> float:
+        """Account for particles already removed by the scene-space suction pass."""
+
         capacity = max(0.0, self.collection_capacity_ml - self.aspirated_ml)
-        amount = min(_finite_nonnegative(requested_ml, "requested_ml"), self.active_particle_ml, capacity)
+        amount = min(
+            _finite_nonnegative(measured_ml, "measured_ml"),
+            self.active_particle_ml,
+            capacity,
+        )
         self.active_particle_ml -= amount
         self.aspirated_ml += amount
         return amount
 
     def absorb(self, requested_ml: float) -> float:
+        _ = requested_ml
+        _require_safeplane_scene_evidence_bridge(
+            "tissue fluid-absorption outcome accounting"
+        )
+
+    def _absorb_task_proxy(self, requested_ml: float) -> float:
+        """Apply caller-authored absorption only inside private task-proxy work."""
+
         amount = min(_finite_nonnegative(requested_ml, "requested_ml"), self.active_particle_ml)
         self.active_particle_ml -= amount
         self.absorbed_ml += amount
         return amount
 
     def spill(self, requested_ml: float) -> float:
+        _ = requested_ml
+        _require_safeplane_scene_evidence_bridge(
+            "spilled-fluid outcome accounting"
+        )
+
+    def _spill_task_proxy(self, requested_ml: float) -> float:
+        """Apply caller-authored spillage only inside private task-proxy work."""
+
         amount = min(_finite_nonnegative(requested_ml, "requested_ml"), self.active_particle_ml)
         self.active_particle_ml -= amount
         self.spilled_ml += amount
@@ -1110,6 +1313,12 @@ class FluidLedger:
 
     def snapshot(self):
         return {
+            "ledger_scope": (
+                "commanded_emission_and_scene_particle_inventory_not_"
+                "tissue_deposition_or_patient_fluid_evidence"
+            ),
+            "outcome_evidence_status": OUTCOME_EVIDENCE_STATUS,
+            "patient_outcome_authoritative": False,
             "reservoir_ml": self.reservoir_ml,
             "emitted_ml": self.emitted_ml,
             "active_particle_ml": self.active_particle_ml,
@@ -1265,7 +1474,9 @@ class SuctionFieldController:
         points.GetPointsAttr().Set(Vt.Vec3fArray(kept_positions))
         points.GetVelocitiesAttr().Set(Vt.Vec3fArray(kept_velocities))
         points.GetWidthsAttr().Set(kept_widths)
-        aspirated = ledger.aspirate(captured * PARTICLE_VOLUME_ML)
+        aspirated = ledger._aspirate_scene_particles(
+            captured * PARTICLE_VOLUME_ML
+        )
         expected_aspirated = captured * PARTICLE_VOLUME_ML
         if not math.isclose(aspirated, expected_aspirated, rel_tol=0.0, abs_tol=1.0e-12):
             raise RuntimeError(
@@ -1293,6 +1504,8 @@ class EnergyDissectionState:
 
 @dataclass
 class LowEnergyDissectionController:
+    """Private lumped thermal task proxy; not measured tissue mechanics."""
+
     target_temperature_c: float = 72.0
     maximum_temperature_c: float = 95.0
     maximum_power_w: float = 22.0
@@ -1301,6 +1514,19 @@ class LowEnergyDissectionController:
     state: EnergyDissectionState = field(default_factory=EnergyDissectionState)
 
     def update(self, dt: float, contact_force_n: float, requested_power_w: float | None = None):
+        _ = dt, contact_force_n, requested_power_w
+        _require_safeplane_scene_evidence_bridge(
+            "contact force, tissue temperature, and delivered energy"
+        )
+
+    def _update_task_proxy(
+        self,
+        dt: float,
+        contact_force_n: float,
+        requested_power_w: float | None = None,
+    ):
+        """Apply authored thermal inputs for private task-proxy analysis."""
+
         dt = _finite_nonnegative(dt, "dt")
         force_scale = max(
             0.0, min(1.0, _finite_nonnegative(contact_force_n, "contact_force_n") / 1.5)
@@ -1322,12 +1548,29 @@ class LowEnergyDissectionController:
 
 @dataclass
 class ScissorsInterlockController:
+    """Private geometric task proxy; public authorization fails closed."""
+
     minimum_guard_retraction_m: float = 0.009
     minimum_structure_clearance_m: float = 0.005
     violations: int = 0
 
     def evaluate(self, local_position: Sequence[float], guard_retraction_m: float, protected: ProtectedStructureController):
-        safety = protected.evaluate_action(local_position, "scissors")
+        _ = local_position, guard_retraction_m, protected
+        _require_safeplane_scene_evidence_bridge(
+            "guarded-scissor safety authorization"
+        )
+
+    def _evaluate_task_proxy(
+        self,
+        local_position: Sequence[float],
+        guard_retraction_m: float,
+        protected: ProtectedStructureController,
+    ):
+        """Evaluate authored geometry for private task-proxy analysis."""
+
+        safety = protected._evaluate_action_task_proxy(
+            local_position, "scissors"
+        )
         reasons = list(safety["reasons"])
         if _finite_nonnegative(guard_retraction_m, "guard_retraction_m") < self.minimum_guard_retraction_m:
             reasons.append("guard_not_fully_retracted")
@@ -1338,27 +1581,74 @@ class ScissorsInterlockController:
         bridges: AdhesionBridgeController, protected: ProtectedStructureController,
         *, override=False, stage=None,
     ):
-        result = self.evaluate(local_position, guard_retraction_m, protected)
+        _ = (
+            local_position,
+            guard_retraction_m,
+            bridges,
+            protected,
+            override,
+            stage,
+        )
+        _require_safeplane_scene_evidence_bridge("guarded-scissor cut")
+
+    def _request_cut_task_proxy(
+        self,
+        local_position: Sequence[float],
+        guard_retraction_m: float,
+        bridges: AdhesionBridgeController,
+        protected: ProtectedStructureController,
+        *,
+        override=False,
+        stage=None,
+    ):
+        """Apply authored scissor inputs for private task-proxy analysis."""
+
+        result = self._evaluate_task_proxy(
+            local_position, guard_retraction_m, protected
+        )
         if not result["authorized"] and not override:
             self.violations += 1
             return {**result, "released": False}
         if not result["authorized"] and override:
-            protected.injure(result["nearest_structure"], "scissor_override", stage=stage)
-        cut = bridges.cut_nearest(local_position, guard_retracted=True, blade_closed=True, stage=stage)
+            protected._injure_task_proxy(
+                result["nearest_structure"], "scissor_override", stage=stage
+            )
+        cut = bridges._cut_nearest_task_proxy(
+            local_position,
+            guard_retracted=True,
+            blade_closed=True,
+            stage=stage,
+        )
         return {**result, **cut, "override": bool(override)}
 
 
 @dataclass
 class DissectionCompletionVerifier:
+    """Fail-closed completion boundary with a private task-proxy evaluator."""
+
     bridges: AdhesionBridgeController
     protected: ProtectedStructureController
 
     def evaluate(self, *, visibility_fraction: float, traction_stable: bool):
+        _ = visibility_fraction, traction_stable
+        return {
+            "complete": False,
+            "outcome_evidence_status": OUTCOME_EVIDENCE_STATUS,
+            "required_evidence": REQUIRED_OUTCOME_EVIDENCE,
+            "patient_outcome_authoritative": False,
+            "clinical_validation": False,
+        }
+
+    def _evaluate_task_proxy(
+        self, *, visibility_fraction: float, traction_stable: bool
+    ):
+        """Evaluate authored completion inputs for private task-proxy analysis."""
+
         visibility_fraction = _finite(visibility_fraction, "visibility_fraction")
         if not 0.0 <= visibility_fraction <= 1.0:
             raise ValueError("visibility_fraction must be between 0 and 1")
         bridge_snapshot = self.bridges.snapshot()
-        structure_snapshot = self.protected.snapshot()
+        structure_snapshot = self.protected.snapshot()["structures"]
         protected_intact = all(value["intact"] for value in structure_snapshot.values())
         residual = bridge_snapshot["total_count"] - bridge_snapshot["released_count"]
         complete = (
@@ -1443,6 +1733,8 @@ PHASE_TARGETS = {
 
 
 def phase_targets(phase: str):
+    """Return an open-loop joint-target proposal, not phase completion."""
+
     try:
         return dict(PHASE_TARGETS[phase])
     except KeyError as exc:
@@ -1451,6 +1743,8 @@ def phase_targets(phase: str):
 
 @dataclass
 class SafePlaneDissectionSequenceController:
+    """Physical setup plus private, non-authoritative procedure task proxy."""
+
     tissue_root: str
     tool_path: str
     phase: str = "inspect"
@@ -1471,6 +1765,10 @@ class SafePlaneDissectionSequenceController:
         self.verifier = DissectionCompletionVerifier(self.bridges, self.protected)
 
     def transition(self, phase: str):
+        if phase == "complete":
+            _require_safeplane_scene_evidence_bridge(
+                "clinical dissection completion transition"
+            )
         targets = phase_targets(phase)
         self.phase = phase
         self.history.append(phase)
@@ -1487,38 +1785,163 @@ class SafePlaneDissectionSequenceController:
         }
 
     def blunt_action(self, local_position: Sequence[float], work_j: float, *, override=False, stage=None):
-        safety = self.protected.evaluate_action(local_position, "blunt")
+        _ = local_position, work_j, override, stage
+        _require_safeplane_scene_evidence_bridge("blunt dissection action")
+
+    def _blunt_action_task_proxy(
+        self,
+        local_position: Sequence[float],
+        work_j: float,
+        *,
+        override=False,
+        stage=None,
+    ):
+        """Apply authored blunt inputs for private task-proxy analysis."""
+
+        safety = self.protected._evaluate_action_task_proxy(
+            local_position, "blunt"
+        )
         if not safety["authorized"] and not override:
             return {"safety": safety, "released_bridges": [], "blocked": True}
         if not safety["authorized"] and override:
-            self.protected.injure(safety["nearest_structure"], "blunt_override", stage=stage)
-        released = self.bridges.apply_blunt_work(local_position, work_j, stage=stage)
+            self.protected._injure_task_proxy(
+                safety["nearest_structure"], "blunt_override", stage=stage
+            )
+        released = self.bridges._apply_blunt_work_task_proxy(
+            local_position, work_j, stage=stage
+        )
         return {"safety": safety, "released_bridges": released, "override": bool(override)}
 
     def hydro_action(self, local_position: Sequence[float], volume_ml: float, *, override=False, stage=None):
-        safety = self.protected.evaluate_action(local_position, "hydro")
+        _ = local_position, volume_ml, override, stage
+        _require_safeplane_scene_evidence_bridge("hydrodissection action")
+
+    def _hydro_action_task_proxy(
+        self,
+        local_position: Sequence[float],
+        volume_ml: float,
+        *,
+        override=False,
+        stage=None,
+    ):
+        """Apply authored hydro inputs for private task-proxy analysis."""
+
+        safety = self.protected._evaluate_action_task_proxy(
+            local_position, "hydro"
+        )
         if not safety["authorized"] and not override:
             return {"safety": safety, "released_bridges": [], "blocked": True}
         if not safety["authorized"] and override:
-            self.protected.injure(safety["nearest_structure"], "hydro_override", stage=stage)
-        released = self.bridges.apply_hydro_volume(local_position, volume_ml, stage=stage)
+            self.protected._injure_task_proxy(
+                safety["nearest_structure"], "hydro_override", stage=stage
+            )
+        released = self.bridges._apply_hydro_volume_task_proxy(
+            local_position, volume_ml, stage=stage
+        )
         return {"safety": safety, "released_bridges": released, "override": bool(override)}
 
     def energy_action(self, local_position: Sequence[float], *, dt: float, contact_force_n: float, requested_power_w: float | None = None, override=False, stage=None):
-        safety = self.protected.evaluate_action(local_position, "energy")
+        _ = (
+            local_position,
+            dt,
+            contact_force_n,
+            requested_power_w,
+            override,
+            stage,
+        )
+        _require_safeplane_scene_evidence_bridge("energy dissection action")
+
+    def _energy_action_task_proxy(
+        self,
+        local_position: Sequence[float],
+        *,
+        dt: float,
+        contact_force_n: float,
+        requested_power_w: float | None = None,
+        override=False,
+        stage=None,
+    ):
+        """Apply authored energy inputs for private task-proxy analysis."""
+
+        safety = self.protected._evaluate_action_task_proxy(
+            local_position, "energy"
+        )
         if not safety["authorized"] and not override:
             return {"safety": safety, "released_bridges": [], "blocked": True}
         if not safety["authorized"] and override:
-            self.protected.injure(safety["nearest_structure"], "energy_override", stage=stage)
-        energy_result = self.energy.update(dt, contact_force_n, requested_power_w)
-        released = self.bridges.apply_energy(local_position, energy_result["energy_j"], stage=stage)
+            self.protected._injure_task_proxy(
+                safety["nearest_structure"], "energy_override", stage=stage
+            )
+        energy_result = self.energy._update_task_proxy(
+            dt, contact_force_n, requested_power_w
+        )
+        released = self.bridges._apply_energy_task_proxy(
+            local_position, energy_result["energy_j"], stage=stage
+        )
         return {"safety": safety, "released_bridges": released, "energy": energy_result, "override": bool(override)}
 
     def scissors_action(self, local_position: Sequence[float], guard_retraction_m: float, *, override=False, stage=None):
-        return self.scissors.request_cut(
+        _ = local_position, guard_retraction_m, override, stage
+        _require_safeplane_scene_evidence_bridge("guarded-scissor action")
+
+    def _scissors_action_task_proxy(
+        self,
+        local_position: Sequence[float],
+        guard_retraction_m: float,
+        *,
+        override=False,
+        stage=None,
+    ):
+        """Apply authored scissor inputs for private task-proxy analysis."""
+
+        return self.scissors._request_cut_task_proxy(
             local_position, guard_retraction_m, self.bridges, self.protected,
             override=override, stage=stage,
         )
 
     def verify(self, *, visibility_fraction: float, traction_stable: bool):
         return self.verifier.evaluate(visibility_fraction=visibility_fraction, traction_stable=traction_stable)
+
+
+__all__ = [
+    "CATALOG_SUBPATH",
+    "ASSET_DATA_ROOT",
+    "ASSET_ROOT",
+    "TOOL_PAYLOAD_USD",
+    "TOOL_STANDALONE_USD",
+    "TOOL_RIGID_PROXY_USD",
+    "TISSUE_DEMO_USD",
+    "ADHESION_BRIDGE_USD",
+    "PROTECTED_VESSEL_USD",
+    "PROTECTED_NERVE_USD",
+    "PROTECTED_DUCT_USD",
+    "MICRO_SCISSORS_USD",
+    "DISSECTION_TOPOLOGY_PATH",
+    "VALID_SCISSORS_STATES",
+    "VALID_FLUID_STATES",
+    "VALID_COLLECTION_STATES",
+    "VALID_ENERGY_STATES",
+    "PROTECTED_STRUCTURES",
+    "OUTCOME_EVIDENCE_STATUS",
+    "REQUIRED_OUTCOME_EVIDENCE",
+    "TOOL_JOINTS",
+    "TOOL_FRAME_PATHS",
+    "REGISTERED_CAMERA_FRAMES",
+    "PARTICLE_RADIUS_M",
+    "PARTICLE_VOLUME_ML",
+    "frame_path",
+    "tensor_value",
+    "make_tool_cfg",
+    "make_rigid_proxy_cfg",
+    "spawn_franka_with_tool",
+    "make_franka_safeplane_dissection_robot_cfg",
+    "spawn_tissue_demo",
+    "apply_tissue_surface_deformables",
+    "create_deformable_attachment",
+    "anchor_target_bed",
+    "load_dissection_topology",
+    "ensure_dissection_particle_system",
+    "emit_hydro_burst",
+    "phase_targets",
+    "SafePlaneEvidenceError",
+]

@@ -1,13 +1,16 @@
 {
-  "schema": "dr.anmar.isaac-lab-oncology-training-contract.v1",
+  "schema": "dr.anmar.isaac-lab-oncology-training-contract.v2",
   "asset": "dranmar-oncosurgery-cell-v1",
   "version": "0.2.0",
-  "workflow": "manager_compatible_episode_model",
-  "implementation": "orbit.surgical.assets.oncologic_resection.OncologicResectionEpisode",
+  "workflow": "blocked_pending_oncology_scene_evidence_bridge",
+  "implementation": "private_non_authoritative_task_proxy",
+  "patient_outcome_authoritative": false,
+  "policy_observation_available": false,
+  "reward_available": false,
   "actions": {
     "robot": "Franka joint or differential IK action selected by the environment",
     "tool": "22 bounded joint targets grouped as imaging traction resection specimen and valves",
-    "task": [
+    "provisional_task_proxy_only": [
       "register",
       "accept_multimodal_map",
       "set_resection_plan",
@@ -38,21 +41,21 @@
       "resolve registered frames",
       "verify joint and collider topology",
       "activate exactly one Dynamic Patient liver GPU volume deformable in native tissue mode",
-      "retain the registered resection graph as the irreversible topology authority"
+      "require but do not claim a registered resection graph and scene-evidence bridge"
     ],
     "reset": [
-      "sample bounded domain parameters",
-      "reset tumor and bond state",
-      "reset specimen and fluid ledgers",
-      "randomize registration sensor friction stiffness and loss scales"
+      "sample bounded domain-parameter proposal only",
+      "private tumor bond and specimen task-proxy reset only",
+      "patient fluid ledgers are not bound",
+      "sampled friction stiffness sensor and loss scales are not applied"
     ],
     "interval": [
-      "refresh modality buffers according to simulated update periods",
-      "expire stale samples"
+      "required modality-buffer refresh is not implemented",
+      "required raw-sample identity and same-step expiry are not implemented"
     ]
   },
   "termination": {
-    "success": "all final report gates pass",
+    "success": "unavailable_no_oncology_scene_evidence_bridge",
     "safety": [
       "protected structure injury",
       "uncontrolled blood loss",
@@ -66,7 +69,7 @@
     "device": "CUDA",
     "maximum_active_components": 1,
     "continuous_state": "simulation nodal positions and velocities",
-    "irreversible_resection_state": "96 registered bonds plus tumor-cell field",
+    "required_irreversible_resection_state": "96 registered bonds plus tumor-cell field bound to exact same-step scene evidence",
     "arbitrary_runtime_mesh_cutting": false,
     "constitutive_calibration": false
   },

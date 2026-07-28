@@ -11,9 +11,10 @@
       "payload",
       "source"
     ],
-    "intervention_method": "patient.interventions.apply(event)",
+    "effect_authority": "intended owning mechanics subsystem with exact post-physics scene evidence; current low-level patient model objects remain mutable and therefore are not a complete authority boundary",
+    "legacy_authored_intervention_api": "disabled",
     "subscription_method": "patient.event_bus.subscribe(kind, callback)",
-    "typed_robot_adapter": "patient.robot"
+    "typed_robot_adapter": "not_exposed"
   },
   "patient_variants": {
     "body_habitus": [
@@ -53,11 +54,24 @@
     "patient.wound_grasp",
     "patient.organ_motion",
     "patient.damage",
-    "patient.interventions",
-    "patient.robot",
+    "patient.contact_effects",
+    "patient.patient_authority",
     "patient.contacts",
     "patient.event_bus",
     "patient.fluids"
+  ],
+  "disabled_runtime_routes": {
+    "patient.incision.advance": "pending exact prim-bound incision provider",
+    "patient.wound_grasp.observe": "pending exact prim-bound wound-grasp provider",
+    "caller_supplied_wound_capture_cells": "disabled",
+    "legacy_robot_interventions": "disabled"
+  },
+  "current_authority_limitations": [
+    "public patient authority and physiology model objects remain mutable",
+    "patient interval mutation is preflighted but not atomically staged and committed",
+    "bile and generic suction outputs do not debit source compartments",
+    "scene evidence is structurally registered but has no environment-issued provider receipt",
+    "no stable patient UUID reset generation or mutation revision"
   ],
   "intended_use": "simulation_training",
   "resuscitation_interfaces": {
@@ -77,7 +91,7 @@
       "incision",
       "wound_grasp",
       "tissue_state",
-      "intervention_history",
+      "disabled_legacy_intervention_history",
       "event_stream",
       "condition",
       "procedure_stage"
@@ -89,10 +103,14 @@
     ],
     "serializable": true
   },
+  "source_review_status": "source_hardened_unexecuted_current_revision",
+  "native_workcell_effect_provider": "not_implemented_for_all_workcells",
   "step_contract": {
     "method": "patient.step(dt_s)",
     "order": [
-      "contact_effects",
+      "preflight_complete_contact_interval",
+      "advance_patient_authority_clock",
+      "consume_contact_preflight_and_apply_contact_effects",
       "respiration",
       "cardiovascular",
       "bleeding",
@@ -106,6 +124,8 @@
       "organ_motion",
       "vital_signs",
       "event_bus"
-    ]
+    ],
+    "atomic_commit": false,
+    "rollback": false
   }
 }

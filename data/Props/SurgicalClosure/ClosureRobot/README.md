@@ -6,10 +6,10 @@ A modular Franka-compatible research end effector that performs one ordered clos
 2. creates temporary clamp-to-deformable attachments in the actual overlap regions;
 3. translates both approximation carriages toward the centerline;
 4. drives a chambered staple against the central anvil;
-5. deploys a rigid formed staple with independent left/right tissue-retention bonds;
-6. releases the temporary approximation attachments while the staple remains load bearing;
+5. deploys a rigid formed staple and creates independent left/right attachment prims;
+6. releases the temporary approximation attachments without inferring that the staple is load bearing;
 7. moves the adhesive nozzle onto the closed line and deposits fresh physical bead segments;
-8. changes each bead from fresh tack to a cured, stronger dual-sided bond.
+8. leaves cure and bond-strength evolution unverified pending cohesive evidence.
 
 The payload replaces the standard Panda hand at `panda_link8`. It is not held by the stock fingers. The composite spawner uses the composable Franka USD, deactivates the stock hand and finger prims before the articulation view initializes, references the payload, and joins `Links/Mount` to `panda_link8` through one fixed joint. Arm and tool therefore appear as one Isaac Lab articulation.
 
@@ -55,13 +55,16 @@ closure = ClosureSequenceController(
 )
 ```
 
-The task or policy commands the joint targets. `ClosureSequenceController` owns the discrete physics events: temporary capture, formed-staple attachment, staple inventory, adhesive deposition, cure progression, and provisional overload release.
+The task or policy commands joint targets. `ClosureSequenceController` owns
+temporary capture, formed-staple attachment-prim creation, staple inventory,
+and fresh-bead deployment. It does not accept caller-authored cure or overload
+results.
 
 ## Physical closure contract
 
 - Approximation is produced by articulated carriage motion while tissue is attached to the clamp contact volumes.
-- The staple is not decorative: the two formed legs create separate deformable attachments and remain after clamp release.
-- Adhesive is not decorative: each deposited bead creates independent left/right tissue bonds. Its task-level strength increases with cure fraction and can fail under an imposed resultant load.
+- The two formed legs create separate deformable attachment prims that remain after clamp release. Their presence alone does not prove load transfer, retention, or pullout resistance.
+- Each fresh bead creates independent left/right attachment prims. Cure, traction, separation, cohesive damage, and failure remain unknown until a same-step cohesive-mechanics bridge supplies them.
 - No biological healing, chemical reaction, calibrated penetration, or clinical efficacy is claimed.
 
 Available for simulation training with category-level geometry and disclosed

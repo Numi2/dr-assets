@@ -10,7 +10,7 @@ def Xform "DrAnmarSpecimenBag" (
     prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI", "SemanticsLabelsAPI:class"]
     prepend variantSets = "state"
     variants = { string state = "open" }
-    customData = { string drAnmarStatus = "simulation_training_component" }
+    customData = { string drAnmarStatus = "non_authoritative_rigid_visual_state_proxy_without_containment_mechanics" }
 )
 {
     token[] semantics:labels:class = ["specimen_retrieval_bag", "surgical_oncology_specimen_container"]

@@ -11,6 +11,10 @@ The following configurations are available:
 * :obj:`STAR_HIGH_PD_CFG`: STAR robot with stiffer PD control
 
 Reference: https://github.com/SamuelSchmidgall/SurgicalGym
+
+The gains and effort/velocity limits below are simulation-control defaults.
+They are not identified STAR/Endo360 hardware dynamics, manufacturer
+calibration, tool-tissue force limits, or patient-use evidence.
 """
 
 import isaaclab.sim as sim_utils

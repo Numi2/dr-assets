@@ -1,7 +1,47 @@
 {
   "asset": "dranmar-safeplane-dissection-robot-v1",
   "clinical_validation": false,
-  "failure_states": [
+  "completion_available": false,
+  "completion_blocker": "unavailable_no_safeplane_scene_evidence_bridge",
+  "medical_device": false,
+  "outcome_evidence": {
+    "required": [
+      "one_exact_step_SceneEvidenceEnvelope_with_registry_provenance",
+      "stable_source_prim_ids_raw_sample_ids_adapter_version_and_scene_epoch",
+      "physics_step_time_and_monotonic_topology_revision_cursor",
+      "shared_layered_soft_tissue_and_cohesive_interface_state",
+      "live_attachment_identity_force_and_disconnect_evidence",
+      "tool_contact_hydro_deposition_scissor_crossing_and_energy_delivery_evidence",
+      "shared_vessel_duct_and_nerve_mechanics",
+      "same_step_patient_blood_and_bile_ledger_binding"
+    ],
+    "status": "unavailable_no_safeplane_scene_evidence_bridge"
+  },
+  "patient_outcome_authoritative": false,
+  "proposed_procedure_sequence": [
+    "inspect",
+    "capture",
+    "traction",
+    "blunt",
+    "hydro",
+    "guarded_scissors",
+    "low_energy",
+    "irrigate_and_evacuate",
+    "verify_connectivity",
+    "release",
+    "complete"
+  ],
+  "proposed_success_conditions": [
+    "all_target_adhesion_bridges_released",
+    "vessel_continuity_intact",
+    "nerve_continuity_intact",
+    "duct_continuity_intact",
+    "roi_visibility_fraction_at_least_0_90",
+    "traction_stable",
+    "no_uncommanded_scissor_or_energy_action_inside_protected_clearance"
+  ],
+  "schema": "dranmar.safeplane-dissection-task.v2",
+  "task_proxy_failure_categories": [
     "traction_overload",
     "pad_capture_loss",
     "residual_adhesion",
@@ -14,8 +54,7 @@
     "unguarded_scissor_command",
     "incomplete_smoke_evacuation"
   ],
-  "medical_device": false,
-  "metrics": [
+  "task_proxy_metrics": [
     "released_bridge_fraction",
     "residual_bridge_count",
     "release_mode_distribution",
@@ -35,28 +74,5 @@
     "roi_visibility_fraction",
     "procedure_time_s",
     "safety_interlock_violations"
-  ],
-  "procedure": [
-    "inspect",
-    "capture",
-    "traction",
-    "blunt",
-    "hydro",
-    "guarded_scissors",
-    "low_energy",
-    "irrigate_and_evacuate",
-    "verify_connectivity",
-    "release",
-    "complete"
-  ],
-  "required_success_conditions": [
-    "all_target_adhesion_bridges_released",
-    "vessel_continuity_intact",
-    "nerve_continuity_intact",
-    "duct_continuity_intact",
-    "roi_visibility_fraction_at_least_0_90",
-    "traction_stable",
-    "no_uncommanded_scissor_or_energy_action_inside_protected_clearance"
-  ],
-  "schema": "dranmar.safeplane-dissection-task.v1"
+  ]
 }

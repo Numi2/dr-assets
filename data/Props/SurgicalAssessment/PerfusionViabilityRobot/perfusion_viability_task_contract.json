@@ -1,6 +1,6 @@
 {
   "asset_id": "dranmar-perfusion-viability-robot-v1",
-  "closed_loop_actions": [
+  "synthetic_fixture_closed_loop_actions": [
     "remove_or_reposition_occluder_or_clip",
     "release_venous_compression_or_revise_outflow",
     "revise_anastomosis",
@@ -8,7 +8,7 @@
     "release_retraction_or_reduce_dressing_pressure",
     "no_action"
   ],
-  "conditions": [
+  "synthetic_fixture_conditions": [
     "healthy",
     "arterial_occlusion",
     "venous_congestion",
@@ -18,33 +18,49 @@
     "dressing_compression",
     "recovered"
   ],
-  "diagnostic_input_boundary": "inference consumes only registered observable modality maps and temporal ICG metrics; scenario labels and latent flow fields are evaluation-only",
-  "intervention_evidence": [
-    "reported_displacement_m",
-    "reported_lumen_gain_fraction",
-    "reported_contact_force_n",
-    "reported_seal_fraction",
-    "reported_dwell_s"
+  "diagnostic_input_boundary": "production inference requires a prim-bound post-physics SceneEvidenceEnvelope, raw payload hashes and native record IDs, and the exact live DynamicSurgicalPatient snapshot binding; caller scenario labels, recovery scalars and latent fixture flow fields are rejected",
+  "production_intervention_evidence": [
+    "environment-owned causally bound native provider receipt",
+    "admitted action identity and exact action target",
+    "exact tracking and contact source prims",
+    "exact patient target prim",
+    "post-physics displacement vector",
+    "post-physics contact-force vector and contact-pair identity",
+    "exact attachment prim identities when a runtime attachment exists",
+    "monotonic before-intervention-after envelopes",
+    "same DynamicSurgicalPatient runtime instance"
   ],
-  "intervention_rule": "recovery advances continuously from physical evidence; evidence-free success transitions are rejected",
-  "outputs": [
+  "intervention_rule": "current production assessment always abstains and simulator completion remains false because no causally bound native provider/action-target-effect receipt exists; synthetic fixture progress is never promoted",
+  "synthetic_fixture_outputs": [
     "arrival_time_s",
     "wash_in_slope_per_s",
     "time_to_peak_s",
     "peak_intensity",
     "washout_slope_per_s",
     "perfusion_asymmetry",
-    "nonperfused_fraction",
+    "low_perfusion_signal_fraction",
     "vessel_flow_direction",
     "surface_temperature_c",
     "surface_oxygenation_fraction",
     "sensor_disagreement",
     "confidence",
-    "diagnostic_confidence",
+    "provisional_pattern_confidence",
     "abstained",
     "usable_modalities",
-    "likely_cause",
-    "recommended_action"
+    "provisional_pattern_label",
+    "provisional_research_action"
+  ],
+  "production_provisional_outputs": [
+    "global_relative_perfusion_index",
+    "low_perfusion_signal_fraction",
+    "relative_ultrasound_lumen_signal_index",
+    "sensor_disagreement",
+    "abstained",
+    "usable_modalities",
+    "prim_bound_evidence_digest",
+    "DynamicSurgicalPatient_snapshot_digest",
+    "clinical_viability_validated_false",
+    "clinical_patency_validated_false"
   ],
   "phases": [
     "inspect",
@@ -63,5 +79,10 @@
   ],
   "intended_use": "simulation_training",
   "schema": "dr.anmar.perfusion-viability-task.v1",
-  "success": "post_intervention_scan_improves_global_viability_and_reduces_nonperfused_fraction_without_new_leak_or_sensor_disagreement_fault"
+  "synthetic_fixture_success_criterion": "post-intervention fixture increases its relative perfusion index and reduces its low-signal fraction",
+  "production_simulator_completion_requirement": "not satisfiable in this revision; first add an environment-issued native provider receipt causally binding one admitted action and exact target to prim-bound before/intervention/after evidence and one patient revision, then separately evaluate calibrated task metrics",
+  "clinical_viability_validated": false,
+  "clinical_patency_validated": false,
+  "clinical_recovery_validated": false,
+  "patient_care_approved": false
 }

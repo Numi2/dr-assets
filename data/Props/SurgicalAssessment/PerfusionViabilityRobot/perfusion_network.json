@@ -1724,6 +1724,9 @@
       "venule_edge": "VB23"
     }
   ],
+  "clinical_validation": false,
+  "evidence_status": "synthetic_fixture_only",
+  "physical_calibration": false,
   "schema": "dr.anmar.perfusion-network.v1",
   "units": {
     "flow": "ml_s",

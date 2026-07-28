@@ -6,7 +6,9 @@
       "ring_curette",
       "microtextured_pad"
     ],
-    "debris_release_model": "cumulative_contact_work_removes_temporary_deformable_attachment",
+    "debris_release_model": "prim_bound_post_physics_tangential_dissipation_work_removes_exact_live_temporary_attachment",
+    "evidence_adapter": "dranmar.wound-preparation.scene-evidence@1.0.0",
+    "runtime_evidence_provider": "not_implemented_fail_closed",
     "default_cartridge": "soft_brush",
     "extension_m": 0.02,
     "guard_compression_m": 0.008,
@@ -129,7 +131,7 @@
     "status": "particle-scale proxy_not_cfd_or_clinical_dose_model"
   },
   "schema": "dr.anmar.wound-preparation-physics.v1",
-  "status": "simulation_training_model",
+  "status": "source_mechanics_hardened_runtime_evidence_bridge_pending",
   "suction": {
     "capture_depth_m": 0.026,
     "capture_radius_m": 0.023,

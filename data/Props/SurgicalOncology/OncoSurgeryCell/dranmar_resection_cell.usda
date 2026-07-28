@@ -10,7 +10,7 @@ def Xform "DrAnmarResectionCell" (
     prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI", "SemanticsLabelsAPI:class"]
     customData = {
         string drAnmarAssetId = "dranmar-resection-cell"
-        string drAnmarStatus = "simulation_training_workcell"
+        string drAnmarStatus = "non_authoritative_rigid_visual_proxy_without_collision_or_attachment_mechanics"
     }
 )
 {

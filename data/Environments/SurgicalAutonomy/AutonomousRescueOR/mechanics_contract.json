@@ -24,8 +24,8 @@
     "ventilation support requires an attached airway valid pressure circuit flow and measured chest excursion",
     "hemostasis success requires a continuous measured upstream-pressure challenge window and cannot be activated by action intent",
     "hemostasis success also requires preserved distal perfusion",
-    "reward is computed from patient state change including blood loss distal perfusion MAP oxygenation and new damage rather than action identity",
-    "a favorable steady state earns no repeated reward"
+    "policy reward remains zero until one admitted action is causally bound to a same-step evidence batch covering every active rescue target",
+    "mechanics deltas are diagnostic only and cannot establish success"
   ],
   "failure_modes": [
     "contact_asymmetry",
@@ -48,6 +48,8 @@
     "ventilation_circuit_leak",
     "airway_pressure_overload"
   ],
+  "runtime_coverage": "public exact evidence ingress exists only for rescue_vessel plus separate pump and ventilation intervals; bowel anastomosis abdominal wall and occlusive film effects are not integrated",
+  "transaction_boundary": "no atomic patient-wide target/device batch or rollback in this revision",
   "calibration_status": "provisional_not_fitted_to_physical_bench_data",
   "clinical_validation": false
 }

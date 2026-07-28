@@ -14,7 +14,8 @@ def Xform "DrAnmarProtectedNerveBranch" (
         string drAnmarAssetId = "dranmar-protected-nerve-branch-v1"
         string drAnmarStructureKind = "nerve"
         bool drAnmarClinicalValidation = false
-        string drAnmarContinuityContract = "independent_rigid_halves_connected_by_runtime_removable_joint"
+        string drAnmarContinuityContract = "rigid_proxy_halves_and_visual_injury_variant_not_nerve_conduction_or_patient_outcome"
+        string drAnmarOutcomeEvidenceStatus = "unavailable_no_safeplane_scene_evidence_bridge"
     }
 )
 {

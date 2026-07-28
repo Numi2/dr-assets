@@ -52,13 +52,17 @@ The supplied integration helper supports:
 - conservative fluid-volume bookkeeping;
 - annular suction forces and particle capture;
 - temporary debris-to-wound attachments;
-- cumulative-work debris release;
+- debris release from prim-bound, raw-identified post-physics contact evidence;
 - canonical wound-preparation phase targets.
 
 The fluid implementation is a particle-scale task model, not CFD. The
-debridement implementation releases discrete debris fragments and does not
-claim tissue viability classification, biological cutting, bacterial reduction,
-or clinical efficacy.
+debridement implementation integrates dissipative tangential contact work from
+the shared contact convention and requires the exact live debris attachment.
+The former caller-authored force/speed update path now fails closed. No
+production Isaac/PhysX provider currently constructs the required
+`WoundPreparationSceneEvidence`, so runtime debridement completion remains
+unverified until that bridge exists. The model does not claim tissue viability
+classification, biological cutting, bacterial reduction, or clinical efficacy.
 
 ## Validation
 
@@ -92,6 +96,9 @@ and workstation metadata from manifests and archives.
 ## Evidence boundary
 
 This simulation-training workcell is available for task execution and
-evaluation. Real-world and clinical evidence are not established. All
-unmeasured mechanical, fluid, tissue, and contact values remain disclosed
-engineering parameters.
+evaluation of its mechanism and scene contract. Debris release is not a
+qualified runtime capability without a registered post-physics evidence
+provider. Suction remains a scripted capture field rather than pressure/flow
+physics. Real-world and clinical evidence are not established. All unmeasured
+mechanical, fluid, tissue, and contact values remain disclosed engineering
+parameters.

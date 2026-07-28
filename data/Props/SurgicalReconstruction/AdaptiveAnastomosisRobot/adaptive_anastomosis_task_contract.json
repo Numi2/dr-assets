@@ -1,4 +1,5 @@
 {
+  "capture_overload_authority": "unavailable_until_capture_contact_sources_are_registered",
   "clinical_validation": false,
   "failure_modes": [
     "capture_loss",
@@ -15,6 +16,8 @@
     "mandrel_entrapment",
     "instrument_collision"
   ],
+  "flow_connected_patency_verified": false,
+  "native_scene_evidence_provider": "not_implemented",
   "phases": [
     "inspect",
     "capture",
@@ -32,21 +35,27 @@
     "abort"
   ],
   "procedure": "end_to_end_hollow_tissue_anastomosis",
-  "schema": "dranmar.adaptive-anastomosis-task.v1",
-  "success_metrics": [
-    "lumen_axis_error_deg",
-    "centerline_offset_m",
+  "provisional_task_signals": [
+    "scene_bound_lumen_axis_error_deg",
+    "scene_bound_centerline_offset_m",
     "minimum_lumen_radius_m",
-    "patency_area_fraction",
-    "edge_apposition_gap_m",
-    "eversion_height_m",
-    "retained_staple_fraction",
-    "reinforcement_bond_fraction",
-    "pressure_decay_pa_s",
-    "residual_leak_ml_min",
-    "integrated_leak_volume_ml",
-    "capture_force_n",
-    "procedure_time_s",
-    "tissue_damage_proxy"
-  ]
+    "geometry_only_patency_area_fraction",
+    "mechanically_qualified_staple_fraction",
+    "mechanically_qualified_collar_sector_fraction",
+    "measured_pressure_pa",
+    "measured_residual_leak_ml_min",
+    "integrated_leak_volume_ml"
+  ],
+  "required_scene_evidence": [
+    "exact_lumen_node_sets",
+    "exact_staple_rod_results",
+    "exact_staple_and_collar_attachment_prim_ids",
+    "exact_cohesive_interface_results",
+    "exact_pressure_flow_records",
+    "raw_native_record_identity",
+    "episode_environment_topology_step_and_time"
+  ],
+  "retention_verified": false,
+  "schema": "dranmar.adaptive-anastomosis-task.v2",
+  "simulator_task_completion_verified": false
 }

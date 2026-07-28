@@ -1,7 +1,7 @@
 #usda 1.0
 (
     defaultPrim = "DrAnmarOncologyLiverDemo"
-    doc = "DrAnmar deformable-ready liver tumor resection substrate with physical vascular and duct structures."
+    doc = "DrAnmar visual task-state liver substrate; no deformable, collision, vascular-flow, duct-flow, or irreversible topology mechanics are authored here."
     kilogramsPerUnit = 1
     metersPerUnit = 1
     upAxis = "Z"

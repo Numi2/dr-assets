@@ -5,6 +5,12 @@
     "empty_state_disables_dependent_measurement": true
   },
   "dynamic_scene_note": "use USD RTX camera route for deforming tissue; Warp ray-caster geometry route is only for compatible static meshes",
+  "implementation_status": {
+    "native_multimodal_scene_bridge": "not_implemented_in_this_package",
+    "production_ingress": "PerfusionScanSceneEvidence",
+    "required_patient_binding": "exact live DynamicSurgicalPatient instance and immutable snapshot digest",
+    "synthetic_generator": "fixture_only_not_runtime_evidence"
+  },
   "failed_modality_policy": "exclude failed modalities, renormalize valid weights, and abstain when evidence is insufficient",
   "fault_states": [
     "ready",
@@ -78,17 +84,18 @@
         "ultrasound_probe_axis"
       ],
       "id": "ultrasound",
-      "output": "b_mode_and_color_flow",
+      "output": "b_mode_color_flow_and_provisional_relative_lumen_signal",
       "update_hz": 30
     }
   ],
-  "registration": "all_outputs_map_to_24_region_tissue_grid_and_common_world_timestamp",
-  "runtime_quality_gates": {
+  "registration_requirement": "native bridge must bind every payload hash and raw record ID to exact source and patient target prims in one post-physics SceneEvidenceEnvelope",
+  "abstention_policy": {
     "explicit_abstention": true,
     "minimum_usable_modalities": 3,
     "registration_error_m_max": 0.003,
     "timestamp_skew_s_max": 0.05
   },
   "schema": "dr.anmar.multimodal-sensor-contract.v1",
-  "shared_state": "perfusion_network.json plus ICGTracerTransport"
+  "fixture_shared_state": "perfusion_network.json plus SyntheticFixtureICGTracerTransport",
+  "production_shared_state": "prim-bound modality records plus exact DynamicSurgicalPatient snapshot; no caller condition or recovery scalar"
 }

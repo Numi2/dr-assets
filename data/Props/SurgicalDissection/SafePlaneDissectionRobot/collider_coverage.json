@@ -1,5 +1,6 @@
 {
   "asset": "dranmar-safeplane-dissection-robot-v1",
+  "coverage_basis": "authored_local_axis_aligned_bounds_only",
   "links": [
     {
       "axis_coverage_ratio": [
@@ -596,5 +597,6 @@
       ]
     }
   ],
-  "schema": "dranmar.collider-coverage.v1"
+  "runtime_contact_coverage_validated": false,
+  "schema": "dranmar.collider-coverage.v2"
 }

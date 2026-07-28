@@ -1,5 +1,8 @@
 {
-  "fusion_outputs": [
+  "runtime_bridge_applied": false,
+  "outcome_evidence_status": "unavailable_no_oncology_scene_evidence_bridge",
+  "patient_outcome_authoritative": false,
+  "provisional_task_proxy_outputs": [
     "tumor_probability",
     "margin_probability",
     "protected_structure_probability",
@@ -61,6 +64,6 @@
       "runtime": "robotic_ultrasound_bridge_or_proxy"
     }
   },
-  "schema": "dr.anmar.oncology-sensors.v1",
+  "schema": "dr.anmar.oncology-sensors.v2",
   "shared_registration_frame": "tumor_mapping_tcp"
 }

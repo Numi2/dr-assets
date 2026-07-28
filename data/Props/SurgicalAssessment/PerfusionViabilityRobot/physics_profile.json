@@ -2,20 +2,23 @@
   "flow": {
     "arterial_pressure_kpa_seed": 13.3,
     "conservation_required": true,
-    "model": "linear_resistive_network_with_boundary_pressure_obstruction_compression_and_leak_sinks",
+    "model": "synthetic_fixture_linear_resistive_network_with_boundary_pressure_obstruction_compression_and_leak_sinks",
     "venous_pressure_kpa_seed": 1.2
   },
   "id": "dranmar-perfusion-viability-robot-v1",
   "modalities": {
-    "depth": "RTX_camera_or_host_depth_route",
-    "doppler": "projected_edge_velocity",
-    "laser_speckle": "shared_region_flow",
-    "nir_icg": "shared_tracer_state",
-    "rgb": "RTX_camera_context",
-    "surface_oxygenation": "delivery_consumption_proxy",
-    "thermal": "perfusion_heat_proxy",
-    "ultrasound": "synthetic_b_mode_plus_color_flow_or_i4h_bridge"
+    "depth": "synthetic_fixture_or_external_native_bridge",
+    "doppler": "synthetic_fixture_projected_edge_velocity",
+    "laser_speckle": "synthetic_fixture_shared_region_flow",
+    "nir_icg": "synthetic_fixture_shared_tracer_state",
+    "rgb": "rendered_camera_fixture_without_calibrated_optical_physics",
+    "surface_oxygenation": "synthetic_fixture_delivery_consumption_proxy",
+    "thermal": "synthetic_fixture_perfusion_heat_proxy",
+    "ultrasound": "synthetic_fixture_b_mode_plus_color_flow"
   },
+  "native_multimodal_scene_bridge_included": false,
+  "production_evidence_contract": "environment-issued native provider/action-target-effect receipt containing PerfusionScanSceneEvidence, PerfusionInterventionSceneEvidence, and exact patient identity/reset/mutation revision",
+  "current_production_behavior": "abstain_with_zero_confidence_and_completion_false",
   "evidence_boundary": [
     "no clinical perfusion thresholds",
     "no pharmacokinetic dosing claim",

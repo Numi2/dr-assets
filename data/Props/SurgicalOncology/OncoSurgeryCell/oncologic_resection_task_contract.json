@@ -1,4 +1,8 @@
 {
+  "authority": "non_authoritative_task_proxy",
+  "outcome_evidence_status": "unavailable_no_oncology_scene_evidence_bridge",
+  "patient_outcome_authoritative": false,
+  "public_success_available": false,
   "failure_modes": [
     "registration_error",
     "positive_margin",
@@ -13,7 +17,7 @@
     "uncontrolled_bleeding",
     "bile_leak"
   ],
-  "metrics": [
+  "task_proxy_metrics": [
     "planned_volume_mm3",
     "resected_volume_mm3",
     "healthy_tissue_removed_mm3",
@@ -49,14 +53,14 @@
     "final_margin_report"
   ],
   "procedure": "adaptive_tumor_resection_and_margin_assurance",
-  "schema": "dr.anmar.oncologic-resection-task.v1",
-  "success": {
+  "schema": "dr.anmar.oncologic-resection-task.v2",
+  "provisional_task_proxy_thresholds": {
     "bag_closed": true,
-    "bile_leak_ml_min_max": 0.2,
+    "cumulative_bile_loss_ml_max": 0.2,
     "minimum_margin_m_min": 0.01,
     "protected_structure_injury_count_max": 0,
     "residual_tumor_volume_mm3_max": 0.0,
     "specimen_detached": true,
-    "uncontrolled_bleeding_ml_min_max": 5.0
+    "cumulative_blood_loss_ml_max": 5.0
   }
 }

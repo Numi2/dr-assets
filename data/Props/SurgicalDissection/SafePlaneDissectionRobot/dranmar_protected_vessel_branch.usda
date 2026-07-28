@@ -14,7 +14,8 @@ def Xform "DrAnmarProtectedVesselBranch" (
         string drAnmarAssetId = "dranmar-protected-vessel-branch-v1"
         string drAnmarStructureKind = "vessel"
         bool drAnmarClinicalValidation = false
-        string drAnmarContinuityContract = "independent_rigid_halves_connected_by_runtime_removable_joint"
+        string drAnmarContinuityContract = "rigid_proxy_halves_and_visual_injury_variant_not_vessel_flow_or_patient_outcome"
+        string drAnmarOutcomeEvidenceStatus = "unavailable_no_safeplane_scene_evidence_bridge"
     }
 )
 {

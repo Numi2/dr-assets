@@ -15,6 +15,16 @@ from pathlib import Path
 from typing import Any, Iterable, Sequence
 import math
 
+from orbit.surgical.assets.adaptive_hemostasis_scene_evidence import (
+    ClipMechanicsSample,
+    CompressionMechanicsSample,
+    HemostasisEvidenceCursor,
+    HemostasisSceneEvidence,
+    HemostasisSceneEvidenceSource,
+    PatchMechanicsSample,
+    VesselMechanicsSample,
+)
+
 CATALOG_SUBPATH = "Props/SurgicalHemostasis/AdaptiveHemostasisRobot"
 ASSET_DATA_ROOT = Path(__file__).resolve().parents[3] / "data"
 ROOT = ASSET_DATA_ROOT / CATALOG_SUBPATH
@@ -420,32 +430,31 @@ class HemorrhageLedger:
 
 @dataclass
 class ReducedOrderBleedModel:
-    defect_area_m2: float=1.8e-6
-    pressure_pa: float=10665.8
-    density_kg_m3: float=1060.0
-    discharge_coefficient: float=0.62
-    compression_fraction: float=0.0
-    clip_occlusion_fraction: float=0.0
-    patch_seal_fraction: float=0.0
-    vessel_damage_multiplier: float=1.0
-    def __post_init__(self):
-        self.defect_area_m2=_nonnegative_finite(self.defect_area_m2,"defect_area_m2")
-        self.pressure_pa=_nonnegative_finite(self.pressure_pa,"pressure_pa")
-        self.density_kg_m3=_nonnegative_finite(self.density_kg_m3,"density_kg_m3")
-        if self.density_kg_m3 == 0.0:raise ValueError("density_kg_m3 must be positive")
-        self.discharge_coefficient=_nonnegative_finite(self.discharge_coefficient,"discharge_coefficient")
-        self.compression_fraction=_fraction(self.compression_fraction,"compression_fraction")
-        self.clip_occlusion_fraction=_fraction(self.clip_occlusion_fraction,"clip_occlusion_fraction")
-        self.patch_seal_fraction=_fraction(self.patch_seal_fraction,"patch_seal_fraction")
-        self.vessel_damage_multiplier=_nonnegative_finite(self.vessel_damage_multiplier,"vessel_damage_multiplier")
-    def effective_area_m2(self):
-        closure=1.0-(1.0-_fraction(self.compression_fraction,"compression_fraction"))*(1.0-_fraction(self.clip_occlusion_fraction,"clip_occlusion_fraction"))*(1.0-_fraction(self.patch_seal_fraction,"patch_seal_fraction"))
-        return self.defect_area_m2*(1.0-closure)*_nonnegative_finite(self.vessel_damage_multiplier,"vessel_damage_multiplier")
-    def flow_m3_s(self, downstream_pressure_pa: float=0.0):
-        downstream=_nonnegative_finite(downstream_pressure_pa,"downstream_pressure_pa");dp=max(0.0,_nonnegative_finite(self.pressure_pa,"pressure_pa")-downstream);density=_nonnegative_finite(self.density_kg_m3,"density_kg_m3")
-        if density == 0.0:raise ValueError("density_kg_m3 must be positive")
-        return _nonnegative_finite(self.discharge_coefficient,"discharge_coefficient")*self.effective_area_m2()*math.sqrt(2.0*dp/density)
-    def flow_ml_min(self,downstream_pressure_pa: float=0.0):return self.flow_m3_s(downstream_pressure_pa)*60.0*1e6
+    """Compatibility-named view over the shared vessel observation.
+
+    This class does not evolve vessel state or recompute leakage.  Flow and
+    residual defect geometry remain authoritative outputs of shared
+    ``VesselMechanics``.
+    """
+
+    last_vessel_sample: VesselMechanicsSample | None = field(default=None, init=False)
+
+    def update_from_scene(self, vessel: VesselMechanicsSample) -> None:
+        if not isinstance(vessel, VesselMechanicsSample):
+            raise TypeError("bleed model requires a VesselMechanicsSample")
+        self.last_vessel_sample = vessel
+
+    def _sample(self, vessel: VesselMechanicsSample | None) -> VesselMechanicsSample:
+        sample = vessel if vessel is not None else self.last_vessel_sample
+        if sample is None:
+            raise RuntimeError("scene vessel mechanics have not been sampled")
+        return sample
+
+    def effective_area_m2(self, vessel: VesselMechanicsSample | None = None):
+        return self._sample(vessel).residual_defect_area_m2
+
+    def observed_flow_ml_min(self, vessel: VesselMechanicsSample | None = None):
+        return self._sample(vessel).measured_leak_flow_ml_min
 
 
 def ensure_blood_particle_system(*, physics_scene_path="/physicsScene", root_path="/World/DrAnmarBlood", system_path=None, particles_path=None, material_path=None, stage=None):
@@ -582,11 +591,13 @@ class TemporaryCompressionController:
             remove_prims(created,stage=stage);raise
         self.attachment_paths=created;self.engaged=True;return list(created)
     def release(self,*,stage=None):remove_prims(self.attachment_paths,stage=stage);self.attachment_paths.clear();self.engaged=False
-    def update_loads(self,left_force_n: float,right_force_n: float,*,stage=None):
-        left=_nonnegative_finite(abs(float(left_force_n)),"left_force_n");right=_nonnegative_finite(abs(float(right_force_n)),"right_force_n")
+    def update_from_scene(self,mechanics: CompressionMechanicsSample,*,stage=None):
+        if not isinstance(mechanics, CompressionMechanicsSample):
+            raise TypeError("compression controller requires CompressionMechanicsSample")
+        left=mechanics.left_normal_force_n;right=mechanics.right_normal_force_n
         hard=max(left,right)>self.hard_release_limit_n;soft=max(left,right)>self.soft_force_limit_n
         if hard and self.engaged:self.release(stage=stage)
-        return {"mode":"hard_release" if hard else "soft_limit" if soft else "controlled","left_force_n":left,"right_force_n":right,"left_target_error_n":left-self.target_force_per_pad_n,"right_target_error_n":right-self.target_force_per_pad_n,"engaged":self.engaged}
+        return {"mode":"hard_release" if hard else "soft_limit" if soft else "controlled","left_force_n":left,"right_force_n":right,"left_contact_area_m2":mechanics.left_contact_area_m2,"right_contact_area_m2":mechanics.right_contact_area_m2,"left_mean_pressure_pa":mechanics.left_mean_pressure_pa,"right_mean_pressure_pa":mechanics.right_mean_pressure_pa,"left_target_error_n":left-self.target_force_per_pad_n,"right_target_error_n":right-self.target_force_per_pad_n,"engaged":self.engaged}
 
 
 def _spawn_reference_at_transform(stage,prim_path: str,usd_path: Path,world_transform: Any,variants: dict[str,str]|None=None):
@@ -612,40 +623,117 @@ def deploy_formed_clip(prim_path: str, world_transform: Any, vessel_path: str, *
 class ClipRetentionBond:
     clip_path: str
     attachment_paths: list[str]
-    retained: bool=True
+    last_scene_step: int=-1
 
 
 @dataclass
 class ClipRetentionController:
-    pullout_force_n: float=2.8
+    minimum_contact_area_m2: float=2.0e-6
+    minimum_contact_pressure_pa: float=500.0
+    maximum_residual_gap_m: float=0.0010
+    minimum_formed_span_m: float=0.0020
+    maximum_damage_fraction: float=0.95
+    maximum_retention_slip_speed_m_s: float=0.001
     bonds: list[ClipRetentionBond]=field(default_factory=list)
-    def __post_init__(self):self.pullout_force_n=_nonnegative_finite(self.pullout_force_n,"pullout_force_n")
+    def __post_init__(self):
+        self.minimum_contact_area_m2=_nonnegative_finite(self.minimum_contact_area_m2,"minimum_contact_area_m2")
+        self.minimum_contact_pressure_pa=_nonnegative_finite(self.minimum_contact_pressure_pa,"minimum_contact_pressure_pa")
+        self.maximum_residual_gap_m=_nonnegative_finite(self.maximum_residual_gap_m,"maximum_residual_gap_m")
+        self.minimum_formed_span_m=_nonnegative_finite(self.minimum_formed_span_m,"minimum_formed_span_m")
+        self.maximum_damage_fraction=_fraction(self.maximum_damage_fraction,"maximum_damage_fraction")
+        self.maximum_retention_slip_speed_m_s=_nonnegative_finite(self.maximum_retention_slip_speed_m_s,"maximum_retention_slip_speed_m_s")
+        if self.minimum_contact_pressure_pa==0.0:raise ValueError("minimum_contact_pressure_pa must be positive")
     def register(self,deployment):
         b=ClipRetentionBond(str(deployment["clip_path"]),list(deployment["attachment_paths"]));self.bonds.append(b);return b
-    def apply_load(self,bond: ClipRetentionBond,load_n: float,*,stage=None):
-        load=_nonnegative_finite(abs(float(load_n)),"load_n")
-        if not bond.retained or load<=self.pullout_force_n:return False
-        remove_prims(bond.attachment_paths,stage=stage);bond.retained=False;return True
+    def update_from_scene(self,bond: ClipRetentionBond,mechanics: ClipMechanicsSample,*,stage=None):
+        if mechanics.clip_path != bond.clip_path:
+            raise ValueError(f"Clip evidence path mismatch: bond={bond.clip_path}, evidence={mechanics.clip_path}")
+        if mechanics.step_index <= bond.last_scene_step:
+            raise ValueError("clip mechanics evidence must advance monotonically")
+        bond.last_scene_step=mechanics.step_index
+        contact_qualified=(
+            mechanics.contact_area_m2>=self.minimum_contact_area_m2
+            and mechanics.contact_pressure_pa>=self.minimum_contact_pressure_pa
+        )
+        form_qualified=(
+            mechanics.residual_gap_m<=self.maximum_residual_gap_m
+            and mechanics.formed_span_m>=self.minimum_formed_span_m
+        )
+        interface_resultant_force_n=mechanics.interface_traction_pa*mechanics.contact_area_m2
+        mechanically_failed=mechanics.damage_fraction>self.maximum_damage_fraction
+        capacity_qualified=(
+            mechanics.retention_capacity_n>0.0
+            and mechanics.retention_load_n<=mechanics.retention_capacity_n
+        )
+        slip_qualified=(
+            mechanics.max_relative_slip_speed_m_s
+            <= self.maximum_retention_slip_speed_m_s
+        )
+        loaded_retention_observed=mechanics.retention_load_n>0.0
+        expected_attachment_ids=tuple(sorted(bond.attachment_paths))
+        live_attachment_ids=tuple(sorted(mechanics.live_attachment_prim_ids))
+        attachment_evidence_matches=bool(expected_attachment_ids) and (
+            live_attachment_ids==expected_attachment_ids
+        )
+        if mechanically_failed and bond.attachment_paths:
+            remove_prims(bond.attachment_paths,stage=stage)
+            bond.attachment_paths.clear()
+        mechanically_qualified=(
+            contact_qualified
+            and form_qualified
+            and capacity_qualified
+            and slip_qualified
+            and not mechanically_failed
+        )
+        retained=(
+            mechanically_qualified
+            and loaded_retention_observed
+            and attachment_evidence_matches
+        )
+        return {
+            "retained":retained,
+            "mechanically_qualified":mechanically_qualified,
+            "contact_qualified":contact_qualified,
+            "form_qualified":form_qualified,
+            "capacity_qualified":capacity_qualified,
+            "slip_qualified":slip_qualified,
+            "loaded_retention_observed":loaded_retention_observed,
+            "mechanically_failed":mechanically_failed,
+            "residual_gap_m":mechanics.residual_gap_m,
+            "formed_span_m":mechanics.formed_span_m,
+            "contact_area_m2":mechanics.contact_area_m2,
+            "contact_pressure_pa":mechanics.contact_pressure_pa,
+            "interface_resultant_force_n":interface_resultant_force_n,
+            "retention_load_n":mechanics.retention_load_n,
+            "retention_capacity_n":mechanics.retention_capacity_n,
+            "retention_utilization":mechanics.retention_utilization,
+            "measured_tangential_force_n":mechanics.measured_tangential_force_n,
+            "max_relative_slip_speed_m_s":mechanics.max_relative_slip_speed_m_s,
+            "plastic_curvature_1_m":mechanics.plastic_curvature_1_m,
+            "damage_fraction":mechanics.damage_fraction,
+            "expected_attachment_prim_ids":expected_attachment_ids,
+            "live_attachment_prim_ids":live_attachment_ids,
+            "attachment_evidence_matches":attachment_evidence_matches,
+            "scene_step":mechanics.step_index,
+        }
 
 
 @dataclass
 class PatchBond:
     patch_path: str
     attachment_paths: list[str]
-    cure_fraction: float=0.0
-    broken: bool=False
+    last_scene_step: int=-1
 
 
 @dataclass
 class HemostaticPatchBondController:
-    cure_time_s: float=30.0
-    initial_tack_force_n: float=0.8
-    final_break_force_n: float=8.0
+    minimum_contact_fraction: float=0.60
+    minimum_contact_pressure_pa: float=500.0
+    maximum_interface_separation_m: float=0.0015
     bonds: list[PatchBond]=field(default_factory=list)
     def __post_init__(self):
-        self.cure_time_s=_nonnegative_finite(self.cure_time_s,"cure_time_s");self.initial_tack_force_n=_nonnegative_finite(self.initial_tack_force_n,"initial_tack_force_n");self.final_break_force_n=_nonnegative_finite(self.final_break_force_n,"final_break_force_n")
-        if self.cure_time_s==0.0:raise ValueError("cure_time_s must be positive")
-        if self.initial_tack_force_n>self.final_break_force_n:raise ValueError("initial tack cannot exceed cured break force")
+        self.minimum_contact_fraction=_fraction(self.minimum_contact_fraction,"minimum_contact_fraction");self.minimum_contact_pressure_pa=_nonnegative_finite(self.minimum_contact_pressure_pa,"minimum_contact_pressure_pa");self.maximum_interface_separation_m=_nonnegative_finite(self.maximum_interface_separation_m,"maximum_interface_separation_m")
+        if self.minimum_contact_pressure_pa==0.0:raise ValueError("minimum_contact_pressure_pa must be positive")
     def deploy(self,prim_path: str,world_transform: Any,vessel_path: str,*,stage=None):
         stage=_current_stage(stage);_spawn_reference_at_transform(stage,prim_path,PATCH_PROXY_USD,world_transform);stage.DefinePrim(f"{prim_path}/Attachments","Scope");created=[]
         try:
@@ -654,35 +742,77 @@ class HemostaticPatchBondController:
         except Exception:
             remove_prims(created+[prim_path],stage=stage);raise
         b=PatchBond(prim_path,created);self.bonds.append(b);return b
-    def update(self,dt: float):
-        for b in self.bonds:
-            if not b.broken:b.cure_fraction=min(1.0,b.cure_fraction+_nonnegative_finite(dt,"dt")/self.cure_time_s)
-    def apply_load(self,bond: PatchBond,load_n: float,*,stage=None):
-        threshold=self.initial_tack_force_n+(self.final_break_force_n-self.initial_tack_force_n)*_fraction(bond.cure_fraction,"cure_fraction")
-        load=_nonnegative_finite(abs(float(load_n)),"load_n")
-        if bond.broken or load<=threshold:return False
-        remove_prims(bond.attachment_paths,stage=stage);bond.broken=True;return True
+    def update_from_scene(self,bond: PatchBond,mechanics: PatchMechanicsSample,*,stage=None):
+        if mechanics.patch_path != bond.patch_path:
+            raise ValueError(f"Patch evidence path mismatch: bond={bond.patch_path}, evidence={mechanics.patch_path}")
+        if mechanics.step_index <= bond.last_scene_step:
+            raise ValueError("patch mechanics evidence must advance monotonically")
+        bond.last_scene_step=mechanics.step_index
+        expected_attachment_ids=tuple(sorted(bond.attachment_paths))
+        live_attachment_ids=tuple(sorted(mechanics.live_attachment_prim_ids))
+        attachment_evidence_matches=bool(expected_attachment_ids) and (
+            live_attachment_ids==expected_attachment_ids
+        )
+        contact_qualified=(
+            mechanics.contact_fraction>=self.minimum_contact_fraction
+            and mechanics.mean_contact_pressure_pa>=self.minimum_contact_pressure_pa
+            and mechanics.interface_separation_m<=self.maximum_interface_separation_m
+            and not mechanics.cohesive_failed
+        )
+        failed=(
+            mechanics.cohesive_failed
+            or mechanics.interface_separation_m>self.maximum_interface_separation_m
+        )
+        if failed and bond.attachment_paths:
+            remove_prims(bond.attachment_paths,stage=stage);bond.attachment_paths.clear()
+        return {
+            "broken":failed or not attachment_evidence_matches,
+            "mechanically_qualified":contact_qualified and attachment_evidence_matches,
+            "contact_fraction":mechanics.contact_fraction,
+            "mean_contact_pressure_pa":mechanics.mean_contact_pressure_pa,
+            "interface_traction_n":mechanics.interface_traction_n,
+            "interface_separation_m":mechanics.interface_separation_m,
+            "cohesive_damage_fraction":mechanics.cohesive_damage_fraction,
+            "cohesive_failed":mechanics.cohesive_failed,
+            "surface_wetness_fraction":mechanics.surface_wetness_fraction,
+            "interface_temperature_c":mechanics.interface_temperature_c,
+            "expected_attachment_prim_ids":expected_attachment_ids,
+            "live_attachment_prim_ids":live_attachment_ids,
+            "attachment_evidence_matches":attachment_evidence_matches,
+            "scene_step":mechanics.step_index,
+        }
 
 
 @dataclass
 class SealVerificationController:
     maximum_flow_ml_min: float=0.1
     observation_window_s: float=5.0
+    target_pressure_pa: float=26664.5
+    minimum_pressure_fraction: float=0.90
     elapsed_s: float=0.0
     integrated_volume_ml: float=0.0
+    integrated_upstream_pressure_pa_s: float=0.0
     peak_flow_ml_min: float=0.0
     def __post_init__(self):
-        self.maximum_flow_ml_min=_nonnegative_finite(self.maximum_flow_ml_min,"maximum_flow_ml_min");self.observation_window_s=_nonnegative_finite(self.observation_window_s,"observation_window_s")
+        self.maximum_flow_ml_min=_nonnegative_finite(self.maximum_flow_ml_min,"maximum_flow_ml_min");self.observation_window_s=_nonnegative_finite(self.observation_window_s,"observation_window_s");self.target_pressure_pa=_nonnegative_finite(self.target_pressure_pa,"target_pressure_pa");self.minimum_pressure_fraction=_fraction(self.minimum_pressure_fraction,"minimum_pressure_fraction")
         if self.observation_window_s==0.0:raise ValueError("observation_window_s must be positive")
-    def reset(self):self.elapsed_s=0.0;self.integrated_volume_ml=0.0;self.peak_flow_ml_min=0.0
-    def update(self,flow_ml_min: float,dt: float):
+        if self.target_pressure_pa==0.0:raise ValueError("target_pressure_pa must be positive")
+    def reset(self):self.elapsed_s=0.0;self.integrated_volume_ml=0.0;self.integrated_upstream_pressure_pa_s=0.0;self.peak_flow_ml_min=0.0
+    def _integrate(self,flow_ml_min: float,dt: float):
         flow=_nonnegative_finite(flow_ml_min,"flow_ml_min");dt=_nonnegative_finite(dt,"dt");self.elapsed_s+=dt;self.integrated_volume_ml+=flow*dt/60.0;self.peak_flow_ml_min=max(self.peak_flow_ml_min,flow)
+    def update_from_scene(self,evidence: HemostasisSceneEvidence,bleed_model: ReducedOrderBleedModel):
+        bleed_model.update_from_scene(evidence.vessel)
+        flow=bleed_model.observed_flow_ml_min(evidence.vessel)
+        dt=evidence.dt_s;self._integrate(flow,dt);self.integrated_upstream_pressure_pa_s+=evidence.vessel.upstream_pressure_pa*dt
+        return flow
     @property
     def average_flow_ml_min(self):return 0.0 if self.elapsed_s<=0 else self.integrated_volume_ml*60.0/self.elapsed_s
     @property
+    def average_upstream_pressure_pa(self):return 0.0 if self.elapsed_s<=0 else self.integrated_upstream_pressure_pa_s/self.elapsed_s
+    @property
     def complete(self):return self.elapsed_s>=self.observation_window_s
     @property
-    def passed(self):return self.complete and self.average_flow_ml_min<=self.maximum_flow_ml_min
+    def passed(self):return self.complete and self.average_flow_ml_min<=self.maximum_flow_ml_min and self.average_upstream_pressure_pa>=self.target_pressure_pa*self.minimum_pressure_fraction
 
 
 PHASE_TARGETS={
@@ -709,19 +839,56 @@ class AdaptiveHemostasisSequenceController:
     phase: str="inspect"
     bleed_model: ReducedOrderBleedModel=field(default_factory=ReducedOrderBleedModel)
     verifier: SealVerificationController=field(default_factory=SealVerificationController)
+    clip_retention: ClipRetentionController=field(default_factory=ClipRetentionController)
+    patch_bonds: HemostaticPatchBondController=field(default_factory=HemostaticPatchBondController)
+    evidence_source: HemostasisSceneEvidenceSource|None=None
+    evidence_cursor: HemostasisEvidenceCursor=field(default_factory=HemostasisEvidenceCursor)
     history: list[str]=field(default_factory=list)
     baseline_pressure_pa: float=10665.8
     challenge_pressure_pa: float=26664.5
+    requested_pressure_pa: float=field(default=10665.8,init=False)
+    last_evidence: HemostasisSceneEvidence|None=field(default=None,init=False)
     def __post_init__(self):
         phase_targets(self.phase);self.baseline_pressure_pa=_nonnegative_finite(self.baseline_pressure_pa,"baseline_pressure_pa");self.challenge_pressure_pa=_nonnegative_finite(self.challenge_pressure_pa,"challenge_pressure_pa")
+        if self.challenge_pressure_pa<=self.baseline_pressure_pa:raise ValueError("challenge_pressure_pa must exceed baseline_pressure_pa")
+        self.requested_pressure_pa=self.baseline_pressure_pa;self.verifier.target_pressure_pa=self.challenge_pressure_pa
     def transition(self,phase: str):
         phase_targets(phase);self.phase=phase;self.history.append(phase)
-        if phase=="pressure_challenge":self.bleed_model.pressure_pa=self.challenge_pressure_pa
-        elif phase in {"complete","abort"}:self.bleed_model.pressure_pa=self.baseline_pressure_pa
+        if phase=="pressure_challenge":self.requested_pressure_pa=self.challenge_pressure_pa
+        elif phase in {"complete","abort"}:self.requested_pressure_pa=self.baseline_pressure_pa
         if phase=="verify":self.verifier.reset()
         return phase_targets(phase)
-    def set_compression(self,fraction: float):self.bleed_model.compression_fraction=_fraction(fraction,"compression_fraction")
-    def set_clip_occlusion(self,fraction: float):self.bleed_model.clip_occlusion_fraction=_fraction(fraction,"clip_occlusion_fraction")
-    def set_patch_seal(self,fraction: float):self.bleed_model.patch_seal_fraction=_fraction(fraction,"patch_seal_fraction")
-    def update_verification(self,dt: float):
-        flow=self.bleed_model.flow_ml_min();self.verifier.update(flow,dt);return {"flow_ml_min":flow,"average_flow_ml_min":self.verifier.average_flow_ml_min,"complete":self.verifier.complete,"passed":self.verifier.passed}
+    def _resolve_evidence(self,evidence: HemostasisSceneEvidence|None):
+        if evidence is None:
+            if self.evidence_source is None:
+                raise RuntimeError("HemostasisSceneEvidence or an evidence_source is required")
+            evidence=self.evidence_source.sample_hemostasis_scene()
+        return evidence
+    def consume_scene_evidence(self,evidence: HemostasisSceneEvidence|None=None,*,dt: float|None=None,stage=None):
+        evidence=self._resolve_evidence(evidence)
+        if dt is not None:
+            supplied_dt=_nonnegative_finite(dt,"dt")
+            if not math.isclose(supplied_dt,evidence.dt_s,rel_tol=0.0,abs_tol=1.0e-9):
+                raise ValueError("caller dt must match the scene evidence provenance dt")
+        evidence=self.evidence_cursor.consume(evidence);self.last_evidence=evidence
+        self.bleed_model.update_from_scene(evidence.vessel)
+        clip_reports={}
+        for bond in self.clip_retention.bonds:
+            mechanics=evidence.clip_for(bond.clip_path)
+            if mechanics is not None:
+                clip_reports[bond.clip_path]=self.clip_retention.update_from_scene(bond,mechanics,stage=stage)
+            else:
+                clip_reports[bond.clip_path]={"retained":False,"mechanically_qualified":False,"reason":"missing_scene_clip_evidence"}
+        patch_reports={}
+        for bond in self.patch_bonds.bonds:
+            mechanics=evidence.patch_for(bond.patch_path)
+            if mechanics is not None:
+                patch_reports[bond.patch_path]=self.patch_bonds.update_from_scene(bond,mechanics,stage=stage)
+            else:
+                patch_reports[bond.patch_path]={"broken":True,"mechanically_qualified":False,"reason":"missing_scene_patch_evidence"}
+        return {"scene_step":evidence.step_index,"scene_time_s":evidence.time_s,"scene_dt_s":evidence.dt_s,"evidence_digest_sha256":evidence.digest_sha256,"source":evidence.source,"residual_defect_area_m2":evidence.vessel.residual_defect_area_m2,"observed_flow_ml_min":self.bleed_model.observed_flow_ml_min(evidence.vessel),"clip_reports":clip_reports,"patch_reports":patch_reports}
+    def update_verification(self,dt: float|None=None,evidence: HemostasisSceneEvidence|None=None,*,stage=None):
+        if self.phase!="verify":raise RuntimeError("verification evidence may only be integrated during the verify phase")
+        scene_report=self.consume_scene_evidence(evidence,dt=dt,stage=stage)
+        flow=self.verifier.update_from_scene(self.last_evidence,self.bleed_model)
+        return {"flow_ml_min":flow,"average_flow_ml_min":self.verifier.average_flow_ml_min,"average_upstream_pressure_pa":self.verifier.average_upstream_pressure_pa,"required_upstream_pressure_pa":self.verifier.target_pressure_pa*self.verifier.minimum_pressure_fraction,"complete":self.verifier.complete,"passed":self.verifier.passed,"scene_step":scene_report["scene_step"],"scene_time_s":scene_report["scene_time_s"],"scene_dt_s":scene_report["scene_dt_s"],"evidence_digest_sha256":scene_report["evidence_digest_sha256"],"evidence_source":scene_report["source"],"residual_defect_area_m2":scene_report["residual_defect_area_m2"],"clip_reports":scene_report["clip_reports"],"patch_reports":scene_report["patch_reports"]}

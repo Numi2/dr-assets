@@ -13,7 +13,7 @@
         "left_clamp_joint": 0.0,
         "right_clamp_joint": 0.0
       },
-      "runtime_event": "create jaw-to-tissue attachments"
+      "runtime_event": "create temporary jaw-to-tissue attachment prims; contact load and attachment integrity remain unverified"
     },
     {
       "id": "approximate",
@@ -21,33 +21,35 @@
         "left_approximation_joint": 0.022,
         "right_approximation_joint": -0.022
       },
-      "success": "wound gap below configured threshold"
+      "observation_required": "same-step registered wound-edge geometry; no current success claim"
     },
     {
       "id": "staple",
       "joint_targets": {
         "staple_driver_joint": 0.014
       },
-      "runtime_event": "spawn formed staple and attach it to both tissue sides"
+      "runtime_event": "spawn formed staple and create two tissue attachment prims; retention remains unverified"
     },
     {
       "id": "release",
-      "runtime_event": "remove temporary jaw attachments; staple remains"
+      "runtime_event": "remove temporary jaw attachments; staple attachment prims remain but load-bearing retention is not inferred"
     },
     {
       "id": "adhesive",
       "joint_targets": {
         "adhesive_deploy_joint": -0.03
       },
-      "runtime_event": "deposit bead segments from nozzle trajectory"
+      "runtime_event": "deposit fresh bead proxy and create initial attachment prims"
     },
     {
       "id": "cure",
-      "runtime_event": "ramp the provisional strength of the two existing bead-to-tissue attachments and switch the bead visual/contact state to cured"
+      "runtime_event": "none until a shared cohesive response and exact post-physics evidence bridge exist",
+      "verified": false
     }
   ],
-  "schema": "dr.anmar.closure-sequence.v1",
-  "success_metrics": [
+  "schema": "dr.anmar.closure-sequence.v2",
+  "source_status": "motion_and_attachment_prim_sequence_only_outcome_unverified",
+  "requested_observations": [
     "wound_edge_distance",
     "edge_height_mismatch",
     "staple_bridge_integrity",
@@ -55,5 +57,6 @@
     "adhesive_coverage_fraction",
     "adhesive_bond_attachment_count",
     "unintended_tissue_contact_count"
-  ]
+  ],
+  "verified_success_metrics": []
 }

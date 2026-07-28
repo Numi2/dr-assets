@@ -196,7 +196,7 @@
   "evaluation_authority": {
     "action_fields_may_author_outcomes": false,
     "current_executable_scenario": "mesenteric_arterial_hemorrhage",
-    "reward_source": "contact_owned_patient_effect_delta",
+    "reward_source": "disabled_pending_action_bound_same_step_target_batch",
     "scenario_parameters": "environment-owned initial conditions or physical perturbations"
   },
   "schema": "dr.anmar.autonomous-rescue-benchmark-scenarios.v2"

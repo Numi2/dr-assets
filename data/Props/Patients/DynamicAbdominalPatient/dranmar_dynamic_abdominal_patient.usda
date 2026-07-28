@@ -19,7 +19,7 @@ def Xform "DrAnmarDynamicAbdominalPatient" (
 {
     custom string drAnmar:assetId = "dranmar-dynamic-abdominal-patient-v1"
     custom string drAnmar:coordinateSystem = "x_left_right_y_caudal_cranial_z_posterior_anterior"
-    custom string drAnmar:runtimeContract = "patient.respiration patient.perfusion patient.bleeding patient.vital_signs patient.tissue_state patient.organ_motion patient.damage patient.interventions patient.robot patient.event_bus patient.fluids"
+    custom string drAnmar:runtimeContract = "patient.respiration patient.perfusion patient.bleeding patient.vital_signs patient.tissue_state patient.organ_motion patient.damage patient.contact_effects patient.patient_authority patient.event_bus patient.fluids"
     custom string drAnmar:status = "research_informed_engineering_model_pending_runtime_physical_and_clinical_validation"
     custom bool drAnmar:clinicalValidation = false
     def Scope "AccessMechanics"

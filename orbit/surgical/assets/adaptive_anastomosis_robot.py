@@ -4,9 +4,10 @@
 
 The payload replaces the Panda hand at ``panda_link8``. Runtime helpers provide
 bilateral hollow-tissue capture, coaxial approximation, surface-deformable
-attachment management, circumferential retained-staple deployment,
+attachment management, circumferential staple deployment and observation,
 reinforcement-collar bonding, lumen-patency metrics, and pressure-decay leak
 verification. All physical values are provisional research parameters.
+They are not clinically validated and must not be used for patient-care claims.
 """
 from __future__ import annotations
 
@@ -14,6 +15,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable, Sequence
 import math
+
+from orbit.surgical.assets.adaptive_anastomosis_scene_evidence import (
+    AnastomosisEvidenceCursor,
+    AnastomosisSceneEvidence,
+    AnastomosisSceneEvidenceSource,
+    CollarSectorMechanicsSample,
+    StapleMechanicsSample,
+)
 
 CATALOG_SUBPATH = "Props/SurgicalReconstruction/AdaptiveAnastomosisRobot"
 ASSET_DATA_ROOT = Path(__file__).resolve().parents[3] / "data"
@@ -521,6 +530,14 @@ class BilateralTissueCaptureController:
         remove_prims(capture.attachment_paths,stage=stage);capture.attachment_paths.clear();capture.engaged=False
     def release(self,*,stage=None):self.release_side(self.left,stage=stage);self.release_side(self.right,stage=stage)
     def update_loads(self,left_force_n: float,right_force_n: float,*,stage=None):
+        del left_force_n,right_force_n,stage
+        raise RuntimeError(
+            "caller-authored capture loads are not admissible mechanics "
+            "evidence; add prim-bound capture contact sources to "
+            "AnastomosisSceneEvidence before enabling overload release"
+        )
+    def _update_loads_task_proxy(self,left_force_n: float,right_force_n: float,*,stage=None):
+        """Private fixture helper; never an outcome or safety authority."""
         left=_nonnegative_finite(abs(float(left_force_n)),"left_force_n")
         right=_nonnegative_finite(abs(float(right_force_n)),"right_force_n")
         peak=max(left,right)
@@ -583,7 +600,7 @@ def deploy_staple_ring(
             left_ap=f"{path}/Attachments/left";right_ap=f"{path}/Attachments/right"
             create_deformable_attachment(left_tissue_path,f"{path}/Collisions/LeftLegAttachment",left_ap,stage=stage)
             create_deformable_attachment(right_tissue_path,f"{path}/Collisions/RightLegAttachment",right_ap,stage=stage)
-            deployments.append({"staple_path":path,"angle_rad":angle,"attachment_paths":[left_ap,right_ap],"retained":True})
+            deployments.append({"staple_path":path,"angle_rad":angle,"attachment_paths":[left_ap,right_ap]})
             current_path=None
     except Exception:
         paths=[d["staple_path"] for d in deployments]
@@ -595,59 +612,105 @@ def deploy_staple_ring(
 
 @dataclass
 class StapleRingRetentionController:
-    pullout_force_per_staple_n: float=1.4
     deployments: list[dict[str,Any]]=field(default_factory=list)
-    def __post_init__(self):
-        self.pullout_force_per_staple_n=_nonnegative_finite(
-            self.pullout_force_per_staple_n,"pullout_force_per_staple_n"
-        )
     def register(self,deployments):
         additions=list(deployments)
         for deployment in additions:
             if "staple_path" not in deployment or len(deployment.get("attachment_paths",[]))!=2:
                 raise ValueError("each staple deployment needs one path and two attachments")
         self.deployments.extend(additions);return additions
-    @property
-    def retained_fraction(self):
-        return 0.0 if not self.deployments else sum(bool(d.get("retained",False)) for d in self.deployments)/len(self.deployments)
-    def apply_loads(self,loads_n: Sequence[float],*,stage=None):
-        loads=list(loads_n)
-        if len(loads)!=len(self.deployments):
-            raise ValueError("loads_n must match the registered staple count")
-        released=[]
-        for deployment,load in zip(self.deployments,loads):
-            magnitude=_nonnegative_finite(abs(float(load)),"staple_load_n")
-            if deployment.get("retained",False) and magnitude>self.pullout_force_per_staple_n:
-                remove_prims(deployment["attachment_paths"],stage=stage);deployment["retained"]=False;released.append(deployment["staple_path"])
-        return released
+    def update_from_scene(self,evidence: AnastomosisSceneEvidence,*,stage=None):
+        if not isinstance(evidence,AnastomosisSceneEvidence):
+            raise TypeError("staple retention requires AnastomosisSceneEvidence")
+        reports={}
+        for deployment in self.deployments:
+            staple_path=str(deployment["staple_path"])
+            mechanics=evidence.staple_for(staple_path)
+            if mechanics is None:
+                reports[staple_path]={
+                    "mechanically_qualified":False,
+                    "retention_verified":False,
+                    "reason":"missing_registered_staple_observation",
+                }
+                continue
+            if not isinstance(mechanics,StapleMechanicsSample):
+                raise TypeError("staple evidence must be StapleMechanicsSample")
+            deployment_attachment_paths=frozenset(
+                str(path) for path in deployment.get("attachment_paths",())
+            )
+            registered_attachment_paths=(
+                mechanics.source.expected_attachment_prim_ids
+            )
+            if deployment_attachment_paths != registered_attachment_paths:
+                reports[staple_path]={
+                    "mechanically_qualified":False,
+                    "retention_verified":False,
+                    "reason":"deployment_attachment_identity_mismatch",
+                    "scene_step":mechanics.step_index,
+                    "evidence_digest_sha256":mechanics.digest_sha256,
+                }
+                continue
+            topology_and_attachments_present=(
+                mechanics.topology_edges_intact
+                and mechanics.attachments_present
+            )
+            mechanically_qualified=(
+                topology_and_attachments_present
+                and mechanics.force_disconnect_validated
+            )
+            bilateral_load_path_observed=(
+                mechanics.left_reaction_force_n>0.0
+                and mechanics.right_reaction_force_n>0.0
+            )
+            if not mechanics.topology_edges_intact:
+                attachment_paths=list(deployment.get("attachment_paths",()))
+                if attachment_paths:
+                    remove_prims(attachment_paths,stage=stage)
+                    deployment["attachment_paths"]=[]
+            reports[staple_path]={
+                "mechanically_qualified":mechanically_qualified,
+                "retention_verified":False,
+                "bilateral_load_path_observed":bilateral_load_path_observed,
+                "topology_and_attachments_present":topology_and_attachments_present,
+                "topology_edges_intact":mechanics.topology_edges_intact,
+                "attachments_present":mechanics.attachments_present,
+                "force_disconnect_validated":mechanics.force_disconnect_validated,
+                "failed_edge_count":mechanics.failed_edge_count,
+                "max_edge_damage_fraction":mechanics.max_edge_damage_fraction,
+                "max_abs_strain":mechanics.max_abs_strain,
+                "max_curvature_1_m":mechanics.max_curvature_1_m,
+                "left_reaction_force_n":mechanics.left_reaction_force_n,
+                "right_reaction_force_n":mechanics.right_reaction_force_n,
+                "scene_step":mechanics.step_index,
+                "evidence_digest_sha256":mechanics.digest_sha256,
+                "evidence_limitation":"calibrated_proof_load_and_pullout_threshold_not_established",
+            }
+        qualified_count=sum(
+            bool(report.get("mechanically_qualified",False))
+            for report in reports.values()
+        )
+        return {
+            "staples":reports,
+            "qualified_count":qualified_count,
+            "registered_count":len(self.deployments),
+            "retention_verified":False,
+            "mechanically_qualified_fraction":(
+                0.0 if not self.deployments
+                else qualified_count/len(self.deployments)
+            ),
+            "evidence_limitation":"source_mechanics_are_provisional_until_instrumented_proof_load_and_pullout_correlation",
+        }
 
 
 @dataclass
 class CollarBond:
     collar_path: str
     attachment_paths: list[str]
-    cure_fraction: float=0.0
-    broken_sectors: set[int]=field(default_factory=set)
 
 
 @dataclass
 class ReinforcementCollarBondController:
-    cure_time_s: float=45.0
-    initial_sector_tack_force_n: float=0.18
-    final_sector_break_force_n: float=2.2
     bonds: list[CollarBond]=field(default_factory=list)
-    def __post_init__(self):
-        self.cure_time_s=_nonnegative_finite(self.cure_time_s,"cure_time_s")
-        self.initial_sector_tack_force_n=_nonnegative_finite(
-            self.initial_sector_tack_force_n,"initial_sector_tack_force_n"
-        )
-        self.final_sector_break_force_n=_nonnegative_finite(
-            self.final_sector_break_force_n,"final_sector_break_force_n"
-        )
-        if self.cure_time_s==0.0:
-            raise ValueError("cure_time_s must be positive")
-        if self.initial_sector_tack_force_n>self.final_sector_break_force_n:
-            raise ValueError("initial tack cannot exceed cured break force")
     def deploy(self,prim_path: str,world_transform: Any,left_tissue_path: str,right_tissue_path: str,*,stage=None):
         stage=_current_stage(stage);_spawn_reference_at_transform(stage,prim_path,COLLAR_PROXY_USD,world_transform,{"state":"fresh"});stage.DefinePrim(f"{prim_path}/Attachments","Scope");created=[]
         try:
@@ -658,33 +721,142 @@ class ReinforcementCollarBondController:
         except Exception:
             remove_prims(created+[prim_path],stage=stage);raise
         bond=CollarBond(prim_path,created);self.bonds.append(bond);return bond
-    def update(self,dt: float):
-        elapsed=_nonnegative_finite(dt,"dt")
-        for bond in self.bonds:
-            bond.cure_fraction=min(1.0,bond.cure_fraction+elapsed/self.cure_time_s)
-    def apply_sector_load(self,bond: CollarBond,sector: int,load_n: float,*,stage=None):
-        if int(sector)!=sector or not 0<=sector<COLLAR_SECTOR_COUNT:
-            raise ValueError(f"sector must be an integer in [0, {COLLAR_SECTOR_COUNT-1}]")
-        sector=int(sector)
-        if sector in bond.broken_sectors:return False
-        cure=_fraction(bond.cure_fraction,"cure_fraction")
-        threshold=self.initial_sector_tack_force_n+(
-            self.final_sector_break_force_n-self.initial_sector_tack_force_n
-        )*cure
-        if _nonnegative_finite(abs(float(load_n)),"load_n")<=threshold:return False
-        paths=[f"{bond.collar_path}/Attachments/left_{sector:02d}",f"{bond.collar_path}/Attachments/right_{sector:02d}"]
-        remove_prims(paths,stage=stage);bond.broken_sectors.add(int(sector));return True
-    def bonded_fraction(self,bond: CollarBond):return max(0.0,1.0-len(bond.broken_sectors)/COLLAR_SECTOR_COUNT)
+    def update_from_scene(self,bond: CollarBond,evidence: AnastomosisSceneEvidence,*,stage=None):
+        if not isinstance(evidence,AnastomosisSceneEvidence):
+            raise TypeError("collar bonding requires AnastomosisSceneEvidence")
+        try:
+            evidence.sources.collar_source_for(bond.collar_path)
+        except ValueError:
+            return {
+                "collar_path":bond.collar_path,
+                "sectors":{
+                    sector:{
+                        "mechanically_qualified":False,
+                        "bonding_verified":False,
+                        "reason":"collar_not_registered_in_scene_evidence",
+                    }
+                    for sector in range(COLLAR_SECTOR_COUNT)
+                },
+                "qualified_sector_count":0,
+                "registered_sector_count":COLLAR_SECTOR_COUNT,
+                "bonding_verified":False,
+                "observed_attached_nonfailed_fraction":0.0,
+            }
+        if evidence.sources.collar_sector_count!=COLLAR_SECTOR_COUNT:
+            raise ValueError("scene collar sector count does not match the asset")
+        collar_source=evidence.sources.collar_source_for(bond.collar_path)
+        registered_attachment_paths=frozenset(
+            collar_source.attachment_prim_path(sector,side)
+            for sector in range(COLLAR_SECTOR_COUNT)
+            for side in ("left","right")
+        )
+        if frozenset(bond.attachment_paths) != registered_attachment_paths:
+            return {
+                "collar_path":bond.collar_path,
+                "sectors":{
+                    sector:{
+                        "mechanically_qualified":False,
+                        "bonding_verified":False,
+                        "reason":"deployment_attachment_identity_mismatch",
+                    }
+                    for sector in range(COLLAR_SECTOR_COUNT)
+                },
+                "qualified_sector_count":0,
+                "registered_sector_count":COLLAR_SECTOR_COUNT,
+                "bonding_verified":False,
+                "observed_attached_nonfailed_fraction":0.0,
+            }
+        reports={}
+        observed_attached_nonfailed_count=0
+        for sector in range(COLLAR_SECTOR_COUNT):
+            left=evidence.collar_sector_for(bond.collar_path,sector,"left")
+            right=evidence.collar_sector_for(bond.collar_path,sector,"right")
+            if left is None or right is None:
+                reports[sector]={
+                    "mechanically_qualified":False,
+                    "bonding_verified":False,
+                    "reason":"missing_registered_sector_observation",
+                }
+                continue
+            if not isinstance(left,CollarSectorMechanicsSample) or not isinstance(right,CollarSectorMechanicsSample):
+                raise TypeError("collar evidence must be CollarSectorMechanicsSample")
+            failed=left.cohesive_failed or right.cohesive_failed
+            attachments_present=left.attachment_present and right.attachment_present
+            attached_nonfailed=(
+                not failed
+                and attachments_present
+                and left.contact_area_m2>0.0
+                and right.contact_area_m2>0.0
+            )
+            mechanically_qualified=(
+                attached_nonfailed
+                and left.resultant_force_n>0.0
+                and right.resultant_force_n>0.0
+            )
+            if failed:
+                paths=[
+                    f"{bond.collar_path}/Attachments/left_{sector:02d}",
+                    f"{bond.collar_path}/Attachments/right_{sector:02d}",
+                ]
+                remove_prims(paths,stage=stage)
+                bond.attachment_paths=[
+                    path for path in bond.attachment_paths if path not in paths
+                ]
+            observed_attached_nonfailed_count+=int(attached_nonfailed)
+            reports[sector]={
+                "mechanically_qualified":mechanically_qualified,
+                "bonding_verified":mechanically_qualified,
+                "observed_attached_nonfailed":attached_nonfailed,
+                "cohesive_failed":failed,
+                "attachments_present":attachments_present,
+                "left_damage_fraction":left.damage_fraction,
+                "right_damage_fraction":right.damage_fraction,
+                "left_contact_area_m2":left.contact_area_m2,
+                "right_contact_area_m2":right.contact_area_m2,
+                "left_resultant_force_n":left.resultant_force_n,
+                "right_resultant_force_n":right.resultant_force_n,
+                "left_net_normal_traction_pa":left.net_normal_traction_pa,
+                "right_net_normal_traction_pa":right.net_normal_traction_pa,
+                "left_interface_normal_w":left.interface_normal_w,
+                "right_interface_normal_w":right.interface_normal_w,
+                "left_shear_traction_w_pa":left.shear_traction_pa,
+                "right_shear_traction_w_pa":right.shear_traction_pa,
+                "scene_step":evidence.step_index,
+                "evidence_digest_sha256":evidence.digest_sha256,
+                "qualification_scope":"provisional_source_mechanics_only",
+            }
+        qualified_sector_count=sum(
+            bool(report.get("mechanically_qualified",False))
+            for report in reports.values()
+        )
+        return {
+            "collar_path":bond.collar_path,
+            "sectors":reports,
+            "qualified_sector_count":qualified_sector_count,
+            "registered_sector_count":COLLAR_SECTOR_COUNT,
+            "bonding_verified":(
+                qualified_sector_count==COLLAR_SECTOR_COUNT
+            ),
+            "observed_attached_nonfailed_fraction":observed_attached_nonfailed_count/COLLAR_SECTOR_COUNT,
+            "qualification_scope":"provisional_source_mechanics_only_not_bench_correlated",
+        }
 
 
-@dataclass
+@dataclass(frozen=True)
 class PatencyReport:
     minimum_radius_m: float
     mean_radius_m: float
+    minimum_lumen_area_m2: float
+    mean_lumen_area_m2: float
     area_fraction: float
     centerline_offset_m: float
     axis_error_deg: float
-    passed: bool
+    geometry_within_thresholds: bool
+    flow_connected_patency_verified: bool
+    foundation_limitation: str
+    scene_step: int
+    scene_time_s: float
+    evidence_digest_sha256: str
 
 
 @dataclass
@@ -708,16 +880,30 @@ class LumenPatencyController:
         )
         if self.reference_radius_m==0.0:
             raise ValueError("reference_radius_m must be positive")
-    def evaluate(self,radial_samples_m: Sequence[float],*,centerline_offset_m: float=0.0,axis_error_deg: float=0.0):
-        values=[_nonnegative_finite(x,"radial_sample_m") for x in radial_samples_m]
-        if not values:raise ValueError("radial_samples_m must not be empty")
-        offset=float(centerline_offset_m);axis_error=float(axis_error_deg)
-        if not math.isfinite(offset) or not math.isfinite(axis_error):
-            raise ValueError("centerline offset and axis error must be finite")
+    def evaluate(self,evidence: AnastomosisSceneEvidence):
+        if not isinstance(evidence,AnastomosisSceneEvidence):
+            raise TypeError("patency evaluation requires AnastomosisSceneEvidence")
+        geometry=measure_lumen_seam_geometry(
+            evidence.left_lumen_nodes_w,
+            evidence.right_lumen_nodes_w,
+        )
+        values=[
+            _nonnegative_finite(value,"radial_sample_m")
+            for value in geometry["radial_samples_m"]
+        ]
+        offset=float(geometry["centerline_offset_m"])
+        axis_error=float(geometry["axis_error_deg"])
         minimum=min(values);mean=sum(values)/len(values)
+        minimum_area=math.pi*minimum*minimum
+        mean_area=math.pi*sum(value*value for value in values)/len(values)
         area_fraction=min(1.0,(minimum/self.reference_radius_m)**2)
-        passed=minimum>=self.minimum_accepted_radius_m and abs(offset)<=self.maximum_centerline_offset_m and abs(axis_error)<=self.maximum_axis_error_deg
-        return PatencyReport(minimum,mean,area_fraction,offset,axis_error,passed)
+        geometry_within_thresholds=minimum>=self.minimum_accepted_radius_m and abs(offset)<=self.maximum_centerline_offset_m and abs(axis_error)<=self.maximum_axis_error_deg
+        return PatencyReport(
+            minimum,mean,minimum_area,mean_area,area_fraction,
+            offset,axis_error,geometry_within_thresholds,False,
+            "soft_tissue_geometry_does_not_prove_flow_connected_patency",
+            evidence.step_index,evidence.time_s,evidence.digest_sha256,
+        )
 
 
 def measure_lumen_seam_geometry(
@@ -879,58 +1065,47 @@ class LeakTestLedger:
 @dataclass
 class PressureDecayLeakController:
     target_pressure_pa: float=8000.0
-    chamber_compliance_m3_pa: float=1.8e-11
-    fluid_density_kg_m3: float=1000.0
-    discharge_coefficient: float=0.62
     observation_window_s: float=8.0
     maximum_residual_leak_ml_min: float=2.0
-    pressure_pa: float=0.0
-    elapsed_s: float=0.0
-    integrated_leak_ml: float=0.0
-    peak_leak_ml_min: float=0.0
-    history: list[dict[str,float]]=field(default_factory=list)
+    pressure_pa: float=field(default=0.0,init=False)
+    elapsed_s: float=field(default=0.0,init=False)
+    integrated_leak_ml: float=field(default=0.0,init=False)
+    integrated_pressure_pa_s: float=field(default=0.0,init=False)
+    peak_leak_ml_min: float=field(default=0.0,init=False)
+    history: list[dict[str,Any]]=field(default_factory=list,init=False)
     def __post_init__(self):
         for name in (
-            "target_pressure_pa","chamber_compliance_m3_pa",
-            "fluid_density_kg_m3","discharge_coefficient",
-            "observation_window_s","maximum_residual_leak_ml_min",
+            "target_pressure_pa","observation_window_s",
+            "maximum_residual_leak_ml_min",
         ):
             setattr(self,name,_nonnegative_finite(getattr(self,name),name))
         if self.target_pressure_pa==0.0:
             raise ValueError("target_pressure_pa must be positive")
-        if self.chamber_compliance_m3_pa==0.0:
-            raise ValueError("chamber_compliance_m3_pa must be positive")
-        if self.fluid_density_kg_m3==0.0:
-            raise ValueError("fluid_density_kg_m3 must be positive")
         if self.observation_window_s==0.0:
             raise ValueError("observation_window_s must be positive")
-    def reset(self):self.pressure_pa=0.0;self.elapsed_s=0.0;self.integrated_leak_ml=0.0;self.peak_leak_ml_min=0.0;self.history.clear()
+    def reset(self):self.pressure_pa=0.0;self.elapsed_s=0.0;self.integrated_leak_ml=0.0;self.integrated_pressure_pa_s=0.0;self.peak_leak_ml_min=0.0;self.history.clear()
     def begin_observation(self):
         self.elapsed_s=0.0;self.integrated_leak_ml=0.0
+        self.integrated_pressure_pa_s=0.0
         self.peak_leak_ml_min=0.0;self.history.clear()
-    def effective_leak_area_m2(self,*,edge_gap_m: float,retained_staple_fraction: float,collar_bond_fraction: float):
-        circumference=2*math.pi*0.0108
-        gap=_nonnegative_finite(edge_gap_m,"edge_gap_m")
-        staple_scale=1.0-_fraction(retained_staple_fraction,"retained_staple_fraction")
-        collar_scale=max(0.04,1.0-0.94*_fraction(collar_bond_fraction,"collar_bond_fraction"))
-        return max(2.0e-10,circumference*gap*(0.06+0.94*staple_scale)*collar_scale)
-    def update(self,dt: float,*,pump_flow_ml_s: float=0.0,edge_gap_m: float=0.0,retained_staple_fraction: float=1.0,collar_bond_fraction: float=1.0):
-        dt=_nonnegative_finite(dt,"dt");area=self.effective_leak_area_m2(edge_gap_m=edge_gap_m,retained_staple_fraction=retained_staple_fraction,collar_bond_fraction=collar_bond_fraction)
-        q_out_m3_s=self.discharge_coefficient*area*math.sqrt(max(0.0,2.0*self.pressure_pa/self.fluid_density_kg_m3))
-        q_in_m3_s=_nonnegative_finite(pump_flow_ml_s,"pump_flow_ml_s")*1.0e-6
-        next_pressure=max(0.0,self.pressure_pa+(q_in_m3_s-q_out_m3_s)*dt/self.chamber_compliance_m3_pa)
-        if q_in_m3_s>0.0:
-            next_pressure=min(self.target_pressure_pa,next_pressure)
-        self.pressure_pa=next_pressure
-        leak_ml_min=q_out_m3_s*1.0e6*60.0;leak_ml=q_out_m3_s*1.0e6*dt
+    def update_from_scene(self,evidence: AnastomosisSceneEvidence):
+        if not isinstance(evidence,AnastomosisSceneEvidence):
+            raise TypeError("leak verification requires AnastomosisSceneEvidence")
+        dt=evidence.dt_s
+        self.pressure_pa=evidence.chamber_pressure_pa
+        leak_ml_min=evidence.measured_leak_flow_ml_min
+        leak_ml=leak_ml_min*dt/60.0
         self.elapsed_s+=dt;self.integrated_leak_ml+=leak_ml;self.peak_leak_ml_min=max(self.peak_leak_ml_min,leak_ml_min)
-        sample={"time_s":self.elapsed_s,"pressure_pa":self.pressure_pa,"leak_ml_min":leak_ml_min,"effective_leak_area_m2":area};self.history.append(sample);return sample
+        self.integrated_pressure_pa_s+=self.pressure_pa*dt
+        sample={"scene_step":evidence.step_index,"scene_time_s":evidence.time_s,"window_elapsed_s":self.elapsed_s,"pressure_pa":self.pressure_pa,"leak_ml_min":leak_ml_min,"evidence_digest_sha256":evidence.digest_sha256};self.history.append(sample);return sample
     @property
     def average_leak_ml_min(self):return 0.0 if self.elapsed_s<=0 else self.integrated_leak_ml*60.0/self.elapsed_s
     @property
+    def average_pressure_pa(self):return 0.0 if self.elapsed_s<=0 else self.integrated_pressure_pa_s/self.elapsed_s
+    @property
     def complete(self):return self.elapsed_s>=self.observation_window_s
     @property
-    def passed(self):return self.complete and self.average_leak_ml_min<=self.maximum_residual_leak_ml_min and self.pressure_pa>=0.70*self.target_pressure_pa
+    def seal_test_passed(self):return self.complete and self.average_leak_ml_min<=self.maximum_residual_leak_ml_min and self.average_pressure_pa>=0.70*self.target_pressure_pa
 
 
 def ensure_leak_particle_system(*,physics_scene_path="/physicsScene",root_path="/World/DrAnmarLeakTest",system_path=None,particles_path=None,material_path=None,stage=None):
@@ -1059,11 +1234,62 @@ class AdaptiveAnastomosisSequenceController:
     collar: ReinforcementCollarBondController=field(default_factory=ReinforcementCollarBondController)
     patency: LumenPatencyController=field(default_factory=LumenPatencyController)
     leak_test: PressureDecayLeakController=field(default_factory=PressureDecayLeakController)
+    evidence_source: AnastomosisSceneEvidenceSource|None=None
+    evidence_cursor: AnastomosisEvidenceCursor=field(default_factory=AnastomosisEvidenceCursor)
     history: list[str]=field(default_factory=list)
+    requested_pressure_pa: float=field(default=0.0,init=False)
+    last_evidence: AnastomosisSceneEvidence|None=field(default=None,init=False)
     def __post_init__(self):
         phase_targets(self.phase)
     def transition(self,phase: str):
         targets=phase_targets(phase);self.phase=phase;self.history.append(phase)
-        if phase=="pressurize":self.leak_test.reset()
+        if phase=="pressurize":
+            self.leak_test.reset();self.requested_pressure_pa=self.leak_test.target_pressure_pa
         elif phase=="verify":self.leak_test.begin_observation()
+        elif phase in {"complete","abort"}:self.requested_pressure_pa=0.0
         return targets
+    def _resolve_evidence(self,evidence: AnastomosisSceneEvidence|None):
+        if evidence is None:
+            if self.evidence_source is None:
+                raise RuntimeError("AnastomosisSceneEvidence or an evidence_source is required")
+            evidence=self.evidence_source.sample_anastomosis_scene()
+        return evidence
+    def consume_scene_evidence(self,evidence: AnastomosisSceneEvidence|None=None,*,stage=None):
+        evidence=self.evidence_cursor.consume(self._resolve_evidence(evidence));self.last_evidence=evidence
+        staple_report=self.staples.update_from_scene(evidence,stage=stage)
+        collar_reports={
+            bond.collar_path:self.collar.update_from_scene(bond,evidence,stage=stage)
+            for bond in self.collar.bonds
+        }
+        patency_report=self.patency.evaluate(evidence)
+        leak_sample=(
+            self.leak_test.update_from_scene(evidence)
+            if self.phase=="verify" else None
+        )
+        return {
+            "scene_step":evidence.step_index,
+            "scene_time_s":evidence.time_s,
+            "scene_dt_s":evidence.dt_s,
+            "evidence_digest_sha256":evidence.digest_sha256,
+            "evidence_source":evidence.source,
+            "staple_report":staple_report,
+            "collar_reports":collar_reports,
+            "patency_report":patency_report,
+            "measured_pressure_pa":evidence.chamber_pressure_pa,
+            "measured_leak_flow_ml_min":evidence.measured_leak_flow_ml_min,
+            "leak_sample":leak_sample,
+        }
+    def update_verification(self,evidence: AnastomosisSceneEvidence|None=None,*,stage=None):
+        if self.phase!="verify":
+            raise RuntimeError("leak evidence may only be integrated during verify")
+        report=self.consume_scene_evidence(evidence,stage=stage)
+        report.update({
+            "average_leak_ml_min":self.leak_test.average_leak_ml_min,
+            "average_pressure_pa":self.leak_test.average_pressure_pa,
+            "required_pressure_pa":0.70*self.leak_test.target_pressure_pa,
+            "complete":self.leak_test.complete,
+            "seal_test_passed":self.leak_test.seal_test_passed,
+            "flow_connected_patency_verified":False,
+            "verification_scope":"provisional_pressure_leak_seal_test_only",
+        })
+        return report

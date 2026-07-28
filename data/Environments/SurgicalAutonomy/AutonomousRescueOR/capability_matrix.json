@@ -163,8 +163,7 @@
     "patient.vital_signs",
     "patient.tissue_state",
     "patient.organ_motion",
-    "patient.damage",
-    "patient.interventions"
+    "patient.damage"
   ],
   "station_layout_count": 4,
   "tool_count": 9

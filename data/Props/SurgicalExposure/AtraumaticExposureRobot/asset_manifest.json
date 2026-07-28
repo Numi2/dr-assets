@@ -1,6 +1,7 @@
 {
   "asset": "DrAnmar Atraumatic Surgical Exposure Robot",
   "catalog_subpath": "Props/SurgicalExposure/AtraumaticExposureRobot",
+  "integrity_status": "stale_after_source_only_realism_hardening_not_release_qualified",
   "files": [
     {
       "bytes": 19,
@@ -218,11 +219,6 @@
       "sha256": "573b4ab3619082d79a4d3785b80e4e356e5e99f8857090dae511608be799c9b8"
     },
     {
-      "bytes": 12553,
-      "path": "examples/validate_atraumatic_exposure_runtime.py",
-      "sha256": "3e9764ee234d037259e8a220f5fcc5ca1b041c03aaf3b6bdafd00bf8b19c3ee5"
-    },
-    {
       "bytes": 1957,
       "path": "physics_next/surgical-exposure/dranmar-atraumatic-exposure-robot-v1.json",
       "sha256": "ac210fdbed5cc17f46b8a0697926a1b25e81d830415c78b48550c62874e6c4b5"
@@ -431,11 +427,6 @@
       "bytes": 43544,
       "path": "source/extensions/orbit.surgical.assets/orbit/surgical/assets/atraumatic_exposure_robot.py",
       "sha256": "f659f69ee487b6e18b5e8e2e1d9fbab81e92756f0b2f03a534116bedfab0e94c"
-    },
-    {
-      "bytes": 5404,
-      "path": "tests/test_atraumatic_exposure_robot.py",
-      "sha256": "804d290280f39b4cb214e192053e331072d6785e0ff1178411126e2cc9df0f2e"
     }
   ],
   "installed_overlay_entries_refreshed": 81,

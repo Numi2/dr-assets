@@ -20,7 +20,7 @@
     ],
     "irrigation": "ten inward-converging microjets with a metering spool and volume ledger"
   },
-  "schema": "dr.anmar.wound-preparation-task.v1",
+  "schema": "dr.anmar.wound-preparation-task.v2",
   "sequence": [
     "inspect",
     "contact",
@@ -31,7 +31,7 @@
     "dry",
     "verify"
   ],
-  "success_metrics": [
+  "requested_observations_not_completion_proof": [
     "target coverage",
     "remaining debris fraction",
     "fluid emitted ml",
@@ -43,5 +43,11 @@
     "collision count",
     "verification coverage"
   ],
+  "completion_authority": {
+    "debris_release": "registered post-physics contact plus exact attachment topology",
+    "provider_status": "missing_native_scene_adapter",
+    "procedure_success": false,
+    "reason": "no runtime provider currently publishes the required evidence envelope; suction is a scripted particle capture proxy"
+  },
   "version": "0.1.0"
 }

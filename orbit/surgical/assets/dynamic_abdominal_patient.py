@@ -12,11 +12,11 @@ The module exposes a shared physiology contract for all DrAnmar surgical robots:
     patient.organ_motion
     patient.damage
     patient.contacts
-    patient.interventions
     patient.incision
+    patient.patient_authority
 
-Extended integration surfaces are available as ``patient.robot``,
-``patient.event_bus`` and ``patient.fluids``.
+Extended integration surfaces are available as ``patient.event_bus`` and
+``patient.fluids``.
 
 The implementation is a research engineering model. Parameters are provisional,
 manufacturer-neutral, and not intended for patient care or clinical decisions.
@@ -30,6 +30,11 @@ from collections import deque
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
+
+from .patient_authority import PatientAuthority
+from .patient_contact_scene_evidence import (
+    PatientContactSceneEvidence,
+)
 
 CATALOG_SUBPATH = "Props/Patients/DynamicAbdominalPatient"
 _MODULE_PATH = Path(__file__).resolve()
@@ -449,54 +454,108 @@ class CoagulationModel:
         return 0.018 * self.clotting_efficiency_fraction * high_flow_penalty
 
 
-@dataclass
 class FluidBalanceModel:
-    baseline_blood_volume_ml: float = 5000.0
-    intravascular_volume_ml: float = 5000.0
-    interstitial_volume_ml: float = 11000.0
-    crystalloid_input_ml: float = 0.0
-    colloid_input_ml: float = 0.0
-    transfused_red_cell_ml: float = 0.0
-    cumulative_blood_loss_ml: float = 0.0
-    urine_output_ml: float = 0.0
-    bile_output_ml: float = 0.0
-    suction_output_ml: float = 0.0
-    irrigation_input_ml: float = 0.0
-    irrigation_recovered_ml: float = 0.0
+    """Compatibility view over the patient's single conserved-fluid authority."""
+
+    def __init__(self, authority: PatientAuthority):
+        self._authority = authority
+
+    @property
+    def baseline_blood_volume_ml(self) -> float:
+        return self._authority.baseline_blood_volume_ml
+
+    @property
+    def intravascular_volume_ml(self) -> float:
+        return self._authority.intravascular_volume_ml
+
+    @property
+    def interstitial_volume_ml(self) -> float:
+        return self._authority.interstitial_volume_ml
+
+    @property
+    def crystalloid_input_ml(self) -> float:
+        return self._authority.crystalloid_input_ml
+
+    @property
+    def colloid_input_ml(self) -> float:
+        return self._authority.colloid_input_ml
+
+    @property
+    def transfused_red_cell_ml(self) -> float:
+        return self._authority.transfused_red_cell_ml
+
+    @property
+    def cumulative_blood_loss_ml(self) -> float:
+        return self._authority.cumulative_blood_loss_ml
+
+    @property
+    def urine_output_ml(self) -> float:
+        return self._authority.urine_output_ml
+
+    @property
+    def bile_output_ml(self) -> float:
+        return self._authority.bile_output_ml
+
+    @property
+    def suction_output_ml(self) -> float:
+        return self._authority.suction_output_ml
+
+    @property
+    def irrigation_input_ml(self) -> float:
+        return self._authority.irrigation_input_ml
+
+    @property
+    def irrigation_recovered_ml(self) -> float:
+        return self._authority.irrigation_recovered_ml
 
     @property
     def blood_volume_fraction(self) -> float:
-        return _clamp(
-            self.intravascular_volume_ml / self.baseline_blood_volume_ml, 0.0, 2.0
-        )
+        return self._authority.blood_volume_fraction
 
-    def lose_blood(self, volume_ml: float) -> None:
-        requested_ml = _nonnegative(volume_ml, "blood-loss volume")
-        actual_ml = min(requested_ml, self.intravascular_volume_ml)
-        self.intravascular_volume_ml -= actual_ml
-        self.cumulative_blood_loss_ml += actual_ml
+    def lose_blood(self, volume_ml: float) -> float:
+        return self._authority.withdraw_blood(volume_ml)
 
-    def infuse_crystalloid(self, volume_ml: float) -> None:
-        v = _nonnegative(volume_ml, "crystalloid volume")
-        self.crystalloid_input_ml += v
-        self.intravascular_volume_ml += 0.24 * v
-        self.interstitial_volume_ml += 0.76 * v
+    def infuse_crystalloid(self, volume_ml: float) -> float:
+        return self._authority.infuse_crystalloid(volume_ml)
 
-    def transfuse_blood(self, volume_ml: float) -> None:
-        v = _nonnegative(volume_ml, "transfusion volume")
-        self.transfused_red_cell_ml += v
-        self.intravascular_volume_ml += v
+    def transfuse_blood(self, volume_ml: float) -> float:
+        return self._authority.transfuse_blood(volume_ml)
 
-    def collect_suction(self, volume_ml: float) -> None:
-        self.suction_output_ml += _nonnegative(volume_ml, "suction volume")
+    def record_urine_output(self, volume_ml: float) -> float:
+        return self._authority.record_urine_output(volume_ml)
 
-    def add_irrigation(self, volume_ml: float) -> None:
-        self.irrigation_input_ml += _nonnegative(volume_ml, "irrigation volume")
+    def record_bile_output(self, volume_ml: float) -> float:
+        return self._authority.record_bile_output(volume_ml)
 
-    def recover_irrigation(self, volume_ml: float) -> None:
-        recovered_ml = _nonnegative(volume_ml, "recovered irrigation volume")
-        available_ml = max(0.0, self.irrigation_input_ml - self.irrigation_recovered_ml)
-        self.irrigation_recovered_ml += min(recovered_ml, available_ml)
+    def collect_suction(self, volume_ml: float) -> float:
+        return self._authority.collect_suction(volume_ml)
+
+    def add_irrigation(self, volume_ml: float) -> float:
+        return self._authority.add_irrigation(volume_ml)
+
+    def recover_irrigation(self, volume_ml: float) -> float:
+        return self._authority.recover_irrigation(volume_ml)
+
+    def snapshot(self) -> dict[str, float]:
+        snapshot = self._authority.fluid_snapshot()
+        return {
+            "baseline_blood_volume_ml": snapshot.baseline_blood_volume_ml,
+            "intravascular_volume_ml": snapshot.intravascular_volume_ml,
+            "interstitial_volume_ml": snapshot.interstitial_volume_ml,
+            "plasma_excess_ml": snapshot.plasma_excess_ml,
+            "interstitial_excess_ml": snapshot.interstitial_excess_ml,
+            "hemoglobin_mass_g": snapshot.hemoglobin_mass_g,
+            "hemoglobin_g_dl": snapshot.hemoglobin_g_dl,
+            "crystalloid_input_ml": snapshot.crystalloid_input_ml,
+            "colloid_input_ml": snapshot.colloid_input_ml,
+            "transfused_red_cell_ml": snapshot.transfused_red_cell_ml,
+            "cumulative_blood_loss_ml": snapshot.cumulative_blood_loss_ml,
+            "urine_output_ml": snapshot.urine_output_ml,
+            "bile_output_ml": snapshot.bile_output_ml,
+            "suction_output_ml": snapshot.suction_output_ml,
+            "irrigation_input_ml": snapshot.irrigation_input_ml,
+            "irrigation_recovered_ml": snapshot.irrigation_recovered_ml,
+        }
 
 
 @dataclass
@@ -678,16 +737,31 @@ class PerfusionModel:
         self.abdominal_flow_ml_min = 0.0
 
     def set_compression(self, organ_id: str, fraction: float) -> None:
-        if organ_id in self.regions:
-            self.regions[organ_id].compression_fraction = _clamp(fraction, 0.0, 1.0)
+        try:
+            region = self.regions[organ_id]
+        except KeyError:
+            raise KeyError(
+                f"unknown perfusion region {organ_id!r}"
+            ) from None
+        region.compression_fraction = _clamp(fraction, 0.0, 1.0)
 
     def set_occlusion(self, organ_id: str, fraction: float) -> None:
-        if organ_id in self.regions:
-            self.regions[organ_id].occlusion_fraction = _clamp(fraction, 0.0, 1.0)
+        try:
+            region = self.regions[organ_id]
+        except KeyError:
+            raise KeyError(
+                f"unknown perfusion region {organ_id!r}"
+            ) from None
+        region.occlusion_fraction = _clamp(fraction, 0.0, 1.0)
 
     def set_leak(self, organ_id: str, fraction: float) -> None:
-        if organ_id in self.regions:
-            self.regions[organ_id].leak_fraction = _clamp(fraction, 0.0, 1.0)
+        try:
+            region = self.regions[organ_id]
+        except KeyError:
+            raise KeyError(
+                f"unknown perfusion region {organ_id!r}"
+            ) from None
+        region.leak_fraction = _clamp(fraction, 0.0, 1.0)
 
     def step(self, dt_s: float) -> None:
         cv = self.patient.cardiovascular
@@ -792,12 +866,15 @@ class OxygenDeliveryModel:
         *,
         cardiac_output_l_min: float,
         spo2_fraction: float,
+        hemoglobin_g_dl: float,
         blood_volume_fraction: float,
         tissue_supply_ratio: float,
     ) -> None:
-        dilution = max(0.0, 1.0 - blood_volume_fraction)
-        target_hb = _clamp(13.5 * (1.0 - 0.45 * dilution), 4.0, 18.0)
-        self.hemoglobin_g_dl = _smooth(self.hemoglobin_g_dl, target_hb, dt_s, 20.0)
+        self.hemoglobin_g_dl = _clamp(
+            float(hemoglobin_g_dl),
+            0.0,
+            25.0,
+        )
         pao2 = 95.0 * _clamp(spo2_fraction / 0.985, 0.2, 1.15)
         self.arterial_oxygen_content_ml_dl = (
             1.34 * self.hemoglobin_g_dl * spo2_fraction + 0.003 * pao2
@@ -986,7 +1063,10 @@ class TissueStateRegistry:
 
     def get(self, organ_id: str) -> OrganTissueState:
         if organ_id not in self.organs:
-            self.organs[organ_id] = OrganTissueState(organ_id=organ_id)
+            raise KeyError(
+                f"unknown patient tissue target {organ_id!r}; "
+                "targets must be declared by the anatomy manifest"
+            )
         return self.organs[organ_id]
 
     def set_access_state(self, state: str) -> None:
@@ -1057,46 +1137,6 @@ class TissueStateRegistry:
 
 
 @dataclass(frozen=True)
-class PatientContactFrame:
-    """One post-physics tool/patient contact observation.
-
-    The frame deliberately contains only simulator primitives.  It has no
-    success, compression, perfusion, exposure, or hemostasis result for a
-    policy or robot caller to write.
-    """
-
-    target: str
-    source_robot: str
-    interaction: str
-    normal_forces_n: tuple[float, float]
-    tool_position_m: tuple[float, float, float] | None = None
-
-    def __post_init__(self) -> None:
-        if not self.target:
-            raise ValueError("target must not be empty")
-        if not self.source_robot:
-            raise ValueError("source_robot must not be empty")
-        if self.interaction not in VALID_CONTACT_INTERACTIONS:
-            raise ValueError(
-                f"unsupported contact interaction {self.interaction!r}"
-            )
-        if len(self.normal_forces_n) != 2:
-            raise ValueError("normal_forces_n must contain exactly two pad forces")
-        forces = tuple(
-            _nonnegative(value, f"normal_forces_n[{index}]")
-            for index, value in enumerate(self.normal_forces_n)
-        )
-        object.__setattr__(self, "normal_forces_n", forces)
-        if self.tool_position_m is not None:
-            if len(self.tool_position_m) != 3:
-                raise ValueError("tool_position_m must contain exactly three values")
-            position = tuple(float(value) for value in self.tool_position_m)
-            if not all(math.isfinite(value) for value in position):
-                raise ValueError("tool_position_m values must be finite")
-            object.__setattr__(self, "tool_position_m", position)
-
-
-@dataclass(frozen=True)
 class ContactEffectCalibration:
     """Provisional simulator coupling derived from the authored tool profiles."""
 
@@ -1134,6 +1174,8 @@ class ContactEffectState:
     traction_distance_m: float = 0.0
     overload_damage_fraction: float = 0.0
     reported_damage_fraction: float = 0.0
+    last_physics_step: int = -1
+    last_evidence_digest_sha256: str | None = None
 
 
 class ContactDrivenPatientEffects:
@@ -1146,25 +1188,223 @@ class ContactDrivenPatientEffects:
     ):
         self.patient = patient
         self.calibration = calibration or ContactEffectCalibration()
-        self._pending: dict[tuple[str, str, str], PatientContactFrame] = {}
+        self._pending: dict[
+            tuple[str, str, str],
+            PatientContactSceneEvidence,
+        ] = {}
+        self._last_step_by_source: dict[
+            tuple[str, str, str],
+            int,
+        ] = {}
+        self._runtime_identity_by_source: dict[
+            tuple[str, str, str],
+            tuple[str, str],
+        ] = {}
+        self._runtime_identity: tuple[str, str] | None = None
+        self._topology_revision: str | None = None
+        self._source_registration_by_source: dict[
+            tuple[str, str, str],
+            tuple[str, ...],
+        ] = {}
+        self._last_digest_by_source: dict[
+            tuple[str, str, str],
+            str,
+        ] = {}
+        self._last_time_by_source: dict[
+            tuple[str, str, str],
+            float,
+        ] = {}
+        self._preflight_expected_close_time_s: float | None = None
+        self._preflight_dt_s: float | None = None
         self.states: dict[tuple[str, str, str], ContactEffectState] = {}
 
-    def observe(self, frame: PatientContactFrame) -> None:
-        """Queue the latest authoritative contact frame for the next patient step."""
-        if frame.interaction == "exposure":
-            self.patient.tissue_state.get(frame.target)
-        elif frame.target not in self.patient.bleeding.sources:
-            raise KeyError(f"unknown bleeding source {frame.target!r}")
-        key = (frame.source_robot, frame.target, frame.interaction)
-        self._pending[key] = frame
+    def observe_scene_evidence(
+        self,
+        evidence: PatientContactSceneEvidence,
+    ) -> None:
+        """Queue one monotonic, prim-bound contact interval."""
+
+        if not isinstance(evidence, PatientContactSceneEvidence):
+            raise TypeError(
+                "patient contact effects require "
+                "PatientContactSceneEvidence"
+            )
+        if evidence.interaction not in VALID_CONTACT_INTERACTIONS:
+            raise ValueError(
+                f"unsupported contact interaction "
+                f"{evidence.interaction!r}"
+            )
+        if evidence.interaction == "exposure":
+            self.patient.tissue_state.get(evidence.target)
+        elif evidence.target not in self.patient.bleeding.sources:
+            raise KeyError(
+                f"unknown bleeding source {evidence.target!r}"
+            )
+        key = (
+            evidence.source_robot,
+            evidence.target,
+            evidence.interaction,
+        )
+        if key in self._pending:
+            raise ValueError(
+                "patient contact evidence for this source is already queued; "
+                "advance the patient before publishing another interval"
+            )
+        runtime_identity = (
+            evidence.envelope.provenance.episode_id,
+            evidence.envelope.provenance.environment_id,
+        )
+        if (
+            self._runtime_identity is not None
+            and runtime_identity != self._runtime_identity
+        ):
+            raise ValueError(
+                "all patient contact sources must remain in the same "
+                "episode and environment until the patient is reset"
+            )
+        topology_revision = (
+            evidence.envelope.provenance.topology_revision
+        )
+        if (
+            self._topology_revision is not None
+            and topology_revision != self._topology_revision
+        ):
+            raise ValueError(
+                "patient contact topology changed without an explicit "
+                "patient-wide topology-transition barrier"
+            )
+        bound_identity = self._runtime_identity_by_source.get(key)
+        if bound_identity is not None and runtime_identity != bound_identity:
+            raise ValueError(
+                "patient contact evidence changed episode or environment "
+                "without a patient reset"
+            )
+        if (
+            evidence.evidence_digest_sha256
+            == self._last_digest_by_source.get(key)
+        ):
+            raise ValueError("duplicate patient contact evidence envelope")
+        if evidence.physics_step <= self._last_step_by_source.get(
+            key,
+            -1,
+        ):
+            raise ValueError(
+                "patient contact evidence must advance monotonically "
+                "per registered source"
+            )
+        last_time = self._last_time_by_source.get(key)
+        if last_time is not None and not math.isclose(
+            evidence.simulation_time_s,
+            last_time + evidence.dt_s,
+            rel_tol=0.0,
+            abs_tol=1.0e-9,
+        ):
+            raise ValueError(
+                "patient contact evidence has a discontinuous source clock"
+            )
+        registration = (
+            evidence.sources.target_id,
+            evidence.sources.interaction,
+            evidence.sources.source_robot,
+            evidence.sources.left_contact_source_id,
+            evidence.sources.right_contact_source_id,
+            evidence.sources.left_jaw_prim_path,
+            evidence.sources.right_jaw_prim_path,
+            evidence.sources.tool_tip_prim_path,
+            evidence.sources.target_prim_path,
+            evidence.sources.calibration_profile_id,
+        )
+        bound_registration = self._source_registration_by_source.get(key)
+        if (
+            bound_registration is not None
+            and registration != bound_registration
+        ):
+            raise ValueError(
+                "patient contact source registration changed during an "
+                "active patient episode"
+            )
+        self._pending[key] = evidence
         self.states.setdefault(
             key,
             ContactEffectState(
-                target=frame.target,
-                source_robot=frame.source_robot,
-                interaction=frame.interaction,
+                target=evidence.target,
+                source_robot=evidence.source_robot,
+                interaction=evidence.interaction,
             ),
         )
+
+    def preflight_step(self, dt_s: float) -> None:
+        """Validate a complete patient-wide evidence barrier before mutation."""
+
+        dt = float(dt_s)
+        if not math.isfinite(dt) or dt <= 0.0:
+            raise ValueError("dt_s must be positive and finite")
+        missing = sorted(set(self.states).difference(self._pending))
+        if missing:
+            raise ValueError(
+                "patient step is missing explicit zero-or-contact evidence "
+                f"for active registered sources: {missing}"
+            )
+        identities = {
+            (
+                frame.envelope.provenance.episode_id,
+                frame.envelope.provenance.environment_id,
+            )
+            for frame in self._pending.values()
+        }
+        if len(identities) > 1:
+            raise ValueError(
+                "one patient interval cannot mix episode or environment "
+                "identities across contact sources"
+            )
+        topology_revisions = {
+            frame.envelope.provenance.topology_revision
+            for frame in self._pending.values()
+        }
+        if len(topology_revisions) > 1:
+            raise ValueError(
+                "one patient interval cannot mix topology revisions"
+            )
+        physics_steps = {
+            frame.physics_step for frame in self._pending.values()
+        }
+        if len(physics_steps) > 1:
+            raise ValueError(
+                "one patient interval requires one exact physics step "
+                "across all contact sources"
+            )
+        digests = [
+            frame.evidence_digest_sha256
+            for frame in self._pending.values()
+        ]
+        if len(digests) != len(set(digests)):
+            raise ValueError(
+                "one evidence envelope cannot authorize multiple patient "
+                "contact source registrations"
+            )
+        expected_time = self.patient.time_s + dt
+        for key, frame in self._pending.items():
+            if not math.isclose(
+                frame.dt_s,
+                dt,
+                rel_tol=0.0,
+                abs_tol=1.0e-9,
+            ):
+                raise ValueError(
+                    f"patient step dt does not match contact evidence for {key}"
+                )
+            if not math.isclose(
+                frame.simulation_time_s,
+                expected_time,
+                rel_tol=0.0,
+                abs_tol=1.0e-9,
+            ):
+                raise ValueError(
+                    "patient contact evidence must close the exact next "
+                    "authoritative patient interval"
+                )
+        self._preflight_expected_close_time_s = expected_time
+        self._preflight_dt_s = dt
 
     @staticmethod
     def _distance(
@@ -1175,7 +1415,7 @@ class ContactDrivenPatientEffects:
 
     def _force_quality(
         self,
-        frame: PatientContactFrame | None,
+        frame: PatientContactSceneEvidence | None,
         *,
         target_force_n: float,
         soft_force_n: float,
@@ -1280,9 +1520,52 @@ class ContactDrivenPatientEffects:
         dt = float(dt_s)
         if not math.isfinite(dt) or dt <= 0.0:
             raise ValueError("dt_s must be positive and finite")
+        if (
+            self._preflight_expected_close_time_s is None
+            or self._preflight_dt_s is None
+            or not math.isclose(
+                self._preflight_dt_s,
+                dt,
+                rel_tol=0.0,
+                abs_tol=1.0e-9,
+            )
+            or not math.isclose(
+                self._preflight_expected_close_time_s,
+                self.patient.time_s,
+                rel_tol=0.0,
+                abs_tol=1.0e-9,
+            )
+        ):
+            raise RuntimeError(
+                "contact effects may advance only after the owning patient "
+                "preflights the complete next-interval evidence barrier"
+            )
+        # Consume the barrier before applying any effects. A downstream error
+        # therefore cannot replay the same authorization token.
+        self._preflight_expected_close_time_s = None
+        self._preflight_dt_s = None
         calibration = self.calibration
         for key, state in self.states.items():
             frame = self._pending.get(key)
+            if frame is not None and not math.isclose(
+                frame.dt_s,
+                dt,
+                rel_tol=0.0,
+                abs_tol=1.0e-9,
+            ):
+                raise ValueError(
+                    "patient step dt does not match contact evidence dt"
+                )
+            if frame is not None and not math.isclose(
+                frame.simulation_time_s,
+                self.patient.time_s,
+                rel_tol=0.0,
+                abs_tol=1.0e-9,
+            ):
+                raise ValueError(
+                    "patient contact evidence time does not match the "
+                    "authoritative patient clock"
+                )
             if state.interaction == "exposure":
                 (
                     active,
@@ -1382,6 +1665,11 @@ class ContactDrivenPatientEffects:
             state.bilateral_force_n = bilateral
             state.peak_force_n = peak
             state.force_asymmetry_n = asymmetry
+            if frame is not None:
+                state.last_physics_step = frame.physics_step
+                state.last_evidence_digest_sha256 = (
+                    frame.evidence_digest_sha256
+                )
             self._apply_overload(
                 state,
                 dt_s=dt,
@@ -1436,11 +1724,41 @@ class ContactDrivenPatientEffects:
                 source_id,
                 control,
             )
+        for key, frame in self._pending.items():
+            runtime_identity = (
+                frame.envelope.provenance.episode_id,
+                frame.envelope.provenance.environment_id,
+            )
+            registration = (
+                frame.sources.target_id,
+                frame.sources.interaction,
+                frame.sources.source_robot,
+                frame.sources.left_contact_source_id,
+                frame.sources.right_contact_source_id,
+                frame.sources.left_jaw_prim_path,
+                frame.sources.right_jaw_prim_path,
+                frame.sources.tool_tip_prim_path,
+                frame.sources.target_prim_path,
+                frame.sources.calibration_profile_id,
+            )
+            self._runtime_identity = runtime_identity
+            self._topology_revision = (
+                frame.envelope.provenance.topology_revision
+            )
+            self._runtime_identity_by_source[key] = runtime_identity
+            self._source_registration_by_source[key] = registration
+            self._last_step_by_source[key] = frame.physics_step
+            self._last_time_by_source[key] = frame.simulation_time_s
+            self._last_digest_by_source[key] = (
+                frame.evidence_digest_sha256
+            )
         self._pending.clear()
 
     def snapshot(self) -> dict[str, Any]:
         return {
-            "authority": "post_physics_contact_force_and_tool_pose",
+            "authority": (
+                "prim_bound_post_physics_scene_evidence"
+            ),
             "calibration": asdict(self.calibration),
             "states": [
                 asdict(state)
@@ -1559,7 +1877,7 @@ class LaparotomyIncisionCalibration:
 
 
 @dataclass(frozen=True)
-class IncisionContactSample:
+class _AuthoredIncisionContactSample:
     blade_contact: bool
     normal_force_n: float
     tangential_force_n: float
@@ -1643,7 +1961,19 @@ class PhysicalLaparotomyIncision:
             "released_bridge_ids": [],
         }
 
-    def advance(self, sample: IncisionContactSample) -> dict[str, Any]:
+    def advance(self, sample: object) -> dict[str, Any]:
+        raise RuntimeError(
+            "caller-authored incision samples are disabled; bind an exact "
+            "post-physics incision SceneEvidence provider before enabling "
+            "continuity release"
+        )
+
+    def _advance_authored_fixture(
+        self,
+        sample: _AuthoredIncisionContactSample,
+    ) -> dict[str, Any]:
+        """Non-runtime engineering fixture retained for model development."""
+
         if self.complete:
             return self._reject("incision_complete")
         normal_force = _nonnegative(sample.normal_force_n, "normal_force_n")
@@ -1826,6 +2156,9 @@ class PhysicalLaparotomyIncision:
             "representation": (
                 "presegmented_deformable_flaps_with_removable_continuity"
             ),
+            "runtime_authority": (
+                "disabled_pending_exact_prim_bound_scene_evidence_provider"
+            ),
             "active_layer": self.active_layer,
             "layer_index": self.layer_index,
             "bridge_index": self.bridge_index,
@@ -1858,7 +2191,7 @@ class LaparotomyGraspCalibration:
 
 
 @dataclass(frozen=True)
-class WoundEdgeGraspSample:
+class _AuthoredWoundEdgeGraspSample:
     layer: str
     side: str
     cell_index: int
@@ -1896,7 +2229,19 @@ class PhysicalWoundEdgeGrasp:
             "capture_requested": False,
         }
 
-    def observe(self, sample: WoundEdgeGraspSample) -> dict[str, Any]:
+    def observe(self, sample: object) -> dict[str, Any]:
+        raise RuntimeError(
+            "caller-authored wound-edge grasp samples are disabled; bind "
+            "an exact post-physics grasp SceneEvidence provider before "
+            "authoring capture attachments"
+        )
+
+    def _observe_authored_fixture(
+        self,
+        sample: _AuthoredWoundEdgeGraspSample,
+    ) -> dict[str, Any]:
+        """Non-runtime engineering fixture retained for model development."""
+
         if sample.layer not in LAPAROTOMY_LAYERS:
             raise ValueError(f"unsupported laparotomy layer {sample.layer!r}")
         if sample.side not in {"left", "right"}:
@@ -1982,7 +2327,9 @@ class PhysicalWoundEdgeGrasp:
 
     def snapshot(self) -> dict[str, Any]:
         return {
-            "authority": "post_physics_contact_sensor",
+            "authority": (
+                "disabled_pending_exact_prim_bound_scene_evidence_provider"
+            ),
             "captured_cells": sorted(self.captured_cells),
             "released_cells": list(self.released_cells),
             "rejected_samples": self.rejected_samples,
@@ -2064,11 +2411,20 @@ class InterventionEvent:
     result: dict[str, Any]
 
 
-class InterventionRegistry:
+class _DisabledAuthoredInterventionRegistry:
+    """Quarantined compatibility code for the former authored-outcome API.
+
+    Runtime patients never instantiate this class.  It remains only to make the
+    removed interface and its non-authoritative fixture semantics explicit while
+    downstream callers migrate to mechanics-owned scene evidence.
+    """
+
     def __init__(self, patient: "DynamicSurgicalPatient"):
-        self.patient = patient
-        self.history: list[InterventionEvent] = []
-        self._counter = 0
+        del patient
+        raise RuntimeError(
+            "caller-authored patient interventions are disabled; submit exact "
+            "post-physics evidence through the owning mechanics subsystem"
+        )
 
     def _record(
         self,
@@ -2105,27 +2461,6 @@ class InterventionRegistry:
                 )
             )
         return event
-
-    def apply(self, event: Mapping[str, Any]) -> InterventionEvent:
-        action = str(event["action"])
-        target = str(event.get("target", "patient"))
-        source = str(event.get("source_robot", "external"))
-        params = dict(event.get("parameters", {}))
-        dispatch = {
-            "set_access_state": self.set_access_state,
-            "dissection": self.apply_dissection,
-            "wound_preparation": self.apply_wound_preparation,
-            "seal_divide": self.apply_seal_divide,
-            "anastomosis": self.apply_anastomosis,
-            "closure": self.apply_closure,
-            "dressing": self.apply_dressing,
-            "perfusion_scan": self.apply_perfusion_scan,
-            "crystalloid": self.infuse_crystalloid,
-            "blood_transfusion": self.transfuse_blood,
-        }
-        if action not in dispatch:
-            raise KeyError(f"unknown patient intervention {action!r}")
-        return dispatch[action](target=target, source_robot=source, **params)
 
     def set_access_state(
         self,
@@ -2389,11 +2724,20 @@ class InterventionRegistry:
         )
 
 
-class RobotInterventionAdapter:
-    """Typed adapter used by all DrAnmar surgical robot systems."""
+class _LegacyRobotInterventionAdapter:
+    """Unattached compatibility implementation for offline authored fixtures.
+
+    Runtime patients deliberately do not expose this adapter because its
+    arguments describe procedure outcomes rather than post-physics evidence.
+    """
 
     def __init__(self, patient: "DynamicSurgicalPatient"):
-        self.patient = patient
+        del patient
+        raise RuntimeError(
+            "the legacy authored robot intervention adapter is disabled; "
+            "submit exact post-physics evidence through the owning mechanics "
+            "subsystem"
+        )
 
     def dissection(
         self,
@@ -2404,7 +2748,7 @@ class RobotInterventionAdapter:
         injury: bool = False,
         severity: float = 0.45,
     ) -> InterventionEvent:
-        return self.patient.interventions.apply_dissection(
+        return self.patient._interventions.apply_dissection(
             target=target,
             method=method,
             protected_structure=protected_structure,
@@ -2427,7 +2771,7 @@ class RobotInterventionAdapter:
         if aspirated_ml > 0.0:
             self.patient.fluid_balance.recover_irrigation(aspirated_ml)
             self.patient.fluid_balance.collect_suction(aspirated_ml)
-        return self.patient.interventions.apply_wound_preparation(
+        return self.patient._interventions.apply_wound_preparation(
             target=target,
             debridement_fraction=debridement_fraction,
             contamination_reduction=contamination_reduction,
@@ -2442,7 +2786,7 @@ class RobotInterventionAdapter:
         division_complete: bool,
         distal_region: str | None = None,
     ) -> InterventionEvent:
-        return self.patient.interventions.apply_seal_divide(
+        return self.patient._interventions.apply_seal_divide(
             target=target,
             seal_quality=seal_quality,
             division_complete=division_complete,
@@ -2462,7 +2806,7 @@ class RobotInterventionAdapter:
         kwargs: dict[str, Any] = {}
         if region is not None:
             kwargs["region"] = region
-        return self.patient.interventions.apply_anastomosis(
+        return self.patient._interventions.apply_anastomosis(
             target=target,
             patency_fraction=patency_fraction,
             leak_area_mm2=leak_area_mm2,
@@ -2474,7 +2818,7 @@ class RobotInterventionAdapter:
     def close_wound(
         self, *, target: str, method: str, closure_fraction: float
     ) -> InterventionEvent:
-        return self.patient.interventions.apply_closure(
+        return self.patient._interventions.apply_closure(
             target=target,
             method=method,
             closure_fraction=closure_fraction,
@@ -2484,7 +2828,7 @@ class RobotInterventionAdapter:
     def dressing(
         self, *, target: str, pressure_kpa: float, seal_fraction: float = 1.0
     ) -> InterventionEvent:
-        return self.patient.interventions.apply_dressing(
+        return self.patient._interventions.apply_dressing(
             target=target,
             pressure_kpa=pressure_kpa,
             seal_fraction=seal_fraction,
@@ -2494,17 +2838,17 @@ class RobotInterventionAdapter:
     def perfusion_scan(
         self, *, target: str = "abdomen", findings: Mapping[str, Any] | None = None
     ) -> InterventionEvent:
-        return self.patient.interventions.apply_perfusion_scan(
+        return self.patient._interventions.apply_perfusion_scan(
             target=target,
             findings=findings,
             source_robot="perfusion_viability_robot",
         )
 
     def crystalloid(self, *, volume_ml: float) -> InterventionEvent:
-        return self.patient.interventions.infuse_crystalloid(volume_ml=volume_ml)
+        return self.patient._interventions.infuse_crystalloid(volume_ml=volume_ml)
 
     def transfuse(self, *, volume_ml: float) -> InterventionEvent:
-        return self.patient.interventions.transfuse_blood(volume_ml=volume_ml)
+        return self.patient._interventions.transfuse_blood(volume_ml=volume_ml)
 
 
 class OrganMotionModel:
@@ -2600,13 +2944,14 @@ class DynamicSurgicalPatient:
             fibrinogen_g_l=float(baseline["fibrinogen_g_l"]),
             inr=float(baseline["inr"]),
         )
-        self.fluid_balance = FluidBalanceModel(
+        self.patient_authority = PatientAuthority(
             baseline_blood_volume_ml=blood_volume_ml,
-            intravascular_volume_ml=blood_volume_ml,
+            baseline_hemoglobin_g_dl=float(baseline["hemoglobin_g_dl"]),
         )
+        self.fluid_balance = FluidBalanceModel(self.patient_authority)
         self.fluids = self.fluid_balance
         self.oxygen = OxygenDeliveryModel(
-            hemoglobin_g_dl=float(baseline["hemoglobin_g_dl"]),
+            hemoglobin_g_dl=self.patient_authority.hemoglobin_g_dl,
             lactate_mmol_l=float(baseline["lactate_mmol_l"]),
         )
         self.temperature = TemperatureModel(
@@ -2630,8 +2975,7 @@ class DynamicSurgicalPatient:
         self.vital_signs = VitalSignsModel()
         self.contact_effects = ContactDrivenPatientEffects(self)
         self.contacts = self.contact_effects
-        self.interventions = InterventionRegistry(self)
-        self.robot = RobotInterventionAdapter(self)
+        self._intervention_history: list[InterventionEvent] = []
         self.released_adhesions: set[str] = set()
         self.anastomoses: dict[str, dict[str, float]] = {}
         self.dressing_state: dict[str, Any] = {
@@ -2641,8 +2985,6 @@ class DynamicSurgicalPatient:
         }
         self.last_perfusion_scan: dict[str, Any] | None = None
         self.anesthetic_depression_fraction = 0.0
-        self.irrigation_exposure_fraction = 0.0
-        self.exposed_surface_fraction = 0.02
         self._last_bile_leak_ml = 0.0
         self._configure_condition(condition)
         self.set_procedure_stage(procedure_stage, emit=False)
@@ -2701,34 +3043,6 @@ class DynamicSurgicalPatient:
         if stage not in VALID_PROCEDURE_STAGES:
             raise ValueError(f"unsupported procedure_stage {stage!r}")
         self.procedure_stage = stage
-        exposure_by_stage = {
-            "closed": 0.02,
-            "access_open": 0.10,
-            "exposed": 0.22,
-            "dissection": 0.28,
-            "hemostasis": 0.28,
-            "division": 0.28,
-            "reconstruction": 0.24,
-            "closure": 0.10,
-            "dressed": 0.03,
-        }
-        self.exposed_surface_fraction = exposure_by_stage[stage]
-        self.tissue_state.set_access_state(
-            "intact" if stage in {"closed", "dressed"} else "open"
-        )
-        if stage == "closed":
-            self.tissue_state.wound_open_fraction = 0.0
-        elif stage in {
-            "access_open",
-            "exposed",
-            "dissection",
-            "hemostasis",
-            "division",
-            "reconstruction",
-        }:
-            self.tissue_state.wound_open_fraction = max(
-                self.tissue_state.wound_open_fraction, 0.85
-            )
         if emit:
             self.event_bus.emit(
                 PatientEvent(
@@ -2739,11 +3053,28 @@ class DynamicSurgicalPatient:
                 )
             )
 
+    @property
+    def exposed_surface_fraction(self) -> float:
+        """Thermal exposure derived from the physical wound aperture.
+
+        A procedure-stage label is orchestration metadata, not evidence of an
+        exposed patient surface.
+        """
+
+        return _clamp(
+            0.02 + 0.26 * self.tissue_state.wound_open_fraction,
+            0.0,
+            0.28,
+        )
+
     def step(self, dt_s: float) -> VitalSignsModel:
         dt = float(dt_s)
         if not math.isfinite(dt) or dt <= 0:
             raise ValueError("dt_s must be positive and finite")
-        self.time_s += dt
+        # Validate the complete next-interval evidence barrier before advancing
+        # the authoritative clock or changing fluid/physiology state.
+        self.contact_effects.preflight_step(dt)
+        self.time_s = self.patient_authority.advance_time(dt)
         self.contact_effects.step(dt)
         tissue_supply = sum(
             s.oxygen_supply_ratio for s in self.perfusion.regions.values()
@@ -2773,14 +3104,11 @@ class DynamicSurgicalPatient:
             dt,
             cardiac_output_l_min=self.cardiovascular.cardiac_output_l_min,
             spo2_fraction=self.respiration.spo2_fraction,
+            hemoglobin_g_dl=self.patient_authority.hemoglobin_g_dl,
             blood_volume_fraction=self.fluid_balance.blood_volume_fraction,
             tissue_supply_ratio=tissue_supply,
         )
-        thermal_exposure = _clamp(
-            max(self.irrigation_exposure_fraction, self.exposed_surface_fraction),
-            0.0,
-            1.0,
-        )
+        thermal_exposure = self.exposed_surface_fraction
         self.temperature.step(
             dt,
             blood_loss_ml_s=blood_loss / dt,
@@ -2809,15 +3137,12 @@ class DynamicSurgicalPatient:
             right_flow_fraction=right,
             vasopressin_drive=vasopressin,
         )
-        self.fluid_balance.urine_output_ml += urine
-        self.fluid_balance.intravascular_volume_ml = max(
-            0, self.fluid_balance.intravascular_volume_ml - urine
-        )
+        self.fluid_balance.record_urine_output(urine)
         liver = self.perfusion.regions.get(
             "liver", RegionalPerfusionState("liver")
         ).relative_flow_fraction
         bile, leak = self.biliary.step(dt, liver_perfusion_fraction=liver)
-        self.fluid_balance.bile_output_ml += leak
+        self.fluid_balance.record_bile_output(leak)
         self._last_bile_leak_ml = leak
         self.organ_motion.step(self.respiration, self.cardiovascular)
         self.vital_signs.update(self)
@@ -2873,7 +3198,7 @@ class DynamicSurgicalPatient:
                 source_robot=source_robot,
             )
 
-    def start_bleeding(
+    def _start_authored_bleeding_fixture(
         self,
         source_id: str,
         organ_id: str,
@@ -2896,7 +3221,7 @@ class DynamicSurgicalPatient:
         )
         return source
 
-    def cut(
+    def _apply_authored_cut_fixture(
         self,
         structure: str,
         severity: float,
@@ -2923,7 +3248,7 @@ class DynamicSurgicalPatient:
         )
         return event
 
-    def puncture(
+    def _apply_authored_puncture_fixture(
         self,
         structure: str,
         severity: float = 0.05,
@@ -2955,19 +3280,18 @@ class DynamicSurgicalPatient:
         )
         return event
 
-    def infuse(
+    def _apply_authored_infusion_fixture(
         self,
         *,
         crystalloid_ml: float = 0.0,
         blood_ml: float = 0.0,
         source: str = "anesthesia",
     ) -> None:
-        if crystalloid_ml > 0.0:
-            self.interventions.infuse_crystalloid(
-                volume_ml=crystalloid_ml, source_robot=source
-            )
-        if blood_ml > 0.0:
-            self.interventions.transfuse_blood(volume_ml=blood_ml, source_robot=source)
+        del crystalloid_ml, blood_ml, source
+        raise RuntimeError(
+            "authored infusion fixtures are disabled; resuscitation effects "
+            "require exact pump evidence"
+        )
 
     def reset(self) -> None:
         self.__init__(
@@ -2992,7 +3316,8 @@ class DynamicSurgicalPatient:
             "oxygen": asdict(self.oxygen),
             "temperature": asdict(self.temperature),
             "coagulation": asdict(self.coagulation),
-            "fluid_balance": asdict(self.fluid_balance),
+            "patient_authority": dict(self.patient_authority.snapshot()),
+            "fluid_balance": self.fluid_balance.snapshot(),
             "renal": asdict(self.renal),
             "biliary": asdict(self.biliary),
             "vital_signs": asdict(self.vital_signs),
@@ -3021,7 +3346,9 @@ class DynamicSurgicalPatient:
             "contact_effects": self.contact_effects.snapshot(),
             "incision": self.incision.snapshot(),
             "wound_grasp": self.wound_grasp.snapshot(),
-            "interventions": [asdict(value) for value in self.interventions.history],
+            "interventions": [
+                asdict(value) for value in self._intervention_history
+            ],
             "events": self.event_bus.snapshot(),
             "released_adhesions": sorted(self.released_adhesions),
             "anastomoses": self.anastomoses,
@@ -3064,7 +3391,6 @@ class ProcedureOrchestrator:
             raise KeyError(scenario_id)
         self.active_scenario = scenario_id
         self.completed_steps = []
-        self.patient.set_procedure_stage("access_open")
         return dict(self.scenarios[scenario_id])
 
     def mark_step(self, step_id: str, event: Mapping[str, Any] | None = None) -> None:
@@ -3076,10 +3402,14 @@ class ProcedureOrchestrator:
             raise ValueError(
                 f"step {step_id!r} is not part of scenario {self.active_scenario!r}"
             )
+        if event is not None:
+            raise ValueError(
+                "procedure steps may not author patient outcomes; submit "
+                "post-physics scene evidence through the owning mechanics "
+                "subsystem"
+            )
         if step_id not in self.completed_steps:
             self.completed_steps.append(step_id)
-        if event is not None:
-            self.patient.interventions.apply(event)
 
     def status(self) -> dict[str, Any]:
         scenario = self.scenarios.get(self.active_scenario or "", {})
@@ -3151,6 +3481,19 @@ def spawn_operating_scene(
 
 
 def set_access_state(patient_path: str, state: str, *, stage=None) -> None:
+    del patient_path, state, stage
+    raise RuntimeError(
+        "runtime access state cannot be caller-authored; use the physical "
+        "incision/contact mechanics path or select an initial spawn fixture"
+    )
+
+
+def _set_access_state_visual_fixture(
+    patient_path: str,
+    state: str,
+    *,
+    stage=None,
+) -> None:
     if state not in VALID_ACCESS_STATES:
         raise ValueError(
             f"unsupported access_state {state!r}; "
@@ -3689,12 +4032,13 @@ def capture_laparotomy_wound_edges(
     prepositioned_fixture: bool = False,
     stage=None,
 ) -> list[str]:
-    """Capture both full-thickness wound margins with the real exposure pads.
+    """Author a camera-only prepositioned wound-margin fixture.
 
     Six independently releasable capture cells are authored per pad and per
-    layer. Contact-gated operation accepts only cell IDs emitted by
-    ``PhysicalWoundEdgeGrasp``. ``prepositioned_fixture`` is retained only for
-    camera demonstrations and must not be treated as grasp qualification.
+    layer. Runtime contact-qualified authoring is disabled until an exact
+    prim-bound incision/grasp SceneEvidence provider is integrated.
+    ``prepositioned_fixture`` is retained only for camera demonstrations and
+    must not be treated as grasp qualification or a completed task.
     """
     if stage is None:
         import omni.usd
@@ -3703,25 +4047,22 @@ def capture_laparotomy_wound_edges(
     normalized_patient = patient_path.rstrip("/")
     normalized_tool = tool_path.rstrip("/")
     paths = laparotomy_wound_edge_paths(normalized_patient)
-    if qualified_cells is not None and prepositioned_fixture:
-        raise ValueError(
-            "choose contact-qualified capture or prepositioned fixture capture"
+    if qualified_cells is not None:
+        raise RuntimeError(
+            "caller-supplied qualified_cells are disabled; current source "
+            "does not contain a prim-bound wound-grasp evidence provider"
         )
-    if qualified_cells is None and not prepositioned_fixture:
+    if not prepositioned_fixture:
         raise ValueError(
-            "wound-edge capture requires post-physics qualified_cells; "
-            "camera-only scenes may opt into prepositioned_fixture=True"
+            "only the explicit camera-only prepositioned fixture is "
+            "available in this revision"
         )
-    requested = (
-        {
-            PhysicalWoundEdgeGrasp.cell_id(layer, side, cell)
-            for layer in LAPAROTOMY_LAYERS
-            for side in ("left", "right")
-            for cell in range(6)
-        }
-        if prepositioned_fixture
-        else {str(cell_id) for cell_id in qualified_cells or ()}
-    )
+    requested = {
+        PhysicalWoundEdgeGrasp.cell_id(layer, side, cell)
+        for layer in LAPAROTOMY_LAYERS
+        for side in ("left", "right")
+        for cell in range(6)
+    }
     valid = {
         PhysicalWoundEdgeGrasp.cell_id(layer, side, cell)
         for layer in LAPAROTOMY_LAYERS
@@ -4244,7 +4585,7 @@ def patient_adapter_contract() -> dict[str, Any]:
             "tissue_state",
             "organ_motion",
             "damage",
-            "interventions",
+            "patient_authority",
         ],
         "robot_compatibility": load_robot_compatibility(),
         "procedure_scenarios": load_procedure_scenarios(),

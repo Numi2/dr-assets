@@ -4,7 +4,7 @@
   "link_count": 23,
   "regions": {
     "aspirator": "tip and guard explicitly represented",
-    "bag_deployer": "housing represented; deformable bag uses separate asset",
+    "bag_deployer": "housing represented; separate bag is a rigid visual-state proxy without collision or containment mechanics",
     "bipolar_jaws": "jaw bodies represented",
     "mount": "0.94 axis-scale inset",
     "scissors": "guard and blade bodies represented",

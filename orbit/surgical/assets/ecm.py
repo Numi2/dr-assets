@@ -12,6 +12,10 @@ The following configurations are available:
 
 Reference: https://github.com/med-air/SurRoL
            https://github.com/WPI-AIM/dvrk_env
+
+The gains and shared effort/velocity limits below are simulation-control
+defaults. They are not identified ECM hardware dynamics, camera-chain
+calibration, manufacturer limits, or patient-use evidence.
 """
 
 import isaaclab.sim as sim_utils

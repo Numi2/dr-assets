@@ -1,7 +1,8 @@
 {
   "asset": "dranmar-adaptive-anastomosis-robot-v1",
   "catalog_subpath": "Props/SurgicalReconstruction/AdaptiveAnastomosisRobot",
-  "file_count": 56,
+  "file_count": 54,
+  "integrity_status": "stale_after_source_only_realism_hardening_not_release_qualified",
   "files": [
     {
       "bytes": 61,
@@ -234,11 +235,6 @@
       "sha256": "281396e7b5857da5c34ddb6b940173058fe06c4834dd2b5786710be233acca8b"
     },
     {
-      "bytes": 14490,
-      "path": "examples/validate_adaptive_anastomosis_runtime.py",
-      "sha256": "56a4a4d46ed420a376364a1545ee3d566af4ca48cdb10c72a144e8a9dfb4f530"
-    },
-    {
       "bytes": 12494,
       "path": "physics_next/surgical-reconstruction/dranmar-adaptive-anastomosis-v1.json",
       "sha256": "2d9734ff95444e2a0bebe44d15d675194b42a070ccf9963d07b6a206195f811e"
@@ -277,11 +273,6 @@
       "bytes": 58084,
       "path": "source/extensions/orbit.surgical.assets/orbit/surgical/assets/adaptive_anastomosis_robot.py",
       "sha256": "950432f66ccc9c38f47665d982cf88569f26afa3c162dd7b9a59f32b2d57d979"
-    },
-    {
-      "bytes": 6595,
-      "path": "tests/test_adaptive_anastomosis_robot.py",
-      "sha256": "ef420a3ff10da976a715a4baf2a28e0537e9252225d1e5455bea710072447393"
     }
   ],
   "installed_overlay_entries_refreshed": 53,

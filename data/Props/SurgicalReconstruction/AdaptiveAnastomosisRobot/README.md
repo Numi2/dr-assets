@@ -12,12 +12,12 @@ gates, and evaluation signals for NVIDIA Isaac Sim and Isaac Lab.
 - lumen-preserving alignment mandrel and expandable centering cage;
 - independent edge-eversion rings;
 - one-shot 16-position circumferential staple crown;
-- individual retained staple bodies with left/right tissue attachment regions;
+- formed staple proxies with left/right tissue attachment regions; retention is unverified;
 - circumferential reinforcement collar with independent bilateral bond sectors;
-- lumen patency scoring and pressure-decay leak verification;
+- geometry-only lumen scoring and provisional pressure/leak observation;
 - direct replacement of the Panda hand at `panda_link8`;
 - standalone articulated, Franka payload, and rigid proxy representations.
-- explicit deformable distal fixtures, temporary-capture release, retained staples, and bilateral collar-sector attachments.
+- explicit deformable distal fixtures and bilateral collar-sector attachments.
 
 ## Primary assets
 
@@ -32,4 +32,10 @@ dranmar_reinforcement_collar_rigid_proxy.usda
 dranmar_leak_test_droplet.usda
 ```
 
-The current package represents staple formation as a discrete open-to-formed event and reinforcement as staged mechanical attachments. It does not claim clinically calibrated penetration, plasticity, tissue damage, adhesive chemistry, healing, patency, or leak thresholds. It is not approved for patient care.
+The current package represents staple formation as a discrete open-to-formed
+event. Production retention and collar qualification require exact rod,
+cohesive, contact, attachment, and clock evidence, but the native provider is
+not implemented. Temporary-capture overload release is unavailable until
+capture-contact sources are added. It does not claim calibrated penetration,
+plasticity, tissue damage, adhesive chemistry, healing, flow-connected
+patency, or clinical leak thresholds. It is not approved for patient care.

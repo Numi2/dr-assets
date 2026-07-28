@@ -1,13 +1,19 @@
 {
   "clinical_validation": false,
+  "completion_authority": "prim_bound_scene_evidence_only",
   "failure_events": [
     "capture_loss",
-    "pad_overload",
+    "capture_epoch_latched",
+    "evidence_registration_change",
+    "evidence_replay",
+    "measured_pad_overload",
     "force_asymmetry",
     "roi_reocclusion",
-    "tissue_attachment_break",
-    "joint_limit_contact"
+    "scene_attachment_loss",
+    "joint_limit_contact",
+    "unsafe_control_interval"
   ],
+  "native_scene_evidence_provider": "not_implemented",
   "phases": [
     "stowed",
     "approach",
@@ -19,22 +25,27 @@
     "overload_relief",
     "release"
   ],
-  "required_observations": [
-    "tool_joint_state",
-    "pad_compliance_state",
-    "pad_contact_force",
-    "camera_or_segmentation_roi_visibility",
-    "capture_attachment_state"
-  ],
-  "schema": "dr.anmar.surgical-exposure-task.v1",
-  "success_metrics": [
-    "roi_visible_fraction",
-    "left_pad_force_n",
-    "right_pad_force_n",
+  "provisional_task_signals": [
+    "prim_bound_roi_visible_fraction",
+    "summed_cell_normal_force_per_pad_n",
+    "conservative_contact_plus_attachment_reaction_load_per_pad_n",
     "force_asymmetry_n",
-    "capture_cell_count",
-    "flap_edge_separation_m",
-    "retraction_stability",
-    "overload_events"
-  ]
+    "scene_confirmed_capture_cell_count",
+    "overload_release_events"
+  ],
+  "required_scene_evidence": [
+    "exact_contact_cell_and_tissue_prim_pair",
+    "exact_attachment_prim_identity",
+    "exact_contact_force_area_and_relative_motion",
+    "exact_attachment_reaction_vector_on_cell",
+    "fixed_workcell_cell_visibility_roi_and_calibration_registration",
+    "integer_roi_visibility_counts",
+    "exact_post_physics_carriage_lift_pitch_and_compliance_joint_positions",
+    "nonreused_raw_native_record_identity_per_source",
+    "episode_environment_topology_step_and_time",
+    "adjacent_preflight_and_consecutive_confirmation_intervals"
+  ],
+  "schema": "dr.anmar.surgical-exposure-task.v2",
+  "simulator_task_completion_verified": false,
+  "tissue_safety_verified": false
 }

@@ -1,72 +1,57 @@
 {
-  "schema": "dr.anmar.autonomous-rescue-or-physics-profile.v1",
-  "version": "0.4.0",
+  "schema": "dr.anmar.autonomous-rescue-or-physics-profile.v2",
+  "version": "0.5.0",
   "runtime": "Isaac Sim / Isaac Lab / PhysX",
   "stable_backend": "physx_rigid_plus_volume_and_surface_deformables",
   "evidence_ingress": {
-    "owner": "environment",
+    "owner": "registered_scene_collector",
     "phase": "post_physics",
-    "required_fields": [
+    "required_provenance": [
+      "episode_id",
+      "environment_id",
       "physics_step",
       "simulation_time_s",
-      "left_normal_force_n",
-      "right_normal_force_n",
-      "separation_m",
-      "tool_speed_m_s",
-      "target_distance_m"
+      "dt_s",
+      "adapter_id",
+      "adapter_version",
+      "topology_revision"
     ],
-    "optional_scene_fields": [
-      "retained_attachment_count",
-      "patch_contact_point_count",
-      "leaked_particle_count",
-      "measured_upstream_pressure_mmhg"
+    "required_measurement_identity": [
+      "source_id",
+      "source_prim_path",
+      "target_prim_path",
+      "raw_sample_ids"
     ],
+    "attachment_evidence": "live_attachment_prim_ids_bound_to_topology_revision",
+    "scalar_attachment_counts_accepted_as_proof": false,
     "strictly_monotonic_per_target": true,
     "policy_writable_outcomes": []
   },
   "rescue_vessel": {
     "representation": "volume_deformable_vessel_wall_plus_reduced_order_conserved_flow",
-    "temporary_control": "bilateral_force_symmetry_gap_and_velocity",
-    "definitive_clip": "retained_attachment_count_plus_contact_dwell",
-    "patch_seal": "contact_point_coverage_force_and_dwell",
-    "verification": "continuous_measured_upstream_pressure_challenge_window_residual_flow_and_distal_perfusion"
+    "temporary_control": "registered_bilateral_contact_force_projection_gap_and_velocity",
+    "definitive_clip": "requires_live_clip_attachment_prim_identity_and_scene_retention",
+    "patch_seal": "not_qualified_pending_live_bond_and_contact_evidence",
+    "verification": "not_qualified_without_continuous_scene_measured_pressure_flow_and_distal_perfusion"
   },
   "resuscitation_evidence_ingress": {
-    "owner": "environment",
-    "phase": "post_physics",
-    "required_fields": [
-      "plunger_position_m",
-      "downstream_flow_ml_s",
-      "reservoir_mass_g",
-      "access_attachment_count",
-      "line_pressure_kpa"
-    ],
-    "delivery_rule": "patient_delivery_is_the_minimum_consistent_plunger_flow_and_reservoir_mass_volume_with_connected_access_and_valid_pressure_while_all_measured_reservoir_mass_loss_reduces_inventory",
-    "strictly_monotonic_per_channel": true,
-    "policy_writable_delivered_volume": false
+    "status": "not_qualified_pending_registered_scene_collector",
+    "legacy_public_frame_is_qualification_evidence": false,
+    "scalar_access_attachment_count_is_qualification_evidence": false
   },
   "ventilation_evidence_ingress": {
-    "owner": "environment",
-    "phase": "post_physics",
-    "required_fields": [
-      "airway_attachment_count",
-      "valve_angle_deg",
-      "inspiratory_flow_l_min",
-      "leaked_flow_l_min",
-      "airway_pressure_cmh2o",
-      "measured_fio2_fraction",
-      "chest_excursion_m"
-    ],
-    "delivery_rule": "support_requires_connected_airway_valid_pressure_valve_opening_net_flow_and_observed_chest_excursion",
-    "strictly_monotonic": true,
-    "policy_writable_oxygenation": false
+    "status": "not_qualified_pending_registered_scene_collector",
+    "legacy_public_frame_is_qualification_evidence": false,
+    "scalar_airway_attachment_count_is_qualification_evidence": false
   },
   "repair_targets": {
-    "bowel_anastomosis": "gap_contact_retained_attachments_and_particle_leak",
-    "abdominal_wall": "gap_contact_and_retained_attachments",
-    "occlusive_film": "gap_contact_coverage_retained_perimeter_bonds_measured_pressure_and_hold_window"
+    "status": "not_qualified_pending_live_geometry_bond_and_leak_evidence",
+    "bowel_anastomosis": "legacy_scalar_ingress_not_qualification_evidence",
+    "abdominal_wall": "legacy_scalar_ingress_not_qualification_evidence",
+    "occlusive_film": "legacy_scalar_ingress_not_qualification_evidence"
   },
   "topology_change": false,
+  "native_simulator_evidence": "not_recorded_for_v0.5.0",
   "clinical_validation": false,
   "parameter_status": "provisional_engineering_seeds"
 }

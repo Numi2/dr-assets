@@ -15,7 +15,9 @@ def Xform "DrAnmarSafePlaneTissueDemo" (
         bool drAnmarClinicalValidation = false
         int drAnmarAdhesionBridgeCount = 28
         int drAnmarProtectedStructureCount = 3
-        string drAnmarTopologyContract = "two_solver_ready_tissue_surfaces_connected_by_two_anchor_bridge_joints"
+        string drAnmarTopologyContract = "authored_surface_meshes_require_runtime_deformable_cooking_and_attachment_setup_fixed_joints_are_not_cohesive_tissue_mechanics"
+        string drAnmarOutcomeEvidenceStatus = "unavailable_no_safeplane_scene_evidence_bridge"
+        bool drAnmarPatientOutcomeAuthoritative = false
     }
 )
 {

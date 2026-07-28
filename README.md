@@ -29,6 +29,14 @@ The central design rule is simple:
 
 > A policy may request an intervention. It may not write the result.
 
+> [!NOTE]
+> The current working source includes an unexecuted source-only realism
+> hardening pass. No tests, imports, builds, simulators, validators, or release
+> gates were run for the modified revision. Existing native artifacts therefore
+> remain historical, and changed manifests may be stale. In the parent DrAnmar
+> checkout, the portfolio-wide grade matrix and B/A promotion blueprint is
+> `docs/REALISM_SOURCE_AUDIT_2026-07-27.md`.
+
 Bleeding control, perfusion, repair integrity, fluid delivery, ventilation,
 damage, and rescue reward are derived from contact forces, geometry,
 attachments, flow, pressure, inventory, dwell, and patient state. This places

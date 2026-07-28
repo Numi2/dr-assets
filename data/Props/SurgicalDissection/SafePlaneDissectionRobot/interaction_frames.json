@@ -6,6 +6,7 @@
     "tool_forward_axis": "+Z from wrist toward tissue",
     "units": "metres"
   },
+  "evidence_scope": "authored_xform_coordinates_only_not_calibrated_sensor_or_contact_observations",
   "frames": {
     "count_reference": {
       "orientation_wxyz": [
@@ -503,5 +504,7 @@
       "role": "thermal_camera_optical_frame"
     }
   },
-  "schema": "dranmar.interaction-frames.v1"
+  "raw_sensor_samples_available": false,
+  "schema": "dranmar.interaction-frames.v2",
+  "sensor_prims_authored": false
 }

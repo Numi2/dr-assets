@@ -1,13 +1,10 @@
 {
   "schema": "dr.anmar.autonomous-rescue-or-qualification-report.v1",
-  "version": "0.4.0",
-  "status": "native_room_implemented_execution_not_asserted",
+  "version": "0.5.0",
+  "status": "source_contracts_present_native_scene_execution_not_recorded",
   "implemented": [
     "catalog_composition",
-    "contact_driven_rescue_effect_runtime",
-    "occlusive_film_bond_contact_pressure_hold_effect",
-    "mass_conserving_resuscitation_effect_runtime",
-    "contact_and_pressure_driven_ventilation_effect_runtime",
+    "scene_evidence_provenance_contract",
     "policy_scene_patient_authority_separation",
     "complication_detection",
     "priority_rescue_planning",
@@ -17,10 +14,19 @@
     "isaac_lab_deferred_asset_configuration",
     "dual_psm_workstation_room",
     "endpoint_anchored_rescue_vessel",
-    "filtered_post_physics_contact_bridge",
-    "transition_based_rescue_reward"
+    "zero_policy_reward_until_action_bound_complete_evidence"
   ],
-  "native_simulator_evidence": "not_recorded_for_v0.4.0",
+  "unqualified_source_paths": [
+    "legacy_public_physics_evidence_frame_ingress",
+    "legacy_public_pump_evidence_frame_ingress",
+    "legacy_public_ventilation_evidence_frame_ingress",
+    "scalar_attachment_counts_without_live_prim_identity",
+    "authored_occlusive_film_outcomes_without_retained_scene_evidence",
+    "bowel_abdominal_wall_and_film_paths_unreachable_from_public_runtime",
+    "no_atomic_patient_wide_device_target_batch_or_rollback",
+    "no_native_scene_provider_for_current_source"
+  ],
+  "native_simulator_evidence": "not_recorded_for_v0.5.0",
   "physical_bench_evidence": "not_established",
   "clinical_validation": false
 }

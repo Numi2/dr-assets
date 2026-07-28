@@ -1,16 +1,17 @@
 # DrAnmar Autonomous Rescue OR v0.4.0
 
-A simulation-only rescue environment that combines DrAnmar deformable surgical
-substrates with contact-owned patient effects. The policy chooses motion and
-intervention intent; post-PhysX contact, geometry, retained attachments, and
-leak observations determine bleeding, perfusion, repair integrity, damage, and
-reward.
+A simulation-only rescue source package combining DrAnmar deformable surgical
+substrates with evidence-gated patient-effect models. Policy requests cannot
+write outcomes. The current revision is unexecuted, has no native scene
+provider, exposes a public vessel interval only, and intentionally returns zero
+policy reward until evidence is bound to an admitted action and a same-step
+batch covers every active rescue target.
 
-## What is executable now
+## What the current source implements
 
-- a native DrAnmar room using NVIDIA i4h dual dVRK PSM articulations;
-- an endpoint-anchored Omni Physics volume-deformable rescue vessel;
-- jaw-to-vessel contact filtering from the live PhysX scene;
+- authored room composition for NVIDIA i4h dual dVRK PSM articulations;
+- an endpoint-anchored Omni Physics volume-deformable rescue-vessel asset;
+- a typed exact-identity contract for post-physics jaw-to-vessel evidence;
 - bilateral force, jaw-separation, tool-speed, and target-distance measurements;
 - reversible compression, force-asymmetry, overload damage, residual-flow,
   blood-loss, and distal-perfusion effects;
@@ -21,14 +22,18 @@ reward.
 - fail-closed resource accounting that checks conserved pump withdrawal
   against available blood, crystalloid, or vasopressor inventory before any
   simulated delivery state can change;
-- transition-based rescue reward with no reward for waiting in a favorable
-  state;
+- diagnostic patient-state delta scoring that is not exposed as reward;
 - a contact-gated compression, hold, verification, and release expert that
   cannot advance on command intent alone;
-- synchronized robot, contact, vessel, vital-sign, and fluid-balance
-  observations exported as transition-aligned Robomimic HDF5 episodes.
+- a transition-aligned Robomimic HDF5 schema whose current-revision export has
+  not been recorded or qualified.
 
-## Imitation-learning data path
+The bowel-anastomosis, abdominal-wall, and occlusive-film update branches do
+not have public exact evidence adapters in this revision and are unreachable
+from `AutonomousRescueORRuntime`. Pump and ventilation evidence have their own
+adapters, but there is no atomic patient-wide device/target batch or rollback.
+
+## Historical imitation-learning workflow
 
 Start the live room, then start its expert. Expert start resets the room and
 starts recording automatically:
@@ -38,11 +43,13 @@ starts recording automatically:
 ./dr_anmar_rescue_il.sh expert
 ```
 
-Each completed recording writes the normal `.npz` evidence package plus a
+The scripts are intended to write the normal `.npz` package plus a
 `dr.anmar.autonomous-rescue-imitation.v1` HDF5 episode. The HDF5 transition
 uses `state[i] -> Cartesian action[i+1] -> state[i+1]` because the workstation
 samples frame state after physics applies that frame's action. Patient effects
-are observations and rewards only; they never appear in the action contract.
+never appear in the action contract. Current source returns zero reward because
+effect evidence is not yet causally bound to an admitted action and complete
+target batch.
 
 For seeded expert generation across visual and control perturbations:
 
@@ -75,10 +82,11 @@ intent and scene setup. They are not a safety kernel and they do not grant
 success. Scenario parameters may initialize a physical defect or fault before
 an episode; policy actions cannot write clinical result fields.
 
-## Executable patient-effect path
+## Intended patient-effect path and current boundary
 
 Policies request interventions but cannot write bleeding, occlusion, seal,
-perfusion, leak, closure, or success values. The environment submits monotonic
+perfusion, leak, closure, or success values. An eventual native environment
+must submit monotonic
 post-physics observations containing bilateral contact forces, tool speed,
 measured separation, retained attachments, patch contact points, and leaked
 particle counts. Hemostasis verification additionally requires measured
@@ -102,9 +110,15 @@ is not refreshed in the current physics interval. It derives:
   airway pressure, measured oxygen fraction, and observed chest excursion;
 - oxygenation support from airway attachment, valve position, circuit flow and
   leak, airway pressure, delivered oxygen fraction, and measured chest motion;
-- complication detection, rescue priority and patient-state reward;
+- complication detection and rescue priority; patient-state delta is
+  diagnostic only and policy reward remains zero;
 - hemostasis only after a continuous measured pressure-challenge evidence
   window.
+
+Only the rescue-vessel path is publicly wired. The repair bullets above are
+model capabilities, not integrated runtime coverage. No current native
+execution, provider binding, same-step batch, rollback proof, or physical
+calibration is claimed.
 
 Runtime modules:
 
