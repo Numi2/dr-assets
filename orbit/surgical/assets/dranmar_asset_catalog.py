@@ -38,7 +38,15 @@ I4H_REFERENCE_COMMIT: Final = "b0b7ad39f26490d58d12407cfa74b3c9ad861769"
 _DEFAULT_DATA_ROOT = Path(__file__).resolve().parents[3] / "data"
 _HASH_SKIP_NAMES = frozenset({".gitattributes", ".gitignore", ".DS_Store"})
 _HASH_SKIP_DIRS = frozenset({".git", "__pycache__"})
-_USD_REFERENCE_RE = re.compile(r"@([^@]+)@")
+_USD_REFERENCE_RE = re.compile(r"@([^@\r\n]*)@")
+
+
+def _iter_usd_asset_references(text: str) -> Iterable[str]:
+    """Yield non-empty USD asset paths without spanning empty ``@@`` values."""
+
+    for reference in _USD_REFERENCE_RE.findall(text):
+        if reference:
+            yield reference
 
 
 @dataclass(frozen=True)
@@ -277,7 +285,7 @@ def validate_usd_dependency_closure(asset_name: str) -> dict[str, object]:
             # Binary .usd layers require OpenUSD resolution at native
             # qualification time; they are still included in the folder hash.
             continue
-        for reference in _USD_REFERENCE_RE.findall(text):
+        for reference in _iter_usd_asset_references(text):
             if "://" in reference:
                 continue
             references_checked += 1
