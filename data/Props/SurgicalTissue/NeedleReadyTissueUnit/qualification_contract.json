@@ -1,12 +1,13 @@
 {
-  "schema": "dr.anmar.needle-ready-tissue-qualification-contract.v1",
+  "schema": "dr.anmar.needle-ready-tissue-qualification-contract.v2",
   "asset_id": "dranmar-needle-ready-tissue-v2",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "policy": "fail_closed",
   "required_evidence": {
     "static_geometry": [
       "contract and generated count agreement",
       "positive tetrahedral volumes",
+      "versioned minimum mean-ratio, minimum scaled-Jacobian and maximum edge-ratio gates",
       "two watertight components",
       "surface partition completeness",
       "exact layer conformity",
@@ -18,7 +19,9 @@
     "native_newton_vbd": [
       "finite state for fixture-retraction-release trajectory",
       "zero inverted tetrahedra",
-      "global volume error reported",
+      "peak displacement and velocity remain below versioned engineering sanity limits",
+      "global volume error remains below its versioned engineering sanity limit",
+      "post-release recovery residual and final free-node speed remain below versioned limits",
       "physics step p50 and p95 reported",
       "final state hash recorded",
       "software and GPU identity recorded"
@@ -26,13 +29,23 @@
     "isaac_lab": [
       "UsdFileCfg spawn from canonical catalog path",
       "DeformableObject discovery of exactly one TetMesh",
-      "coupled rigid-soft configuration import and reset smoke"
+      "coupled rigid-soft configuration import and reset smoke",
+      "simulation and visual point arrays match one-to-one in count and order",
+      "Fabric-synchronized visual points visibly follow live Newton particles",
+      "rigid ContactSensors update through the actual coupled rigid solver",
+      "soft penetration receipts accumulate over every physics substep"
     ],
     "performance": [
       "training, contact and validation LOD measurements are separate",
       "environment count is never inferred from rigid-only capacity",
       "2400-environment policy training requires an explicit measured memory fit"
     ]
+  },
+  "checked_in_runtime_evidence_status": {
+    "status": "legacy_finite_no_inversion_smoke_not_current_promotion_evidence",
+    "reason": "The historical receipts predate bounded displacement, speed, recovery, volume and final-speed gates; several recorded motions exceed the new engineering sanity limits.",
+    "rerun_required": true,
+    "native_execution_in_this_change": false
   },
   "promotion_blockers": {
     "puncture": "no qualified topology change or persistent tract",

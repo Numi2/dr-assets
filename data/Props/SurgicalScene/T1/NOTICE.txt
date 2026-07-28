@@ -1,0 +1,18 @@
+DrAnmar T1 Non-Tissue Visual Package 1.1.0
+
+Copyright 2026 Dr.Anmar Project Developers.
+
+The OpenUSD overlays, generated table render geometry, material graphs, UVs,
+and textures in this directory are independently authored DrAnmar content
+licensed under Apache-2.0.
+
+Referenced PSM, table, and legacy needle assets remain separate repository
+foundations under their existing notices and terms.
+This package does not rewrite or relicense those files.
+
+The unmodified NVIDIA OpenPBR 1.1 MaterialX base class and its MIT-0 license
+are redistributed from PhysicalAI-SimReady-Materials v0.2.0. See
+`vendor/nvidia_physicalai_simready_materials_v0_2_0/PROVENANCE.md`.
+No third-party texture or model asset is redistributed.
+
+Research simulation only. Not clinically validated and not for patient care.

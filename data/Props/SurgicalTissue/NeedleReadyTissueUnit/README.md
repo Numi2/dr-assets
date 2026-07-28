@@ -11,16 +11,20 @@ and `needle_ready_tissue_validation.usda` for mesh-convergence and rendered
 inspection. `needle_ready_tissue_unit.usda` exposes those representations as
 the `geometryLod` variant set with `contact` selected by default.
 
-The current qualified scope is geometry and intact deformable contact. The
-asset does not create a puncture, persistent tract, cut, tear, or thread
-passage. Those capabilities stay fail-closed until a topology-capable backend
-and physical qualification data are present.
+The current qualified scope is deterministic source/static geometry,
+topology, semantics, nested LOD mapping, and OpenUSD composition. Because
+version 2.1 changes wound-edge refinement and fixture membership, native
+Newton/Isaac intact deformation, two-way contact, fixture/retraction behavior,
+visual synchronization, and performance all require a fresh run before
+promotion. The asset does not create a puncture, persistent tract, cut, tear,
+or thread passage. Those capabilities stay fail-closed until a
+topology-capable backend and physical qualification data are present.
 
 Material values are research seeds, not patient-specific or clinically
-validated tissue properties. The matte preview materials are intended to avoid
-the wet-plastic rendering seen in older screenshots; realistic endoscopic
-appearance still requires calibrated lighting, subsurface scattering, texture,
-and camera response.
+validated tissue properties. The nested visual package supplies OpenPBR
+materials, 2K maps, restrained subsurface seeds, and one-to-one deforming
+overlays; realistic endoscopic appearance still requires native RTX inspection
+with calibrated lighting, exposure, camera response, and live point sync.
 
 Regenerate from the repository root:
 

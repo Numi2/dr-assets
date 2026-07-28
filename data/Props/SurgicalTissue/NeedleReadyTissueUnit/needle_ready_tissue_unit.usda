@@ -11,9 +11,9 @@ def Xform "DrAnmarNeedleReadyTissue" (
     customData = {
         string drAnmarAssetId = "dranmar-needle-ready-tissue-v2"
         string drAnmarAssetName = "DrAnmar Needle-Ready Tissue Unit"
-        string drAnmarAssetVersion = "2.0.0"
+        string drAnmarAssetVersion = "2.1.0"
         bool drAnmarClinicalValidation = false
-        string drAnmarStatus = "research_geometry_qualified_separately_from_physics_and_clinical_use"
+        string drAnmarStatus = "source_static_geometry_qualified_native_physics_requalification_pending"
     }
     variants = {
         string geometryLod = "contact"

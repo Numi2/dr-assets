@@ -82,7 +82,7 @@ def make_needle_cfg(
         ),
         init_state=RigidObjectCfg.InitialStateCfg(
             pos=(-0.195, 0.015, 0.0012),
-            rot=(1.0, 0.0, 0.0, 0.0),
+            rot=(0.0, 0.0, 0.0, 1.0),
         ),
     )
 
@@ -110,7 +110,7 @@ def make_needle_thread_rigid_proxy_cfg(
         ),
         init_state=RigidObjectCfg.InitialStateCfg(
             pos=(-0.060, -0.120, 0.0012),
-            rot=(1.0, 0.0, 0.0, 0.0),
+            rot=(0.0, 0.0, 0.0, 1.0),
         ),
     )
 
@@ -144,7 +144,7 @@ def make_segmented_needle_thread_cfg(
                 if normalized == "coiled"
                 else (0.075, -0.180, 0.0012)
             ),
-            rot=(1.0, 0.0, 0.0, 0.0),
+            rot=(0.0, 0.0, 0.0, 1.0),
         ),
     )
 

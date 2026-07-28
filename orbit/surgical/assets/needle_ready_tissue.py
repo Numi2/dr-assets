@@ -26,6 +26,10 @@ LOD_USD: Final[dict[str, Path]] = {
     lod: ASSET_ROOT / f"needle_ready_tissue_{lod}.usda"
     for lod in ("training", "contact", "validation")
 }
+VISUAL_LOD_USD: Final[dict[str, Path]] = {
+    lod: ASSET_ROOT / f"needle_ready_tissue_{lod}_visual.usda"
+    for lod in LOD_USD
+}
 
 
 def needle_ready_tissue_usd(lod: str = "contact") -> Path:
@@ -41,6 +45,22 @@ def needle_ready_tissue_usd(lod: str = "contact") -> Path:
     except KeyError as error:
         raise ValueError(
             f"lod must be one of {sorted(LOD_USD)}, received {lod!r}"
+        ) from error
+
+
+def needle_ready_tissue_visual_usd(lod: str = "contact") -> Path:
+    """Return the visual overlay for one explicit physics LOD.
+
+    Each overlay references the matching authoritative TetMesh layer and adds
+    only render-purpose materials, UVs, and support geometry.
+    """
+
+    normalized = str(lod).strip().lower()
+    try:
+        return VISUAL_LOD_USD[normalized]
+    except KeyError as error:
+        raise ValueError(
+            f"lod must be one of {sorted(VISUAL_LOD_USD)}, received {lod!r}"
         ) from error
 
 
@@ -66,8 +86,13 @@ def make_needle_ready_tissue_cfg(
     youngs_modulus_pa: float = 180_000.0,
     poissons_ratio: float = 0.47,
     density_kg_m3: float = 1_050.0,
+    visual_quality: bool = False,
 ):
-    """Build the current Isaac Lab Newton deformable configuration lazily."""
+    """Build the Isaac Lab Newton deformable configuration lazily.
+
+    ``visual_quality`` selects a render-only overlay that references the same
+    explicit LOD; it does not select a different TetMesh or physics profile.
+    """
 
     import isaaclab.sim as sim_utils  # type: ignore
     from isaaclab.assets import DeformableObjectCfg  # type: ignore
@@ -78,6 +103,7 @@ def make_needle_ready_tissue_cfg(
         NewtonDeformableBodyMaterialCfg,
     )
 
+    normalized_lod = str(lod).strip().lower()
     physics_profile = load_needle_ready_tissue_physics_profile()
     intact = physics_profile["intact_deformation"]
     poisson = float(poissons_ratio)
@@ -91,7 +117,7 @@ def make_needle_ready_tissue_cfg(
     material = NewtonDeformableBodyMaterialCfg(
         density=float(density_kg_m3),
         particle_radius=float(
-            intact["particle_radius_m_by_lod"][str(lod).strip().lower()]
+            intact["particle_radius_m_by_lod"][normalized_lod]
         ),
         k_mu=shear_modulus,
         k_lambda=lame_first_parameter,
@@ -100,7 +126,13 @@ def make_needle_ready_tissue_cfg(
     return DeformableObjectCfg(
         prim_path=prim_path,
         spawn=sim_utils.UsdFileCfg(
-            usd_path=str(needle_ready_tissue_usd(lod).resolve()),
+            usd_path=str(
+                (
+                    needle_ready_tissue_visual_usd(normalized_lod)
+                    if visual_quality
+                    else needle_ready_tissue_usd(normalized_lod)
+                ).resolve()
+            ),
             deformable_props=NewtonDeformableBodyPropertiesCfg(),
             physics_material=material,
         ),
@@ -116,9 +148,11 @@ __all__ = [
     "PHYSICS_PROFILE_PATH",
     "QUALIFICATION_CONTRACT_PATH",
     "TISSUE_UNIT_USD",
+    "VISUAL_LOD_USD",
     "load_needle_ready_tissue_geometry_contract",
     "load_needle_ready_tissue_physics_profile",
     "load_needle_ready_tissue_qualification_contract",
     "make_needle_ready_tissue_cfg",
     "needle_ready_tissue_usd",
+    "needle_ready_tissue_visual_usd",
 ]

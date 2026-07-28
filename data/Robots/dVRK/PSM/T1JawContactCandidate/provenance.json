@@ -1,0 +1,22 @@
+{
+  "asset_id": "dranmar-psm-t1-jaw-contact-candidate-v1",
+  "asset_version": "1.0.0",
+  "authorship": {
+    "base_asset": "ORBIT-Surgical Project Developers",
+    "candidate_layer_and_contracts": "Dr.Anmar Project Developers"
+  },
+  "base_asset": {
+    "bytes": 22251170,
+    "license": "BSD-3-Clause",
+    "modified": false,
+    "repository_path": "data/Robots/dVRK/PSM/psm_col.usd",
+    "sha256": "87330b0e46e5554d53fe1b840f2db38a9bdbf00a79ca464159009406156ca0d4"
+  },
+  "generation": {
+    "deterministic": true,
+    "external_downloads": [],
+    "generator": "tools/generate_psm_t1_jaw_contact_candidate.py",
+    "third_party_content_added": false
+  },
+  "status": "inactive_unqualified_candidate"
+}

@@ -5,4 +5,4 @@
 *.usdc binary
 *.exr binary
 *.hdr binary
-
+data/**/vendor/nvidia_physicalai_simready_materials_v0_2_0/open_pbr_uber_base_class.usda binary

@@ -1,7 +1,7 @@
 {
   "schema": "dr.anmar.needle-ready-tissue-physics-profile.v2",
   "asset_id": "dranmar-needle-ready-tissue-v2",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "status": "research_defaults_pending_bench_calibration",
   "intact_deformation": {
     "preferred_runtime": "nvidia_newton_vbd",

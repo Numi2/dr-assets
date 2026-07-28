@@ -1,0 +1,11 @@
+Dr.Anmar T1 PSM jaw-contact candidate 1.0.0
+
+Status: inactive, unqualified research candidate.
+
+The candidate layer and local contracts were authored by the Dr.Anmar Project
+Developers under BSD-3-Clause. The wrapper references the unchanged
+ORBIT-Surgical `data/Robots/dVRK/PSM/psm_col.usd`, also under BSD-3-Clause.
+See LICENSE.txt, provenance.json, and dependency_lock.json.
+
+No clinical validation, instrument calibration, physics calibration, or
+activation claim is made.

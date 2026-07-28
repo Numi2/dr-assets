@@ -1,0 +1,22 @@
+{
+  "asset_id": "dranmar-psm-t1-collider-candidate-v1",
+  "asset_version": "1.0.0",
+  "authorship": "Collision proxy geometry, composition, contracts, generator, and tests were independently authored by Dr.Anmar Project Developers.",
+  "external_downloads": [],
+  "generator": "tools/generate_t1_collider_candidates.py",
+  "locked_measurement_sources": {
+    "psm_collision_foundation": {
+      "path": "data/Robots/dVRK/PSM/psm_col.usd",
+      "sha256": "87330b0e46e5554d53fe1b840f2db38a9bdbf00a79ca464159009406156ca0d4"
+    },
+    "psm_visual_overlay": {
+      "path": "data/Props/SurgicalScene/T1/psm_visual_v1.usda",
+      "sha256": "534b8072d9e05a82df7707124c5a88715176fba1c58231aa09d8d8af062c2e84"
+    }
+  },
+  "patient_or_clinical_data": false,
+  "provider": "Dr.Anmar Project Developers",
+  "source_method": "Deterministic analytic primitives and low-poly convex envelopes derived from exact, hash-locked OpenUSD render bounds.",
+  "third_party_geometry_or_code_added": false,
+  "validation_boundary": "Source-static package only; not native-physics qualified, physics-calibrated, instrument-calibrated, or clinically validated."
+}

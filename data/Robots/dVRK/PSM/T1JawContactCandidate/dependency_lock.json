@@ -1,0 +1,18 @@
+{
+  "asset_id": "dranmar-psm-t1-jaw-contact-candidate-v1",
+  "asset_version": "1.0.0",
+  "dependencies": {
+    "base_psm_collision_asset": {
+      "bytes": 22251170,
+      "default_prim": "/psm",
+      "license": "BSD-3-Clause",
+      "modified_by_candidate": false,
+      "reference_from_candidate": "../psm_col.usd",
+      "repository_path": "data/Robots/dVRK/PSM/psm_col.usd",
+      "sha256": "87330b0e46e5554d53fe1b840f2db38a9bdbf00a79ca464159009406156ca0d4"
+    }
+  },
+  "dependency_complete": true,
+  "resolution_scope": "The sole runtime dependency is the adjacent, repository-tracked psm_col.usd and is locked by byte count and SHA-256.",
+  "status": "inactive_unqualified_candidate"
+}

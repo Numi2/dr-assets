@@ -1,0 +1,28 @@
+{
+  "asset_id": "dranmar-psm-t1-collider-candidate-v1",
+  "asset_version": "1.0.0",
+  "dependencies": {
+    "psm_collision_foundation": {
+      "bytes": 22251170,
+      "default_prim": "/psm",
+      "license": "BSD-3-Clause",
+      "license_path": "LICENSE",
+      "modified_by_candidate": false,
+      "path": "data/Robots/dVRK/PSM/psm_col.usd",
+      "sha256": "87330b0e46e5554d53fe1b840f2db38a9bdbf00a79ca464159009406156ca0d4"
+    },
+    "psm_visual_overlay": {
+      "bytes": 16261,
+      "default_prim": "/psm",
+      "license": "Apache-2.0",
+      "license_path": "data/Props/SurgicalScene/T1/LICENSE.txt",
+      "modified_by_candidate": false,
+      "path": "data/Props/SurgicalScene/T1/psm_visual_v1.usda",
+      "sha256": "534b8072d9e05a82df7707124c5a88715176fba1c58231aa09d8d8af062c2e84"
+    }
+  },
+  "dependency_complete": true,
+  "direct_composition_dependency": "psm_visual_overlay",
+  "resolution_scope": "All direct and transitive repository foundations are locked by exact byte count and SHA-256. No network or runtime asset lookup is permitted by this candidate.",
+  "status": "inactive_unqualified_candidate"
+}

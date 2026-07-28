@@ -1,0 +1,94 @@
+{
+  "activation": {
+    "active_replacement": false,
+    "allowed_after_all_required_suites_pass": true,
+    "decision_owner": "explicit_human_review",
+    "default": "blocked",
+    "requires_native_isaac_physx_evidence": true
+  },
+  "asset_id": "dranmar-psm-t1-jaw-contact-candidate-v1",
+  "asset_version": "1.0.0",
+  "evidence_integrity": {
+    "archive": [
+      "resolved_runtime_asset_hashes",
+      "candidate_and_base_layer_hashes",
+      "configuration_hash",
+      "checkpoint_hash_or_null",
+      "seed_lists",
+      "per_episode_metrics",
+      "contact_telemetry",
+      "failure_taxonomy"
+    ],
+    "forbid_post_hoc_threshold_changes": true,
+    "reward_contract_must_be_identical_between_baseline_and_candidate": true
+  },
+  "required_suites": {
+    "analytic_pickup": {
+      "comparison": "paired_against_locked_base_on_identical_held_out_seeds",
+      "metrics": [
+        "pickup_success",
+        "first_attempt_pickup_success",
+        "recovered_pickup_success",
+        "attempt_count"
+      ],
+      "requirement": "pre_registered_noninferiority_and_no_reward_definition_change"
+    },
+    "first_attempt_retention": {
+      "metrics": [
+        "bilateral_jaw_contact_at_lift",
+        "needle_retained_without_regrasp",
+        "time_to_secure_grasp_s"
+      ],
+      "requirement": "reported_separately_from_recovery_success"
+    },
+    "friction_sensitivity": {
+      "metrics": [
+        "success_by_static_friction_bin",
+        "success_by_dynamic_ratio_bin",
+        "force_and_slip_by_bin",
+        "failure_mode_by_bin"
+      ],
+      "requirement": "evaluate the complete predeclared envelope and reject brittle single-coefficient optima"
+    },
+    "held_out_seeds": {
+      "minimum_independent_seed_sets": 3,
+      "requirement": "evaluation seeds remain disjoint from controller or residual training and all exclusions are reported"
+    },
+    "mid_air_transport": {
+      "metrics": [
+        "conditional_retention_given_pickup",
+        "slip_distance_m",
+        "needle_drop",
+        "transport_completion"
+      ],
+      "requirement": "no_attachment_and_no_contact_state_override"
+    },
+    "normal_force_and_contact": {
+      "metrics": [
+        "per_jaw_normal_force_n",
+        "normal_impulse_ns",
+        "bilateral_contact_duty_cycle",
+        "peak_contact_force_n",
+        "contact_point_count",
+        "needle_relative_slip_speed_m_s"
+      ],
+      "requirement": "archive distributions and video-linked outliers; success cannot be inferred from commanded jaw closure"
+    },
+    "two_arm_handover": {
+      "metrics": [
+        "giver_retention_before_receiver_contact",
+        "simultaneous_bilateral_contact",
+        "receiver_retention_after_release",
+        "handover_drop"
+      ],
+      "requirement": "physics_contact_owned_transition_only"
+    }
+  },
+  "status": "inactive_unqualified_candidate",
+  "validation_boundaries": {
+    "clinical_validation": false,
+    "instrument_calibration": false,
+    "physics_calibration": false,
+    "source_only_generation_is_qualification": false
+  }
+}

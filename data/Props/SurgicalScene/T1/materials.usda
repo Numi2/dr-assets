@@ -1,0 +1,394 @@
+#usda 1.0
+(
+    defaultPrim = "DrAnmarT1VisualMaterials"
+    doc = "DrAnmar T1 render-only materials: NVIDIA OpenPBR 1.1 MaterialX primary with portable PreviewSurface fallback."
+    metersPerUnit = 1
+    subLayers = [
+        @./vendor/nvidia_physicalai_simready_materials_v0_2_0/open_pbr_uber_base_class.usda@
+    ]
+    upAxis = "Z"
+)
+
+def Scope "DrAnmarT1VisualMaterials" (
+    customData = {
+        string drAnmarAssetRole = "render_materials_only"
+        bool drAnmarClinicalValidation = false
+        bool drAnmarPhysicsAuthority = false
+        string drAnmarFallbackMaterialContext = "UsdPreviewSurface"
+        string drAnmarPrimaryMaterialContext = "OpenPBR_1_1_MaterialX"
+        string drAnmarTextureColorContract = "basecolor_sRGB_roughness_and_normal_raw"
+        string drAnmarVendorDependency = "NVIDIA_PhysicalAI_SimReady_Materials_v0.2.0_MIT-0"
+        string drAnmarVersion = "1.1.0"
+    }
+)
+{
+    def Material "SatinSteel" (
+        inherits = </open_pbr_uber_base>
+    )
+    {
+        token outputs:surface.connect = </DrAnmarT1VisualMaterials/SatinSteel/PreviewSurface.outputs:surface>
+        custom string drAnmarOpenPBRInputMode = "constants_no_uv_contract"
+        custom string drAnmarPreviewFallback = "UsdPreviewSurface"
+
+        float inputs:base_weight = 1
+        color3f inputs:base_color = (0.43, 0.47, 0.52)
+        float inputs:base_diffuse_roughness = 0
+        float inputs:base_metalness = 0.9
+        float inputs:specular_weight = 1
+        color3f inputs:specular_color = (1, 1, 1)
+        float inputs:specular_roughness = 0.42
+        float inputs:specular_ior = 1.5
+        float inputs:coat_weight = 0
+        float inputs:subsurface_weight = 0
+        float inputs:transmission_weight = 0
+        bool inputs:geometry_thin_walled = false
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor = (0.43, 0.47, 0.52)
+            float inputs:metallic = 0.9
+            float inputs:roughness = 0.42
+            float inputs:ior = 1.5
+            float inputs:clearcoat = 0
+            float inputs:clearcoatRoughness = 1
+            token outputs:surface
+        }
+    }
+    def Material "NeedleSatinSteel" (
+        inherits = </open_pbr_uber_base>
+    )
+    {
+        token outputs:surface.connect = </DrAnmarT1VisualMaterials/NeedleSatinSteel/PreviewSurface.outputs:surface>
+        custom string drAnmarOpenPBRInputMode = "constants_no_uv_contract"
+        custom string drAnmarPreviewFallback = "UsdPreviewSurface"
+
+        float inputs:base_weight = 1
+        color3f inputs:base_color = (0.5, 0.54, 0.6)
+        float inputs:base_diffuse_roughness = 0
+        float inputs:base_metalness = 0.92
+        float inputs:specular_weight = 1
+        color3f inputs:specular_color = (1, 1, 1)
+        float inputs:specular_roughness = 0.36
+        float inputs:specular_ior = 1.5
+        float inputs:coat_weight = 0
+        float inputs:subsurface_weight = 0
+        float inputs:transmission_weight = 0
+        bool inputs:geometry_thin_walled = false
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor = (0.5, 0.54, 0.6)
+            float inputs:metallic = 0.92
+            float inputs:roughness = 0.36
+            float inputs:ior = 1.5
+            float inputs:clearcoat = 0
+            float inputs:clearcoatRoughness = 1
+            token outputs:surface
+        }
+    }
+    def Material "MattePolymer" (
+        inherits = </open_pbr_uber_base>
+    )
+    {
+        token outputs:surface.connect = </DrAnmarT1VisualMaterials/MattePolymer/PreviewSurface.outputs:surface>
+        custom string drAnmarOpenPBRInputMode = "constants_no_uv_contract"
+        custom string drAnmarPreviewFallback = "UsdPreviewSurface"
+
+        float inputs:base_weight = 1
+        color3f inputs:base_color = (0.035, 0.043, 0.05)
+        float inputs:base_diffuse_roughness = 0
+        float inputs:base_metalness = 0
+        float inputs:specular_weight = 1
+        color3f inputs:specular_color = (1, 1, 1)
+        float inputs:specular_roughness = 0.72
+        float inputs:specular_ior = 1.46
+        float inputs:coat_weight = 0
+        float inputs:subsurface_weight = 0
+        float inputs:transmission_weight = 0
+        bool inputs:geometry_thin_walled = false
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor = (0.035, 0.043, 0.05)
+            float inputs:metallic = 0
+            float inputs:roughness = 0.72
+            float inputs:ior = 1.46
+            float inputs:clearcoat = 0
+            float inputs:clearcoatRoughness = 1
+            token outputs:surface
+        }
+    }
+    def Material "TableFrameSteel" (
+        inherits = </open_pbr_uber_base>
+    )
+    {
+        token outputs:surface.connect = </DrAnmarT1VisualMaterials/TableFrameSteel/PreviewSurface.outputs:surface>
+        custom string drAnmarOpenPBRInputMode = "uv_texture_maps"
+        custom string drAnmarPreviewFallback = "UsdPreviewSurface"
+
+        float inputs:base_weight = 1
+        color3f inputs:base_color = (0.42, 0.46, 0.5)
+        asset inputs:base_color_texture_file = @textures/steel_basecolor.png@ (
+            colorSpace = "sRGB"
+        )
+        float inputs:base_diffuse_roughness = 0
+        float inputs:base_metalness = 0.86
+        float inputs:specular_weight = 1
+        color3f inputs:specular_color = (1, 1, 1)
+        float inputs:specular_roughness = 0.46
+        asset inputs:specular_roughness_texture_file = @textures/steel_roughness.png@ (
+            colorSpace = "raw"
+        )
+        float inputs:specular_ior = 1.5
+        float inputs:fuzz_weight = 0
+        color3f inputs:fuzz_color = (0.42, 0.46, 0.5)
+        float inputs:fuzz_roughness = 0.92
+        float inputs:coat_weight = 0
+        float inputs:subsurface_weight = 0
+        float inputs:transmission_weight = 0
+        bool inputs:geometry_thin_walled = false
+        float inputs:geometry_normal_scale = 1
+        asset inputs:geometry_normal_texture_file = @textures/steel_normal.png@ (
+            colorSpace = "raw"
+        )
+        bool inputs:geometry_normal_texture_flip_g = false
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor.connect = </DrAnmarT1VisualMaterials/TableFrameSteel/BaseColorTexture.outputs:rgb>
+            float inputs:metallic = 0.86
+            float inputs:roughness.connect = </DrAnmarT1VisualMaterials/TableFrameSteel/RoughnessTexture.outputs:r>
+            float inputs:ior = 1.5
+            float inputs:clearcoat = 0
+            float inputs:clearcoatRoughness = 1
+            normal3f inputs:normal.connect = </DrAnmarT1VisualMaterials/TableFrameSteel/NormalTexture.outputs:rgb>
+            token outputs:surface
+        }
+
+        def Shader "Texcoord"
+        {
+            uniform token info:id = "UsdPrimvarReader_float2"
+            token inputs:varname = "st"
+            float2 outputs:result
+        }
+
+        def Shader "BaseColorTexture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            asset inputs:file = @textures/steel_basecolor.png@
+            token inputs:sourceColorSpace = "sRGB"
+            float2 inputs:st.connect = </DrAnmarT1VisualMaterials/TableFrameSteel/Texcoord.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float3 outputs:rgb
+        }
+
+        def Shader "RoughnessTexture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            asset inputs:file = @textures/steel_roughness.png@
+            token inputs:sourceColorSpace = "raw"
+            float2 inputs:st.connect = </DrAnmarT1VisualMaterials/TableFrameSteel/Texcoord.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float outputs:r
+        }
+
+        def Shader "NormalTexture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            asset inputs:file = @textures/steel_normal.png@
+            token inputs:sourceColorSpace = "raw"
+            float4 inputs:scale = (2, 2, 2, 1)
+            float4 inputs:bias = (-1, -1, -1, 0)
+            float2 inputs:st.connect = </DrAnmarT1VisualMaterials/TableFrameSteel/Texcoord.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            normal3f outputs:rgb
+        }
+    }
+    def Material "TablePad" (
+        inherits = </open_pbr_uber_base>
+    )
+    {
+        token outputs:surface.connect = </DrAnmarT1VisualMaterials/TablePad/PreviewSurface.outputs:surface>
+        custom string drAnmarOpenPBRInputMode = "uv_texture_maps"
+        custom string drAnmarPreviewFallback = "UsdPreviewSurface"
+
+        float inputs:base_weight = 1
+        color3f inputs:base_color = (0.055, 0.064, 0.071)
+        asset inputs:base_color_texture_file = @textures/pad_basecolor.png@ (
+            colorSpace = "sRGB"
+        )
+        float inputs:base_diffuse_roughness = 0
+        float inputs:base_metalness = 0
+        float inputs:specular_weight = 1
+        color3f inputs:specular_color = (1, 1, 1)
+        float inputs:specular_roughness = 0.68
+        asset inputs:specular_roughness_texture_file = @textures/pad_roughness.png@ (
+            colorSpace = "raw"
+        )
+        float inputs:specular_ior = 1.46
+        float inputs:fuzz_weight = 0
+        color3f inputs:fuzz_color = (0.055, 0.064, 0.071)
+        float inputs:fuzz_roughness = 0.92
+        float inputs:coat_weight = 0
+        float inputs:subsurface_weight = 0
+        float inputs:transmission_weight = 0
+        bool inputs:geometry_thin_walled = false
+        float inputs:geometry_normal_scale = 1
+        asset inputs:geometry_normal_texture_file = @textures/pad_normal.jpg@ (
+            colorSpace = "raw"
+        )
+        bool inputs:geometry_normal_texture_flip_g = false
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor.connect = </DrAnmarT1VisualMaterials/TablePad/BaseColorTexture.outputs:rgb>
+            float inputs:metallic = 0
+            float inputs:roughness.connect = </DrAnmarT1VisualMaterials/TablePad/RoughnessTexture.outputs:r>
+            float inputs:ior = 1.46
+            float inputs:clearcoat = 0
+            float inputs:clearcoatRoughness = 1
+            normal3f inputs:normal.connect = </DrAnmarT1VisualMaterials/TablePad/NormalTexture.outputs:rgb>
+            token outputs:surface
+        }
+
+        def Shader "Texcoord"
+        {
+            uniform token info:id = "UsdPrimvarReader_float2"
+            token inputs:varname = "st"
+            float2 outputs:result
+        }
+
+        def Shader "BaseColorTexture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            asset inputs:file = @textures/pad_basecolor.png@
+            token inputs:sourceColorSpace = "sRGB"
+            float2 inputs:st.connect = </DrAnmarT1VisualMaterials/TablePad/Texcoord.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float3 outputs:rgb
+        }
+
+        def Shader "RoughnessTexture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            asset inputs:file = @textures/pad_roughness.png@
+            token inputs:sourceColorSpace = "raw"
+            float2 inputs:st.connect = </DrAnmarT1VisualMaterials/TablePad/Texcoord.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float outputs:r
+        }
+
+        def Shader "NormalTexture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            asset inputs:file = @textures/pad_normal.jpg@
+            token inputs:sourceColorSpace = "raw"
+            float4 inputs:scale = (2, 2, 2, 1)
+            float4 inputs:bias = (-1, -1, -1, 0)
+            float2 inputs:st.connect = </DrAnmarT1VisualMaterials/TablePad/Texcoord.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            normal3f outputs:rgb
+        }
+    }
+    def Material "SterileDrape" (
+        inherits = </open_pbr_uber_base>
+    )
+    {
+        token outputs:surface.connect = </DrAnmarT1VisualMaterials/SterileDrape/PreviewSurface.outputs:surface>
+        custom string drAnmarOpenPBRInputMode = "uv_texture_maps"
+        custom string drAnmarPreviewFallback = "UsdPreviewSurface"
+
+        float inputs:base_weight = 1
+        color3f inputs:base_color = (0.05, 0.27, 0.3)
+        asset inputs:base_color_texture_file = @textures/drape_basecolor.png@ (
+            colorSpace = "sRGB"
+        )
+        float inputs:base_diffuse_roughness = 0
+        float inputs:base_metalness = 0
+        float inputs:specular_weight = 1
+        color3f inputs:specular_color = (1, 1, 1)
+        float inputs:specular_roughness = 0.86
+        asset inputs:specular_roughness_texture_file = @textures/drape_roughness.png@ (
+            colorSpace = "raw"
+        )
+        float inputs:specular_ior = 1.43
+        float inputs:fuzz_weight = 0.12
+        color3f inputs:fuzz_color = (0.05, 0.27, 0.3)
+        float inputs:fuzz_roughness = 0.92
+        float inputs:coat_weight = 0
+        float inputs:subsurface_weight = 0
+        float inputs:transmission_weight = 0
+        bool inputs:geometry_thin_walled = true
+        float inputs:geometry_normal_scale = 1
+        asset inputs:geometry_normal_texture_file = @textures/drape_normal.jpg@ (
+            colorSpace = "raw"
+        )
+        bool inputs:geometry_normal_texture_flip_g = false
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor.connect = </DrAnmarT1VisualMaterials/SterileDrape/BaseColorTexture.outputs:rgb>
+            float inputs:metallic = 0
+            float inputs:roughness.connect = </DrAnmarT1VisualMaterials/SterileDrape/RoughnessTexture.outputs:r>
+            float inputs:ior = 1.43
+            float inputs:clearcoat = 0
+            float inputs:clearcoatRoughness = 1
+            normal3f inputs:normal.connect = </DrAnmarT1VisualMaterials/SterileDrape/NormalTexture.outputs:rgb>
+            token outputs:surface
+        }
+
+        def Shader "Texcoord"
+        {
+            uniform token info:id = "UsdPrimvarReader_float2"
+            token inputs:varname = "st"
+            float2 outputs:result
+        }
+
+        def Shader "BaseColorTexture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            asset inputs:file = @textures/drape_basecolor.png@
+            token inputs:sourceColorSpace = "sRGB"
+            float2 inputs:st.connect = </DrAnmarT1VisualMaterials/SterileDrape/Texcoord.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float3 outputs:rgb
+        }
+
+        def Shader "RoughnessTexture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            asset inputs:file = @textures/drape_roughness.png@
+            token inputs:sourceColorSpace = "raw"
+            float2 inputs:st.connect = </DrAnmarT1VisualMaterials/SterileDrape/Texcoord.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            float outputs:r
+        }
+
+        def Shader "NormalTexture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            asset inputs:file = @textures/drape_normal.jpg@
+            token inputs:sourceColorSpace = "raw"
+            float4 inputs:scale = (2, 2, 2, 1)
+            float4 inputs:bias = (-1, -1, -1, 0)
+            float2 inputs:st.connect = </DrAnmarT1VisualMaterials/SterileDrape/Texcoord.outputs:result>
+            token inputs:wrapS = "repeat"
+            token inputs:wrapT = "repeat"
+            normal3f outputs:rgb
+        }
+    }
+}

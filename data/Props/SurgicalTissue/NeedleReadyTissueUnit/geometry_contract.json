@@ -2,8 +2,8 @@
   "schema": "dr.anmar.needle-ready-tissue-geometry-contract.v2",
   "id": "dranmar-needle-ready-tissue-v2",
   "name": "DrAnmar Needle-Ready Tissue Unit",
-  "version": "2.0.0",
-  "status": "research_geometry_qualified_separately_from_physics_and_clinical_use",
+  "version": "2.1.0",
+  "status": "source_static_geometry_qualified_native_physics_requalification_pending",
   "purpose": "A solver-neutral layered deformable tissue unit for post-handover needle approach, contact, intact deformation, bite planning and future topology-capable needle passage research.",
   "coordinate_system": {
     "units": "metres",
@@ -71,12 +71,17 @@
         0.82,
         1.0
       ],
-      "wound_edge_refinement_power": 1.7,
+      "wound_edge_refinement_power": 1.1,
       "expected_points": 560,
-      "expected_tetrahedra": 1944
+      "expected_tetrahedra": 1944,
+      "quality_gates": {
+        "minimum_mean_ratio": 0.33,
+        "minimum_scaled_jacobian": 0.12,
+        "maximum_edge_ratio": 7.5
+      }
     },
     "contact": {
-      "intent": "needle approach, contact, grasp and intact-deformation qualification",
+      "intent": "needle approach, contact, grasp and intact-deformation native qualification candidate",
       "cells_per_flap_x": 12,
       "cells_y": 18,
       "z_fractions": [
@@ -86,9 +91,14 @@
         0.82,
         1.0
       ],
-      "wound_edge_refinement_power": 1.7,
+      "wound_edge_refinement_power": 1.1,
       "expected_points": 2470,
-      "expected_tetrahedra": 10368
+      "expected_tetrahedra": 10368,
+      "quality_gates": {
+        "minimum_mean_ratio": 0.5,
+        "minimum_scaled_jacobian": 0.23,
+        "maximum_edge_ratio": 4.0
+      }
     },
     "validation": {
       "intent": "mesh-convergence and rendered inspection reference",
@@ -105,9 +115,14 @@
         0.91,
         1.0
       ],
-      "wound_edge_refinement_power": 1.7,
+      "wound_edge_refinement_power": 1.1,
       "expected_points": 16650,
-      "expected_tetrahedra": 82944
+      "expected_tetrahedra": 82944,
+      "quality_gates": {
+        "minimum_mean_ratio": 0.5,
+        "minimum_scaled_jacobian": 0.22,
+        "maximum_edge_ratio": 4.0
+      }
     }
   },
   "semantics": {
@@ -211,10 +226,14 @@
       "layer-conforming tetrahedral geometry",
       "nested deterministic geometry LODs",
       "stable semantic coordinates across LODs",
+      "wound-edge approach and bite-region planning labels"
+    ],
+    "native_requalification_pending": [
       "intact deformation",
       "two-way rigid-soft contact",
-      "wound-edge approach and bite-region planning",
-      "outer-band fixture and retraction"
+      "outer-band fixture and retraction",
+      "Fabric-synchronized visual deformation",
+      "measured performance and memory by LOD"
     ],
     "gated": [
       "puncture",

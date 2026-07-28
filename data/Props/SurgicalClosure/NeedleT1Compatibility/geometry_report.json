@@ -1,0 +1,90 @@
+{
+  "asset_id": "dranmar-needle-t1-legacy-envelope-candidate-v1",
+  "bounds_m": {
+    "maximum": [
+      0.0200400000000001,
+      0.019979,
+      0.000825
+    ],
+    "minimum": [
+      6.10170178519336e-05,
+      -0.01951732627548466,
+      -0.000825
+    ]
+  },
+  "collision_capsule_count": 96,
+  "face_varying_uv_count": 75264,
+  "generated_usd": "dranmar_needle_t1_compatibility.usda",
+  "mesh_mass_properties": {
+    "center_of_mass_m": [
+      0.0072816199600989895,
+      0.0010067334266879394,
+      3.9480845092955484e-10
+    ],
+    "density_kg_m3": 8000.0,
+    "diagonal_inertia_kg_m2": [
+      2.886051342709055e-08,
+      1.6923519078570365e-07,
+      1.977698351604087e-07
+    ],
+    "inertia_tensor_kg_m2": [
+      [
+        1.683827174371418e-07,
+        -1.0905914012647556e-08,
+        -3.570073817747644e-15
+      ],
+      [
+        -1.0905914012647556e-08,
+        2.971298677565332e-08,
+        7.608195568175281e-15
+      ],
+      [
+        -3.570073817747644e-15,
+        7.608195568175281e-15,
+        1.9776983516040775e-07
+      ]
+    ],
+    "mass_kg": 0.0009714360915530493,
+    "principal_axes_convention": {
+      "openusd_serialization": "wxyz",
+      "runtime": "xyzw"
+    },
+    "principal_axes_usd_wxyz": [
+      6.809929687679495e-08,
+      0.7341418278034434,
+      0.6789961536484677,
+      3.352167058525161e-08
+    ],
+    "principal_axes_xyzw": [
+      0.7341418278034434,
+      0.6789961536484677,
+      3.352167058525161e-08,
+      6.809929687679495e-08
+    ],
+    "source": "actual_connected_watertight_render_mesh_tetrahedral_integration",
+    "volume_m3": 1.2142951144413116e-07
+  },
+  "schema": "dr.anmar.needle-t1-compatibility-report.v1",
+  "tail_cap_center_m": [
+    0.02004,
+    0.019154,
+    0.0
+  ],
+  "tip_position_m": [
+    0.02004,
+    -0.019154,
+    0.0
+  ],
+  "topology": {
+    "boundary_edge_count": 0,
+    "connected_component_count": 1,
+    "edge_count": 37632,
+    "minimum_triangle_area_m2": 2.4265197774463995e-12,
+    "nonmanifold_edge_count": 0,
+    "signed_volume_m3": 1.2142951144413116e-07,
+    "triangle_count": 25088,
+    "vertex_count": 12546,
+    "watertight": true
+  },
+  "vertex_normal_count": 12546
+}

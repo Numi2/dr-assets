@@ -1,0 +1,221 @@
+{
+  "asset_id": "dranmar-table-t1-collider-candidate-v1",
+  "asset_version": "1.0.0",
+  "broad_single_shell_used": false,
+  "candidate_mesh_triangles": 28,
+  "candidate_primitive_count": 7,
+  "components": {
+    "CenterColumn": {
+      "maximum_absolute_aabb_support_error_m": 0.0,
+      "proxy_aabb_m": {
+        "max": [
+          0.11,
+          0.16,
+          0.343
+        ],
+        "min": [
+          -0.11,
+          -0.16,
+          -0.413
+        ]
+      },
+      "render_target_aabb_m": {
+        "max": [
+          0.11,
+          0.16,
+          0.343
+        ],
+        "min": [
+          -0.11,
+          -0.16,
+          -0.413
+        ]
+      }
+    },
+    "DeckFrame": {
+      "maximum_absolute_aabb_support_error_m": 5.551115123125783e-17,
+      "proxy_aabb_m": {
+        "max": [
+          0.87,
+          0.38,
+          0.393
+        ],
+        "min": [
+          -0.87,
+          -0.38,
+          0.34299999999999997
+        ]
+      },
+      "render_target_aabb_m": {
+        "max": [
+          0.87,
+          0.38,
+          0.393
+        ],
+        "min": [
+          -0.87,
+          -0.38,
+          0.343
+        ]
+      }
+    },
+    "FloorBase": {
+      "maximum_absolute_aabb_support_error_m": 5.551115123125783e-17,
+      "proxy_aabb_m": {
+        "max": [
+          0.51,
+          0.3,
+          -0.396
+        ],
+        "min": [
+          -0.51,
+          -0.3,
+          -0.45400000000000007
+        ]
+      },
+      "render_target_aabb_m": {
+        "max": [
+          0.51,
+          0.3,
+          -0.396
+        ],
+        "min": [
+          -0.51,
+          -0.3,
+          -0.454
+        ]
+      }
+    },
+    "LeftFoot": {
+      "maximum_absolute_aabb_support_error_m": 5.551115123125783e-17,
+      "proxy_aabb_m": {
+        "max": [
+          -0.48,
+          0.08,
+          -0.386
+        ],
+        "min": [
+          -0.74,
+          -0.08,
+          -0.45400000000000007
+        ]
+      },
+      "render_target_aabb_m": {
+        "max": [
+          -0.48,
+          0.08,
+          -0.386
+        ],
+        "min": [
+          -0.74,
+          -0.08,
+          -0.454
+        ]
+      }
+    },
+    "PatientPad": {
+      "maximum_absolute_aabb_support_error_m": 0.0,
+      "proxy_aabb_m": {
+        "max": [
+          0.83,
+          0.35,
+          0.4565
+        ],
+        "min": [
+          -0.83,
+          -0.35,
+          0.3915
+        ]
+      },
+      "render_target_aabb_m": {
+        "max": [
+          0.83,
+          0.35,
+          0.4565
+        ],
+        "min": [
+          -0.83,
+          -0.35,
+          0.3915
+        ]
+      }
+    },
+    "RightFoot": {
+      "maximum_absolute_aabb_support_error_m": 5.551115123125783e-17,
+      "proxy_aabb_m": {
+        "max": [
+          0.74,
+          0.08,
+          -0.386
+        ],
+        "min": [
+          0.48,
+          -0.08,
+          -0.45400000000000007
+        ]
+      },
+      "render_target_aabb_m": {
+        "max": [
+          0.74,
+          0.08,
+          -0.386
+        ],
+        "min": [
+          0.48,
+          -0.08,
+          -0.454
+        ]
+      }
+    },
+    "SterileFieldTop": {
+      "proxy_aabb_m": {
+        "max": [
+          0.83,
+          0.35,
+          0.459881078
+        ],
+        "min": [
+          -0.83,
+          -0.35,
+          0.4565
+        ]
+      },
+      "render_target_aabb_m": {
+        "max": [
+          0.89,
+          0.44,
+          0.459881078
+        ],
+        "min": [
+          -0.89,
+          -0.44,
+          0.360018317
+        ]
+      },
+      "supported_interaction_footprint_m": {
+        "x": [
+          -0.83,
+          0.83
+        ],
+        "y": [
+          -0.35,
+          0.35
+        ],
+        "z": [
+          0.4565,
+          0.459881078
+        ]
+      },
+      "unsupported_hanging_drape_is_rigid": false,
+      "vertical_top_support_error_m": 0.0
+    }
+  },
+  "legacy_collision_mesh_triangles": 127622,
+  "limitations": [
+    "The thin drape proxy covers only the pad-supported sterile field; hanging fabric is intentionally excluded from rigid collision.",
+    "Static envelope agreement is not PhysX contact, load, friction, or table-calibration evidence."
+  ],
+  "measurement_method": "OpenUSD 25.11 authored render extents from the exact locked T1 table visual overlay",
+  "status": "inactive_unqualified_candidate",
+  "triangle_reduction_fraction": 0.9997806020905486
+}

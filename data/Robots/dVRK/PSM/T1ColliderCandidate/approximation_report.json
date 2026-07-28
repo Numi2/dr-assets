@@ -1,0 +1,616 @@
+{
+  "asset_id": "dranmar-psm-t1-collider-candidate-v1",
+  "asset_version": "1.0.0",
+  "broad_single_shell_used": false,
+  "candidate_mesh_triangles": 48,
+  "candidate_primitive_count": 31,
+  "legacy_enabled_collision_mesh_triangles": 288052,
+  "legacy_enabled_collision_primitive_count": 11,
+  "limitations": [
+    "AABB support agreement is a source-level geometry check, not contact, penetration, inertia, torque, or stability qualification.",
+    "Piecewise boxes conservatively cover occupied render slices; they do not claim surface-scanned instrument geometry.",
+    "Jaw frusta are low-poly contact-envelope hypotheses and add no serration, adhesion, suction, attachment, or force injection."
+  ],
+  "links": {
+    "psm_main_insertion_link": {
+      "component_count": 6,
+      "maximum_absolute_aabb_support_error_m": 0.00015000000000000256,
+      "proxy_aabb_m": {
+        "max": [
+          0.02875,
+          0.041653000999999995,
+          0.070145
+        ],
+        "min": [
+          0.013099999999999997,
+          -0.04166099899999999,
+          -0.052166001999999996
+        ]
+      },
+      "proxy_components": [
+        {
+          "kind": "Cube",
+          "name": "InsertionA",
+          "rationale": "piecewise occupied insertion-housing slice",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "InsertionB",
+          "rationale": "piecewise occupied insertion-housing slice",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "InsertionC",
+          "rationale": "piecewise occupied insertion-housing slice",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "InsertionD",
+          "rationale": "piecewise occupied insertion-housing slice",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "InsertionE",
+          "rationale": "piecewise occupied insertion-housing slice",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "InsertionF",
+          "rationale": "piecewise occupied insertion-housing slice",
+          "triangles": 0
+        }
+      ],
+      "proxy_minus_target_max_m": [
+        0.00015000000000000083,
+        0.00014999999999999736,
+        0.00014999999999999736
+      ],
+      "proxy_minus_target_min_m": [
+        -0.00015000000000000256,
+        -0.00014999999999999042,
+        -0.00014999999999999736
+      ],
+      "render_target_aabb_m": {
+        "max": [
+          0.0286,
+          0.041503001,
+          0.069995
+        ],
+        "min": [
+          0.01325,
+          -0.041510999,
+          -0.052016002
+        ]
+      },
+      "target_measurement": "locked render geometry transformed into owning link coordinates"
+    },
+    "psm_main_insertion_link_2": {
+      "component_count": 6,
+      "maximum_absolute_aabb_support_error_m": 0.00015000000000000083,
+      "proxy_aabb_m": {
+        "max": [
+          0.018311001,
+          0.036840999,
+          0.051576000999999996
+        ],
+        "min": [
+          -0.016658,
+          -0.036840999,
+          -0.057553999999999994
+        ]
+      },
+      "proxy_components": [
+        {
+          "kind": "Cube",
+          "name": "MainHousingA",
+          "rationale": "piecewise occupied main-insertion housing slice",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "MainHousingB",
+          "rationale": "piecewise occupied main-insertion housing slice",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "MainHousingC",
+          "rationale": "piecewise occupied main-insertion housing slice",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "MainHousingD",
+          "rationale": "piecewise occupied main-insertion housing slice",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "MainHousingE",
+          "rationale": "piecewise occupied main-insertion housing slice",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "MainHousingF",
+          "rationale": "piecewise occupied main-insertion housing slice",
+          "triangles": 0
+        }
+      ],
+      "proxy_minus_target_max_m": [
+        0.00015000000000000083,
+        0.00014999999999999736,
+        0.00014999999999999736
+      ],
+      "proxy_minus_target_min_m": [
+        -0.00015000000000000083,
+        -0.00014999999999999736,
+        -0.00014999999999999736
+      ],
+      "render_target_aabb_m": {
+        "max": [
+          0.018161001,
+          0.036690999,
+          0.051426001
+        ],
+        "min": [
+          -0.016508,
+          -0.036690999,
+          -0.057404
+        ]
+      },
+      "target_measurement": "locked render geometry transformed into owning link coordinates"
+    },
+    "psm_main_insertion_link_3": {
+      "component_count": 1,
+      "maximum_absolute_aabb_support_error_m": 9.999999999999593e-06,
+      "proxy_aabb_m": {
+        "max": [
+          0.00571,
+          0.005717,
+          0.407001
+        ],
+        "min": [
+          -0.00571,
+          -0.005703,
+          0.03869899999999998
+        ]
+      },
+      "proxy_components": [
+        {
+          "kind": "Capsule",
+          "name": "InsertionShaft",
+          "rationale": "analytic shaft with locked endpoint and radial support bounds",
+          "triangles": 0
+        }
+      ],
+      "proxy_minus_target_max_m": [
+        9.999999999999593e-06,
+        9.999999999999593e-06,
+        0.0
+      ],
+      "proxy_minus_target_min_m": [
+        -9.999999999999593e-06,
+        -9.999999999999593e-06,
+        -1.3877787807814457e-17
+      ],
+      "render_target_aabb_m": {
+        "max": [
+          0.0057,
+          0.005707,
+          0.407001
+        ],
+        "min": [
+          -0.0057,
+          -0.005693,
+          0.038699
+        ]
+      },
+      "target_measurement": "locked render geometry transformed into owning link coordinates"
+    },
+    "psm_pitch_end_link": {
+      "component_count": 5,
+      "maximum_absolute_aabb_support_error_m": 0.00020000000000000573,
+      "proxy_aabb_m": {
+        "max": [
+          0.067500002,
+          0.538875785,
+          0.038957566
+        ],
+        "min": [
+          -0.012399989,
+          -0.036779925,
+          -0.038954925
+        ]
+      },
+      "proxy_components": [
+        {
+          "kind": "Cube",
+          "name": "RemoteRod",
+          "rationale": "isolated remote-center-side component; open span remains empty",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "PitchHousingA",
+          "rationale": "first occupied pitch-housing segment",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "PitchHousingB",
+          "rationale": "central pitch-housing segment",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "PitchHousingC",
+          "rationale": "third occupied pitch-housing segment",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "PitchEndBlock",
+          "rationale": "separate distal block; 298 mm empty mechanical span is preserved",
+          "triangles": 0
+        }
+      ],
+      "proxy_minus_target_max_m": [
+        0.00020000000000000573,
+        0.00019999999999997797,
+        0.0001999999999999988
+      ],
+      "proxy_minus_target_min_m": [
+        -0.00020000000000000052,
+        -0.0001999999999999988,
+        -0.0001999999999999988
+      ],
+      "render_target_aabb_m": {
+        "max": [
+          0.067300002,
+          0.538675785,
+          0.038757566
+        ],
+        "min": [
+          -0.012199989,
+          -0.036579925,
+          -0.038754925
+        ]
+      },
+      "target_measurement": "locked render geometry transformed into owning link coordinates"
+    },
+    "psm_remote_center_link": {
+      "component_count": 1,
+      "maximum_absolute_aabb_support_error_m": 0.0,
+      "proxy_aabb_m": {
+        "max": [
+          0.015,
+          0.015,
+          0.015
+        ],
+        "min": [
+          -0.015,
+          -0.015,
+          -0.015
+        ]
+      },
+      "proxy_components": [
+        {
+          "kind": "Sphere",
+          "name": "RemoteCenter",
+          "rationale": "exact analytic replacement for the locked spherical envelope",
+          "triangles": 0
+        }
+      ],
+      "proxy_minus_target_max_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "proxy_minus_target_min_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "render_target_aabb_m": {
+        "max": [
+          0.015,
+          0.015,
+          0.015
+        ],
+        "min": [
+          -0.015,
+          -0.015,
+          -0.015
+        ]
+      },
+      "target_measurement": "locked render geometry transformed into owning link coordinates"
+    },
+    "psm_tool_gripper1_link": {
+      "component_count": 2,
+      "maximum_absolute_aabb_support_error_m": 0.00010000000000000026,
+      "proxy_aabb_m": {
+        "max": [
+          0.002593,
+          0.0103,
+          0.001105
+        ],
+        "min": [
+          -0.002599,
+          -0.002599,
+          -0.002094
+        ]
+      },
+      "proxy_components": [
+        {
+          "kind": "Mesh",
+          "name": "JawProximal",
+          "rationale": "convex proximal jaw body; follows link-local taper",
+          "triangles": 12
+        },
+        {
+          "kind": "Mesh",
+          "name": "JawDistal",
+          "rationale": "convex distal contact jaw; no attachment or adhesion",
+          "triangles": 12
+        }
+      ],
+      "proxy_minus_target_max_m": [
+        9.999999999999983e-05,
+        9.99999999999994e-05,
+        0.00010000000000000005
+      ],
+      "proxy_minus_target_min_m": [
+        -0.00010000000000000026,
+        -0.00010000000000000026,
+        -9.999999999999983e-05
+      ],
+      "render_target_aabb_m": {
+        "max": [
+          0.002493,
+          0.0102,
+          0.001005
+        ],
+        "min": [
+          -0.002499,
+          -0.002499,
+          -0.001994
+        ]
+      },
+      "target_measurement": "locked render geometry transformed into owning link coordinates"
+    },
+    "psm_tool_gripper2_link": {
+      "component_count": 2,
+      "maximum_absolute_aabb_support_error_m": 0.00010000000000000026,
+      "proxy_aabb_m": {
+        "max": [
+          0.002599,
+          0.0103,
+          0.002069
+        ],
+        "min": [
+          -0.002593,
+          -0.002599,
+          -0.001131
+        ]
+      },
+      "proxy_components": [
+        {
+          "kind": "Mesh",
+          "name": "JawProximal",
+          "rationale": "convex proximal jaw body; mirrored link-local taper",
+          "triangles": 12
+        },
+        {
+          "kind": "Mesh",
+          "name": "JawDistal",
+          "rationale": "convex distal contact jaw; no attachment or adhesion",
+          "triangles": 12
+        }
+      ],
+      "proxy_minus_target_max_m": [
+        0.00010000000000000026,
+        9.99999999999994e-05,
+        0.00010000000000000026
+      ],
+      "proxy_minus_target_min_m": [
+        -9.999999999999983e-05,
+        -0.00010000000000000026,
+        -0.00010000000000000005
+      ],
+      "render_target_aabb_m": {
+        "max": [
+          0.002499,
+          0.0102,
+          0.001969
+        ],
+        "min": [
+          -0.002493,
+          -0.002499,
+          -0.001031
+        ]
+      },
+      "target_measurement": "locked render geometry transformed into owning link coordinates"
+    },
+    "psm_tool_pitch_link": {
+      "component_count": 3,
+      "maximum_absolute_aabb_support_error_m": 0.00010000000000000026,
+      "proxy_aabb_m": {
+        "max": [
+          0.011431,
+          0.0033,
+          0.004220113
+        ],
+        "min": [
+          -0.00312,
+          -0.0033004689999999995,
+          -0.00424
+        ]
+      },
+      "proxy_components": [
+        {
+          "kind": "Cube",
+          "name": "PitchWristA",
+          "rationale": "piecewise wrist housing segment",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "PitchWristB",
+          "rationale": "piecewise wrist housing segment",
+          "triangles": 0
+        },
+        {
+          "kind": "Cube",
+          "name": "PitchWristC",
+          "rationale": "piecewise wrist housing segment",
+          "triangles": 0
+        }
+      ],
+      "proxy_minus_target_max_m": [
+        9.99999999999994e-05,
+        9.999999999999983e-05,
+        0.00010000000000000026
+      ],
+      "proxy_minus_target_min_m": [
+        -9.999999999999983e-05,
+        -9.99999999999994e-05,
+        -0.00010000000000000026
+      ],
+      "render_target_aabb_m": {
+        "max": [
+          0.011331,
+          0.0032,
+          0.004120113
+        ],
+        "min": [
+          -0.00302,
+          -0.003200469,
+          -0.00414
+        ]
+      },
+      "target_measurement": "locked render geometry transformed into owning link coordinates"
+    },
+    "psm_tool_roll_link": {
+      "component_count": 4,
+      "maximum_absolute_aabb_support_error_m": 5.999999999999062e-06,
+      "proxy_aabb_m": {
+        "max": [
+          0.00794,
+          0.00794,
+          0.0019007319999999996
+        ],
+        "min": [
+          -0.00794,
+          -0.00794,
+          -0.47702100000000003
+        ]
+      },
+      "proxy_components": [
+        {
+          "kind": "Capsule",
+          "name": "RollShaft",
+          "rationale": "continuous slender roll shaft",
+          "triangles": 0
+        },
+        {
+          "kind": "Capsule",
+          "name": "DistalCollar",
+          "rationale": "separate distal collar around the roll shaft",
+          "triangles": 0
+        },
+        {
+          "kind": "Cylinder",
+          "name": "DistalFlange",
+          "rationale": "thin distal flange retained without widening the whole shaft",
+          "triangles": 0
+        },
+        {
+          "kind": "Capsule",
+          "name": "RollHousing",
+          "rationale": "proximal roll housing",
+          "triangles": 0
+        }
+      ],
+      "proxy_minus_target_max_m": [
+        1.9999999999985307e-06,
+        5.999999999999062e-06,
+        -4.336808689942018e-19
+      ],
+      "proxy_minus_target_min_m": [
+        -1.9999999999985307e-06,
+        -5.999999999999062e-06,
+        -5.551115123125783e-17
+      ],
+      "render_target_aabb_m": {
+        "max": [
+          0.007938,
+          0.007934,
+          0.001900732
+        ],
+        "min": [
+          -0.007938,
+          -0.007934,
+          -0.477021
+        ]
+      },
+      "target_measurement": "locked render geometry transformed into owning link coordinates"
+    },
+    "psm_tool_yaw_link": {
+      "component_count": 1,
+      "maximum_absolute_aabb_support_error_m": 2.544999999999956e-06,
+      "proxy_aabb_m": {
+        "max": [
+          0.0006525,
+          0.000649429,
+          0.002852
+        ],
+        "min": [
+          -0.0006475,
+          -0.000650571,
+          -0.0026089999999999998
+        ]
+      },
+      "proxy_components": [
+        {
+          "kind": "Capsule",
+          "name": "YawPin",
+          "rationale": "analytic yaw pin at the locked render envelope",
+          "triangles": 0
+        }
+      ],
+      "proxy_minus_target_max_m": [
+        2.5439999999999404e-06,
+        9.889999999999595e-07,
+        0.0
+      ],
+      "proxy_minus_target_min_m": [
+        -2.544999999999956e-06,
+        -9.889999999999595e-07,
+        4.336808689942018e-19
+      ],
+      "render_target_aabb_m": {
+        "max": [
+          0.000649956,
+          0.00064844,
+          0.002852
+        ],
+        "min": [
+          -0.000644955,
+          -0.000649582,
+          -0.002609
+        ]
+      },
+      "target_measurement": "locked render geometry transformed into owning link coordinates"
+    }
+  },
+  "maximum_absolute_aabb_support_error_m": 0.00020000000000000573,
+  "measurement_method": "OpenUSD 25.11 default-time render vertices transformed into each owning rigid-link frame; analytic support bounds evaluated exactly",
+  "status": "inactive_unqualified_candidate",
+  "triangle_reduction_fraction": 0.9998333634204936
+}

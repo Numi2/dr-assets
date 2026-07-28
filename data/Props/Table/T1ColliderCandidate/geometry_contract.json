@@ -1,0 +1,58 @@
+{
+  "activation": {
+    "active_replacement": false,
+    "default": "blocked",
+    "requires_explicit_human_review": true
+  },
+  "allowed_layer_authority": [
+    "candidate namespaced metadata on /Table",
+    "physics:collisionEnabled=false on the exact locked legacy mesh /Table/Table/Table",
+    "new collision-only prims below /Table/Table/DrAnmarT1ColliderCandidate"
+  ],
+  "asset_id": "dranmar-table-t1-collider-candidate-v1",
+  "asset_version": "1.0.0",
+  "forbidden_authority": [
+    "articulation_or_joint_properties",
+    "existing_link_or_tool_transforms",
+    "root_transform",
+    "render_geometry_or_visibility",
+    "material_or_friction_values",
+    "mass_center_of_mass_or_inertia",
+    "adhesion_suction_attachment_or_force_injection"
+  ],
+  "primitive_budget": {
+    "maximum_mesh_triangles": 28,
+    "maximum_primitives": 7,
+    "observed_mesh_triangles": 28,
+    "observed_primitives": 7
+  },
+  "proxy_ownership": "decomposed_components_below_existing_table_rigid_body",
+  "runtime_contract": {
+    "allowed_runtime_scale": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "identity_quaternion_runtime_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "identity_quaternion_usd_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "meters_per_unit": 1.0,
+    "non_unit_scale_invalidates_qualification": true,
+    "root_prim": "/Table",
+    "root_transform_authored_by_candidate": false,
+    "root_transform_inherited_exactly": true,
+    "runtime_quaternion_order": "xyzw",
+    "stage_up_axis": "Z",
+    "usd_quaternion_order": "wxyz"
+  },
+  "status": "inactive_unqualified_candidate"
+}

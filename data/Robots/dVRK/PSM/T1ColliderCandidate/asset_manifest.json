@@ -1,0 +1,92 @@
+{
+  "active_replacement": false,
+  "asset_id": "dranmar-psm-t1-collider-candidate-v1",
+  "asset_version": "1.0.0",
+  "clinical_validation": false,
+  "dependency_complete_directory": false,
+  "dependency_lock_complete": true,
+  "external_dependencies": {
+    "psm_collision_foundation": {
+      "bytes": 22251170,
+      "modified": false,
+      "repository_path": "data/Robots/dVRK/PSM/psm_col.usd",
+      "sha256": "87330b0e46e5554d53fe1b840f2db38a9bdbf00a79ca464159009406156ca0d4"
+    },
+    "psm_visual_overlay": {
+      "bytes": 16261,
+      "modified": false,
+      "repository_path": "data/Props/SurgicalScene/T1/psm_visual_v1.usda",
+      "sha256": "534b8072d9e05a82df7707124c5a88715176fba1c58231aa09d8d8af062c2e84"
+    }
+  },
+  "generator": {
+    "repository_path": "tools/generate_t1_collider_candidates.py",
+    "sha256": "c960dce568af9ab4ede9b6b6b3376000637dd1d52e12bdc87f0011f8180c5519",
+    "standard_library_only": true
+  },
+  "instrument_calibration": false,
+  "license": "BSD-3-Clause",
+  "members": {
+    "LICENSE.txt": {
+      "bytes": 1613,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "9c69bf1f27dd03eeed8dd8aa2fa8a86702f6608b7f6397e8ea9d4c6a1d895c76"
+    },
+    "NOTICE.txt": {
+      "bytes": 500,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "10b58a849ef278b94baa1301988ca70584084920f880c7d62ecbc3cf1deef584"
+    },
+    "README.md": {
+      "bytes": 1179,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "57867dd3d260a2396a5cd9edf3bd1bc258c50c25add2a956a86e8a951d8c08b8"
+    },
+    "approximation_report.json": {
+      "bytes": 16261,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "40c873fae4ffb8720fa412544f83ef1b6418de5b41f0a7ad73a023d78d605f09"
+    },
+    "dependency_lock.json": {
+      "bytes": 1129,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "df9150b60c3d601d0c0d8cf859ff3202df1206de8a68ecadb907d4e3d9fd41f5"
+    },
+    "geometry_contract.json": {
+      "bytes": 1629,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "d00b416ea028740898ad948a931fc8e39223a23f0bc08c9f855cabf292cfcd38"
+    },
+    "provenance.json": {
+      "bytes": 1140,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "10ece74b20fbf5e39f5e29da1083b7db7a8466b589e4bfc6c17e6555dbdc7c89"
+    },
+    "psm_t1_collider_candidate.usda": {
+      "bytes": 31069,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "8a063dfbcd6054d84ea8824b222db00721203ceb4d0c6be78a8794752f89a254"
+    },
+    "qualification_contract.json": {
+      "bytes": 1852,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "259d8be8c428ec4246f74f296fde722518a678c90ad79dd90a9d1be9110252e0"
+    }
+  },
+  "package_role": "inactive_collision_overlay_with_external_hash_locked_bases",
+  "physics_calibration": false,
+  "provider": "Dr.Anmar Project Developers",
+  "runtime_references": [],
+  "schema": "dr.anmar.psm-t1-collider-candidate-manifest.v1",
+  "source_static_validation": true,
+  "status": "inactive_unqualified_candidate"
+}

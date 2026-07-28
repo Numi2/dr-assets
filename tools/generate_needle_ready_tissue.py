@@ -24,7 +24,7 @@ from typing import Any
 
 ASSET_ID = "dranmar-needle-ready-tissue-v2"
 ASSET_NAME = "DrAnmar Needle-Ready Tissue Unit"
-ASSET_VERSION = "2.0.0"
+ASSET_VERSION = "2.1.0"
 ROOT_PRIM = "DrAnmarNeedleReadyTissue"
 CATALOG_SUBPATH = Path("data/Props/SurgicalTissue/NeedleReadyTissueUnit")
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -79,6 +79,114 @@ def signed_tetra_volume(a: Vec3, b: Vec3, c: Vec3, d: Vec3) -> float:
         ac[0] * ad[1] - ac[1] * ad[0],
     )
     return sum(ab[index] * cross[index] for index in range(3)) / 6.0
+
+
+def _squared_distance(a: Vec3, b: Vec3) -> float:
+    return sum((a[index] - b[index]) ** 2 for index in range(3))
+
+
+def _determinant(vectors: tuple[Vec3, Vec3, Vec3]) -> float:
+    a, b, c = vectors
+    return (
+        a[0] * (b[1] * c[2] - b[2] * c[1])
+        - a[1] * (b[0] * c[2] - b[2] * c[0])
+        + a[2] * (b[0] * c[1] - b[1] * c[0])
+    )
+
+
+def _percentile(values: list[float], fraction: float) -> float:
+    ordered = sorted(values)
+    index = round((len(ordered) - 1) * fraction)
+    return ordered[index]
+
+
+def tetrahedron_quality(mesh: TissueMesh) -> dict[str, float]:
+    """Report scale-independent sliver and aspect-ratio diagnostics.
+
+    Mean ratio and vertex-scaled Jacobian are normalized to one for a regular
+    tetrahedron. Edge ratio is one for equal edge lengths and increases with
+    anisotropy.
+    """
+
+    mean_ratios: list[float] = []
+    scaled_jacobians: list[float] = []
+    edge_ratios: list[float] = []
+    edge_pairs = ((0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3))
+    for tetrahedron in mesh.tetrahedra:
+        points = tuple(mesh.points[index] for index in tetrahedron)
+        volume = abs(signed_tetra_volume(*points))
+        squared_edges = [
+            _squared_distance(points[left], points[right])
+            for left, right in edge_pairs
+        ]
+        mean_ratios.append(
+            12.0 * (3.0 * volume) ** (2.0 / 3.0) / sum(squared_edges)
+        )
+        edge_ratios.append(
+            math.sqrt(max(squared_edges) / min(squared_edges))
+        )
+        vertex_jacobians = []
+        for vertex_index, vertex in enumerate(points):
+            edges = tuple(
+                tuple(other[axis] - vertex[axis] for axis in range(3))
+                for other_index, other in enumerate(points)
+                if other_index != vertex_index
+            )
+            denominator = math.prod(
+                math.sqrt(sum(component * component for component in edge))
+                for edge in edges
+            )
+            vertex_jacobians.append(
+                min(
+                    1.0,
+                    math.sqrt(2.0)
+                    * abs(_determinant(edges))
+                    / max(denominator, 1.0e-30),
+                )
+            )
+        scaled_jacobians.append(min(vertex_jacobians))
+    return {
+        "minimum_mean_ratio": min(mean_ratios),
+        "p01_mean_ratio": _percentile(mean_ratios, 0.01),
+        "median_mean_ratio": _percentile(mean_ratios, 0.50),
+        "minimum_scaled_jacobian": min(scaled_jacobians),
+        "p01_scaled_jacobian": _percentile(scaled_jacobians, 0.01),
+        "median_scaled_jacobian": _percentile(scaled_jacobians, 0.50),
+        "maximum_edge_ratio": max(edge_ratios),
+        "p99_edge_ratio": _percentile(edge_ratios, 0.99),
+        "median_edge_ratio": _percentile(edge_ratios, 0.50),
+    }
+
+
+def validate_tetrahedron_quality(
+    lod: str,
+    quality: dict[str, float],
+    gates: dict[str, float],
+) -> None:
+    comparisons = {
+        "minimum_mean_ratio": (
+            quality["minimum_mean_ratio"],
+            float(gates["minimum_mean_ratio"]),
+            lambda actual, threshold: actual >= threshold,
+        ),
+        "minimum_scaled_jacobian": (
+            quality["minimum_scaled_jacobian"],
+            float(gates["minimum_scaled_jacobian"]),
+            lambda actual, threshold: actual >= threshold,
+        ),
+        "maximum_edge_ratio": (
+            quality["maximum_edge_ratio"],
+            float(gates["maximum_edge_ratio"]),
+            lambda actual, threshold: actual <= threshold,
+        ),
+    }
+    failed = {
+        name: {"actual": actual, "threshold": threshold}
+        for name, (actual, threshold, passed) in comparisons.items()
+        if not passed(actual, threshold)
+    }
+    if failed:
+        raise ValueError(f"{lod} tetrahedron quality gates failed: {failed}")
 
 
 def _triangle_normal(a: Vec3, b: Vec3, c: Vec3) -> Vec3:
@@ -777,6 +885,9 @@ def build_report(
     for lod, mesh in meshes.items():
         path = output_root / f"needle_ready_tissue_{lod}.usda"
         layer_names = [str(layer["id"]) for layer in contract["layers"]]
+        quality = tetrahedron_quality(mesh)
+        quality_gates = contract["lods"][lod]["quality_gates"]
+        validate_tetrahedron_quality(lod, quality, quality_gates)
         lod_reports[lod] = {
             "usd": path.name,
             "usd_sha256": sha256(path),
@@ -787,6 +898,8 @@ def build_report(
             "volume_m3": mesh.volume_m3,
             "mass_kg_seed": mesh.volume_m3 * density,
             "minimum_tetra_volume_m3": mesh.minimum_tetra_volume_m3,
+            "tetrahedron_quality": quality,
+            "tetrahedron_quality_gates": quality_gates,
             "node_set_counts": {
                 name: len(values) for name, values in mesh.node_sets.items()
             },
@@ -807,6 +920,12 @@ def build_report(
         "asset_id": ASSET_ID,
         "asset_name": ASSET_NAME,
         "asset_version": ASSET_VERSION,
+        "generator": {
+            "path": "tools/generate_needle_ready_tissue.py",
+            "sha256": sha256(Path(__file__)),
+            "dependency_policy": "Python_standard_library_only",
+            "deterministic": True,
+        },
         "contract": "geometry_contract.json",
         "contract_sha256": sha256(output_root / "geometry_contract.json"),
         "root_usd": "needle_ready_tissue_unit.usda",
@@ -815,7 +934,11 @@ def build_report(
         "semantic_coordinate_system": "(component,u,v,w)",
         "lods_point_nested": True,
         "material_interfaces_conforming": True,
+        "qualification_scope": "source_static_only",
         "stable_capabilities": contract["capabilities"]["stable"],
+        "native_requalification_pending": contract["capabilities"][
+            "native_requalification_pending"
+        ],
         "gated_capabilities": contract["capabilities"]["gated"],
         "clinical_validation": False,
     }
@@ -824,7 +947,15 @@ def build_report(
 def write_manifest(output_root: Path) -> dict[str, Any]:
     members = {}
     for path in sorted(output_root.iterdir()):
-        if not path.is_file() or path.name == "asset_manifest.json":
+        if (
+            not path.is_file()
+            or path.name in {
+                "asset_manifest.json",
+                "visual_manifest.json",
+                "needle_ready_tissue_visual_unit.usda",
+            }
+            or path.name.endswith("_visual.usda")
+        ):
             continue
         members[path.name] = {
             "bytes": path.stat().st_size,
@@ -837,8 +968,18 @@ def write_manifest(output_root: Path) -> dict[str, Any]:
         "asset_version": ASSET_VERSION,
         "primary_usd": "needle_ready_tissue_unit.usda",
         "default_lod": "contact",
-        "dependency_complete_directory": True,
+        "dependency_complete_directory": False,
+        "manifest_scope": "base_physics_geometry_members_only",
+        "nested_package_manifests": {
+            "render_only_visual": "visual_manifest.json",
+        },
         "generated_geometry": True,
+        "generator": {
+            "path": "tools/generate_needle_ready_tissue.py",
+            "sha256": sha256(Path(__file__)),
+            "dependency_policy": "Python_standard_library_only",
+            "deterministic": True,
+        },
         "members": members,
         "license": "Apache-2.0",
         "clinical_validation": False,
