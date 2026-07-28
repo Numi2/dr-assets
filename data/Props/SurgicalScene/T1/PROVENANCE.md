@@ -6,7 +6,7 @@ The overlay composition, derived material parameter overrides, UV-authored
 operating-table render geometry, and all nine 2048 px texture maps were
 independently and
 deterministically authored by the Dr.Anmar project for package version
-`1.1.0`. The generator seeds and pinned dependency versions are
+`1.2.0`. The generator seeds and pinned dependency versions are
 recorded in `asset_manifest.json`.
 
 No patient data, clinical photography, scanned anatomy, purchased model,

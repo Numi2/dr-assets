@@ -13,7 +13,7 @@ def Xform "DrAnmarNeedleReadyTissue" (
     prepend variantSets = "geometryLod"
     customData = {
         string drAnmarAssetId = "dranmar-needle-ready-tissue-visual-v1"
-        string drAnmarAssetVersion = "1.0.0"
+        string drAnmarAssetVersion = "1.1.0"
         bool drAnmarClinicalValidation = false
         bool drAnmarPhysicsAuthority = false
     }

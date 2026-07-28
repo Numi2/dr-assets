@@ -1,0 +1,34 @@
+{
+  "asset_id": "dranmar-needle-22mm-half-circle-taper-category-candidate-v1",
+  "clinical_validation": false,
+  "independent_dranmar_authoring": true,
+  "manufacturer_category_source": {
+    "accessed_utc_date": "2026-07-28",
+    "category_facts_used": [
+      "22_mm_is_published_as_needle_length",
+      "one_half_circle_curvature_category",
+      "taper_point_category",
+      "longitudinal_ribbing_is_described_as_resisting_turning_rocking_and_twisting",
+      "swaging_is_described_as_a_smooth_factory_attachment"
+    ],
+    "document": "157677-230117-AH Suture Catalog",
+    "example_catalog_designations_not_modeled_as_twins": [
+      "SH-1",
+      "CT-3"
+    ],
+    "not_sourced_from_catalog": [
+      "body_diameter",
+      "tip_taper_length",
+      "swage_dimensions",
+      "rib_dimensions",
+      "mass_properties",
+      "friction",
+      "collision",
+      "textures"
+    ],
+    "provider": "Johnson & Johnson MedTech / Ethicon",
+    "url": "https://www.jnjmedtech.com/system/files/pdf/157677-230117-AH-Suture-Catalog-157677-230117.pdf"
+  },
+  "manufacturer_digital_twin": false,
+  "schema": "dr.anmar.asset-provenance.v1"
+}

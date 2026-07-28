@@ -1,0 +1,1488 @@
+#usda 1.0
+(
+    defaultPrim = "DrAnmarNeedle22HalfCircleTaperCandidate"
+    doc = "Engine-neutral rigid-body, mass, material and adaptive collision layer for the inactive 22 mm needle candidate."
+    kilogramsPerUnit = 1
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+over "DrAnmarNeedle22HalfCircleTaperCandidate" (
+    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+)
+{
+    bool physics:rigidBodyEnabled = true
+    bool physics:kinematicEnabled = false
+    float physics:mass = 3.23003776411e-05
+    point3f physics:centerOfMass = (0.00508277510575, 0.000343570392124, 1.08332240125e-11)
+    float3 physics:diagonalInertia = (9.24325431998e-11, 6.56001508638e-10, 7.47409017074e-10)
+    quatf physics:principalAxes = (6.66848651549e-09, -0.678524938905, -0.734577366439, 2.22676687126e-08)
+
+    def Scope "PhysicsMaterials"
+    {
+        def Material "NeedleSteelPhysics" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            float physics:staticFriction = 0.28
+            float physics:dynamicFriction = 0.2
+            float physics:restitution = 0.01
+        }
+    }
+
+    def Xform "Collision"
+    {
+        custom bool drAnmar:adaptiveCenterlinePartition = true
+        custom int drAnmar:capsuleSegmentCount = 32
+        custom int drAnmar:graspConvexSegmentCount = 16
+        custom int drAnmar:segmentCount = 48
+        custom bool drAnmar:separatePreciseTipShape = true
+        custom string drAnmar:authority = "adaptive_48_segment_compound_plus_precise_tip"
+        def Capsule "C000" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.0003049758936
+            float radius = 5.19330197274e-05
+            float3[] extent = [(-0.000204420966527, -5.19330197274e-05, -5.19330197274e-05), (0.000204420966527, 5.19330197274e-05, 5.19330197274e-05)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.000899790374459, -0.00694309567779, 0)
+            quatd xformOp:orient = (0.997924567869, 0, 0, 0.0643937640038)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C001" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.0003049758936
+            float radius = 7.96147123971e-05
+            float3[] extent = [(-0.000232102659197, -7.96147123971e-05, -7.96147123971e-05), (0.000232102659197, 7.96147123971e-05, 7.96147123971e-05)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00120124036982, -0.00689733440417, 0)
+            quatd xformOp:orient = (0.996285762702, 0, 0, 0.0861085305779)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C002" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.0003049758936
+            float radius = 0.00011361138178
+            float3[] extent = [(-0.00026609932858, -0.00011361138178, -0.00011361138178), (0.00026609932858, 0.00011361138178, 0.00011361138178)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.001500412042, -0.00683849135506, 0)
+            quatd xformOp:orient = (0.994174502117, 0, 0, 0.107782463043)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C003" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.0003049758936
+            float radius = 0.000150625004494
+            float3[] extent = [(-0.000303112951294, -0.000150625004494, -0.000150625004494), (0.000303112951294, 0.000150625004494, 0.000150625004494)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00179673796939, -0.00676667813468, 0)
+            quatd xformOp:orient = (0.991591787312, 0, 0, 0.129405283256)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C004" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.0003049758936
+            float radius = 0.000186872256355
+            float3[] extent = [(-0.000339360203155, -0.000186872256355, -0.000186872256355), (0.000339360203155, 0.000186872256355, 0.000186872256355)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00208965612772, -0.00668203094701, 0)
+            quatd xformOp:orient = (0.988538843053, 0, 0, 0.150966737314)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C005" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.0003049758936
+            float radius = 0.00021869113838
+            float3[] extent = [(-0.00037117908518, -0.00021869113838, -0.00021869113838), (0.00037117908518, 0.00021869113838, 0.00021869113838)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00237861095607, -0.00658471033749, 0)
+            quatd xformOp:orient = (0.985017117097, 0, 0, 0.172456600414)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C006" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.0003049758936
+            float radius = 0.000243147602789
+            float3[] extent = [(-0.000395635549589, -0.000243147602789, -0.000243147602789), (0.000395635549589, 0.000243147602789, 0.000243147602789)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00266305441051, -0.00647490088848, 0)
+            quatd xformOp:orient = (0.981028279505, 0, 0, 0.193864681701)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C007" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.0003049758936
+            float radius = 0.000258642179017
+            float3[] extent = [(-0.000411130125817, -0.000258642179017, -0.000258642179017), (0.000411130125817, 0.000258642179017, 0.000258642179017)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00294244700358, -0.00635281086922, 0)
+            quatd xformOp:orient = (0.976574221852, 0, 0, 0.215180829106)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C008" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.0003049758936
+            float radius = 0.000265516599712
+            float3[] extent = [(-0.000418004546512, -0.000265516599712, -0.000265516599712), (0.000418004546512, 0.000265516599712, 0.000265516599712)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.0032162588275, -0.0062186718408, 0)
+            quatd xformOp:orient = (0.971657056325, 0, 0, 0.236394934152)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C009" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.0003049758936
+            float radius = 0.000266660426746
+            float3[] extent = [(-0.000419148373546, -0.000266660426746, -0.000266660426746), (0.000419148373546, 0.000266660426746, 0.000266660426746)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.0034839705592, -0.00607273821695, 0)
+            quatd xformOp:orient = (0.966279114729, 0, 0, 0.257496936757)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C010" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000799565047076
+            float radius = 0.00027642086756
+            float3[] extent = [(-0.000676203391098, -0.00027642086756, -0.00027642086756), (0.000676203391098, 0.00027642086756, 0.00027642086756)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00394624641736, -0.00577120143733, 0)
+            quatd xformOp:orient = (0.955372151824, 0, 0, 0.295404894202)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C011" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000799565047076
+            float radius = 0.00027642086756
+            float3[] extent = [(-0.000676203391098, -0.00027642086756, -0.00027642086756), (0.000676203391098, 0.00027642086756, 0.00027642086756)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00457839112743, -0.00528374502612, 0)
+            quatd xformOp:orient = (0.936949725, 0, 0, 0.349464179599)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C012" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000799565047076
+            float radius = 0.00027642086756
+            float3[] extent = [(-0.000676203391098, -0.00027642086756, -0.00027642086756), (0.000676203391098, 0.00027642086756, 0.00027642086756)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00515084950741, -0.00472740691804, 0)
+            quatd xformOp:orient = (0.915471162919, 0, 0, 0.402383585479)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C013" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000799565047076
+            float radius = 0.00027642086756
+            float3[] extent = [(-0.000676203391098, -0.00027642086756, -0.00027642086756), (0.000676203391098, 0.00027642086756, 0.00027642086756)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00565615868686, -0.00410943983115, 0)
+            quatd xformOp:orient = (0.891006524188, 0, 0, 0.45399049974)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C014" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000799565047076
+            float radius = 0.00027642086756
+            float3[] extent = [(-0.000676203391098, -0.00027642086756, -0.00027642086756), (0.000676203391098, 0.00027642086756, 0.00027642086756)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00608773118784, -0.00343789991148, 0)
+            quatd xformOp:orient = (0.863635607373, 0, 0, 0.504116591353)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C015" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000799565047076
+            float radius = 0.00027642086756
+            float3[] extent = [(-0.000676203391098, -0.00027642086756, -0.00027642086756), (0.000676203391098, 0.00027642086756, 0.00027642086756)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.0064399408028, -0.00272154170888, 0)
+            quatd xformOp:orient = (0.833447690715, 0, 0, 0.552598359427)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C016" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000799565047076
+            float radius = 0.00027642086756
+            float3[] extent = [(-0.000676203391098, -0.00027642086756, -0.00027642086756), (0.000676203391098, 0.00027642086756, 0.00027642086756)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00670819594078, -0.00196970404804, 0)
+            quatd xformOp:orient = (0.800541240924, 0, 0, 0.599277666511)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C017" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000799565047076
+            float radius = 0.00027642086756
+            float3[] extent = [(-0.000676203391098, -0.00027642086756, -0.00027642086756), (0.000676203391098, 0.00027642086756, 0.00027642086756)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00688899948581, -0.00119218828265, 0)
+            quatd xformOp:orient = (0.765023592, 0, 0, 0.644002254409)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C018" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000799565047076
+            float radius = 0.00027642086756
+            float3[] extent = [(-0.000676203391098, -0.00027642086756, -0.00027642086756), (0.000676203391098, 0.00027642086756, 0.00027642086756)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00697999438717, -0.00039913051979, 0)
+            quatd xformOp:orient = (0.72701059513, 0, 0, 0.68662624081)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C019" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000799565047076
+            float radius = 0.00027642086756
+            float3[] extent = [(-0.000676203391098, -0.00027642086756, -0.00027642086756), (0.000676203391098, 0.00027642086756, 0.00027642086756)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00697999438717, 0.00039913051979, 0)
+            quatd xformOp:orient = (0.68662624081, 0, 0, 0.72701059513)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Mesh "C020" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00665297174743, 0.000768053315959, -0.000265), (0.00722044393817, 0.00114974862838, 0.000265)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.00722044393817, 0.000828468763201, 0), (0.00720755845703, 0.000826990291972, 8.18895035094e-05), (0.00717016333429, 0.000822699601351, 0.000155763091858),
+            (0.0071119190651, 0.00081601669403, 0.000214389503509), (0.00703852700435, 0.00080759573954, 0.000252029976818), (0.0069571712783, 0.00079826103958, 0.000265),
+            (0.00687581555225, 0.00078892633962, 0.000252029976818), (0.0068024234915, 0.00078050538513, 0.000214389503509), (0.00674417922231, 0.000773822477809, 0.000155763091858),
+            (0.00670678409957, 0.000769531787188, 8.18895035094e-05), (0.00669389861843, 0.000768053315959, 3.24531401774e-20), (0.00670678409957, 0.000769531787188, -8.18895035094e-05),
+            (0.00674417922231, 0.000773822477809, -0.000155763091858), (0.0068024234915, 0.00078050538513, -0.000214389503509), (0.00687581555225, 0.00078892633962, -0.000252029976818),
+            (0.0069571712783, 0.00079826103958, -0.000265), (0.00703852700435, 0.00080759573954, -0.000252029976818), (0.0071119190651, 0.00081601669403, -0.000214389503509),
+            (0.00717016333429, 0.000822699601351, -0.000155763091858), (0.00720755845703, 0.000826990291972, -8.18895035094e-05), (0.0071762977396, 0.00114974862838, 0),
+            (0.00716349104101, 0.00114769680658, 8.18895035094e-05), (0.00712632455414, 0.0011417421878, 0.000155763091858), (0.00706843639368, 0.00113246765161, 0.000214389503509),
+            (0.0069954930561, 0.00112078105424, 0.000252029976818), (0.00691463474351, 0.00110782636125, 0.000265), (0.00683377643093, 0.00109487166827, 0.000252029976818),
+            (0.00676083309335, 0.00108318507089, 0.000214389503509), (0.00670294493288, 0.0010739105347, 0.000155763091858), (0.00666577844602, 0.00106795591592, 8.18895035094e-05),
+            (0.00665297174743, 0.00106590409412, 3.24531401774e-20), (0.00666577844602, 0.00106795591592, -8.18895035094e-05), (0.00670294493288, 0.0010739105347, -0.000155763091858),
+            (0.00676083309335, 0.00108318507089, -0.000214389503509), (0.00683377643093, 0.00109487166827, -0.000252029976818), (0.00691463474351, 0.00110782636125, -0.000265),
+            (0.0069954930561, 0.00112078105424, -0.000252029976818), (0.00706843639368, 0.00113246765161, -0.000214389503509), (0.00712632455414, 0.0011417421878, -0.000155763091858),
+            (0.00716349104101, 0.00114769680658, -8.18895035094e-05)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C021" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00659390864256, 0.00106590409412, -0.000265), (0.0071762977396, 0.00146974827988, 0.000265)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.0071762977396, 0.00114974862838, 0), (0.00716349104101, 0.00114769680658, 8.18895035094e-05), (0.00712632455414, 0.0011417421878, 0.000155763091858),
+            (0.00706843639368, 0.00113246765161, 0.000214389503509), (0.0069954930561, 0.00112078105424, 0.000252029976818), (0.00691463474351, 0.00110782636125, 0.000265),
+            (0.00683377643093, 0.00109487166827, 0.000252029976818), (0.00676083309335, 0.00108318507089, 0.000214389503509), (0.00670294493288, 0.0010739105347, 0.000155763091858),
+            (0.00666577844602, 0.00106795591592, 8.18895035094e-05), (0.00665297174743, 0.00106590409412, 3.24531401774e-20), (0.00666577844602, 0.00106795591592, -8.18895035094e-05),
+            (0.00670294493288, 0.0010739105347, -0.000155763091858), (0.00676083309335, 0.00108318507089, -0.000214389503509), (0.00683377643093, 0.00109487166827, -0.000252029976818),
+            (0.00691463474351, 0.00110782636125, -0.000265), (0.0069954930561, 0.00112078105424, -0.000252029976818), (0.00706843639368, 0.00113246765161, -0.000214389503509),
+            (0.00712632455414, 0.0011417421878, -0.000155763091858), (0.00716349104101, 0.00114769680658, -8.18895035094e-05), (0.0071227529959, 0.00146974827988, 0),
+            (0.00711465587422, 0.00146807747497, 0.000106769749913), (0.00709038387783, 0.00146306905688, 0.000157803877212), (0.00704961793083, 0.00145465718573, 0.000192976112013),
+            (0.00698953619611, 0.00144225958802, 0.000217933825973), (0.0068583308208, 0.00141518594461, 0.000229352975695), (0.00672712544235, 0.00138811230056, 0.000217933825973),
+            (0.00666704370763, 0.00137571470284, 0.000192976112013), (0.00662627776063, 0.00136730283169, 0.000157803877212), (0.00660200576423, 0.0013622944136, 0.000106769749913),
+            (0.00659390864256, 0.00136062360869, 1.72388402848e-12), (0.00660200576423, 0.0013622944136, -0.000106769749913), (0.00662627776063, 0.00136730283169, -0.000157803877212),
+            (0.00666704370763, 0.00137571470284, -0.000192976112013), (0.00672712544235, 0.00138811230056, -0.000217933825973), (0.00685833081651, 0.00141518594373, -0.000229352975695),
+            (0.00698953619611, 0.00144225958802, -0.000217933825973), (0.00704961793083, 0.00145465718573, -0.000192976112013), (0.00709038387783, 0.00146306905688, -0.000157803877212),
+            (0.00711465587422, 0.00146807747497, -0.000106769749913)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C022" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00652506452774, 0.00136062360869, -0.000229352975695), (0.0071227529959, 0.00178643255281, 0.000229352975695)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.0071227529959, 0.00146974827988, 0), (0.00711465587422, 0.00146807747497, 0.000106769749913), (0.00709038387783, 0.00146306905688, 0.000157803877212),
+            (0.00704961793083, 0.00145465718573, 0.000192976112013), (0.00698953619611, 0.00144225958802, 0.000217933825973), (0.0068583308208, 0.00141518594461, 0.000229352975695),
+            (0.00672712544235, 0.00138811230056, 0.000217933825973), (0.00666704370763, 0.00137571470284, 0.000192976112013), (0.00662627776063, 0.00136730283169, 0.000157803877212),
+            (0.00660200576423, 0.0013622944136, 0.000106769749913), (0.00659390864256, 0.00136062360869, 1.72388402848e-12), (0.00660200576423, 0.0013622944136, -0.000106769749913),
+            (0.00662627776063, 0.00136730283169, -0.000157803877212), (0.00666704370763, 0.00137571470284, -0.000192976112013), (0.00672712544235, 0.00138811230056, -0.000217933825973),
+            (0.00685833081651, 0.00141518594373, -0.000229352975695), (0.00698953619611, 0.00144225958802, -0.000217933825973), (0.00704961793083, 0.00145465718573, -0.000192976112013),
+            (0.00709038387783, 0.00146306905688, -0.000157803877212), (0.00711465587422, 0.00146807747497, -0.000106769749913), (0.0070516786911, 0.00178643255281, 0),
+            (0.00704515427478, 0.00178477969393, 0.000114903076951), (0.00702520414353, 0.00177972564008, 0.000158471007615), (0.00699024165558, 0.00177086844034, 0.000185921731027),
+            (0.00693474216514, 0.0017568085121, 0.000209679320628), (0.00678837161148, 0.00171972782064, 0.0002177), (0.0066420010537, 0.00168264712814, 0.000209679320628),
+            (0.00658650156327, 0.0016685871999, 0.000185921731027), (0.00655153907531, 0.00165973000016, 0.000158471007615), (0.00653158894406, 0.00165467594631, 0.000114903076951),
+            (0.00652506452774, 0.00165302308743, 2.2874199392e-12), (0.00653158894406, 0.00165467594631, -0.000114903076951), (0.00655153907531, 0.00165973000016, -0.000158471007615),
+            (0.00658650156327, 0.0016685871999, -0.000185921731027), (0.0066420010537, 0.00168264712814, -0.000209679320628), (0.00678837160585, 0.00171972781922, -0.0002177),
+            (0.00693474216514, 0.0017568085121, -0.000209679320628), (0.00699024165558, 0.00177086844034, -0.000185921731027), (0.00702520414353, 0.00177972564008, -0.000158471007615),
+            (0.00704515427478, 0.00178477969393, -0.000114903076951)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C023" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00644482715753, 0.00165302308743, -0.0002177), (0.0070516786911, 0.00209923010844, 0.0002177)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.0070516786911, 0.00178643255281, 0), (0.00704515427478, 0.00178477969393, 0.000114903076951), (0.00702520414353, 0.00177972564008, 0.000158471007615),
+            (0.00699024165558, 0.00177086844034, 0.000185921731027), (0.00693474216514, 0.0017568085121, 0.000209679320628), (0.00678837161148, 0.00171972782064, 0.0002177),
+            (0.0066420010537, 0.00168264712814, 0.000209679320628), (0.00658650156327, 0.0016685871999, 0.000185921731027), (0.00655153907531, 0.00165973000016, 0.000158471007615),
+            (0.00653158894406, 0.00165467594631, 0.000114903076951), (0.00652506452774, 0.00165302308743, 2.2874199392e-12), (0.00653158894406, 0.00165467594631, -0.000114903076951),
+            (0.00655153907531, 0.00165973000016, -0.000158471007615), (0.00658650156327, 0.0016685871999, -0.000185921731027), (0.0066420010537, 0.00168264712814, -0.000209679320628),
+            (0.00678837160585, 0.00171972781922, -0.0002177), (0.00693474216514, 0.0017568085121, -0.000209679320628), (0.00699024165558, 0.00177086844034, -0.000185921731027),
+            (0.00702520414353, 0.00177972564008, -0.000158471007615), (0.00704515427478, 0.00178477969393, -0.000114903076951), (0.00696496565534, 0.00209923010844, 0),
+            (0.00695852146842, 0.00209728784026, 0.000114903076951), (0.00693881665981, 0.00209134884076, 0.000158471007615), (0.00690428409835, 0.00208094077899, 0.000185921731027),
+            (0.00684946707368, 0.00206441901071, 0.000209679320628), (0.00670489640847, 0.002020845631, 0.0002177), (0.00656032573919, 0.00197727225006, 0.000209679320628),
+            (0.00650550871453, 0.00196075048178, 0.000185921731027), (0.00647097615306, 0.00195034242001, 0.000158471007615), (0.00645127134446, 0.00194440342052, 0.000114903076951),
+            (0.00644482715753, 0.00194246115233, 2.2874199392e-12), (0.00645127134446, 0.00194440342052, -0.000114903076951), (0.00647097615306, 0.00195034242001, -0.000158471007615),
+            (0.00650550871453, 0.00196075048178, -0.000185921731027), (0.00656032573919, 0.00197727225006, -0.000209679320628), (0.00670489640291, 0.00202084562932, -0.0002177),
+            (0.00684946707368, 0.00206441901071, -0.000209679320628), (0.00690428409835, 0.00208094077899, -0.000185921731027), (0.00693881665981, 0.00209134884076, -0.000158471007615),
+            (0.00695852146842, 0.00209728784026, -0.000114903076951)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C024" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00635175780863, 0.00194246115233, -0.0002177), (0.00696496565534, 0.00240784799015, 0.0002177)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.00696496565534, 0.00209923010844, 0), (0.00695852146842, 0.00209728784026, 0.000114903076951), (0.00693881665981, 0.00209134884076, 0.000158471007615),
+            (0.00690428409835, 0.00208094077899, 0.000185921731027), (0.00684946707368, 0.00206441901071, 0.000209679320628), (0.00670489640847, 0.002020845631, 0.0002177),
+            (0.00656032573919, 0.00197727225006, 0.000209679320628), (0.00650550871453, 0.00196075048178, 0.000185921731027), (0.00647097615306, 0.00195034242001, 0.000158471007615),
+            (0.00645127134446, 0.00194440342052, 0.000114903076951), (0.00644482715753, 0.00194246115233, 2.2874199392e-12), (0.00645127134446, 0.00194440342052, -0.000114903076951),
+            (0.00647097615306, 0.00195034242001, -0.000158471007615), (0.00650550871453, 0.00196075048178, -0.000185921731027), (0.00656032573919, 0.00197727225006, -0.000209679320628),
+            (0.00670489640291, 0.00202084562932, -0.0002177), (0.00684946707368, 0.00206441901071, -0.000209679320628), (0.00690428409835, 0.00208094077899, -0.000185921731027),
+            (0.00693881665981, 0.00209134884076, -0.000158471007615), (0.00695852146842, 0.00209728784026, -0.000114903076951), (0.00686438501867, 0.00240784799015, 0),
+            (0.00685803389185, 0.00240562017981, 0.000114903076951), (0.00683861363917, 0.00239880805953, 0.000158471007615), (0.00680457976028, 0.0023868698587, 0.000185921731027),
+            (0.00675055434486, 0.00236791914606, 0.000209679320628), (0.00660807141565, 0.00231793983491, 0.0002177), (0.00646558848244, 0.00226796052235, 0.000209679320628),
+            (0.00641156306702, 0.00224900980971, 0.000185921731027), (0.00637752918813, 0.00223707160889, 0.000158471007615), (0.00635810893544, 0.00223025948861, 0.000114903076951),
+            (0.00635175780863, 0.00222803167827, 2.2874199392e-12), (0.00635810893544, 0.00223025948861, -0.000114903076951), (0.00637752918813, 0.00223707160889, -0.000158471007615),
+            (0.00641156306702, 0.00224900980971, -0.000185921731027), (0.00646558848244, 0.00226796052235, -0.000209679320628), (0.00660807141017, 0.00231793983299, -0.0002177),
+            (0.00675055434486, 0.00236791914606, -0.000209679320628), (0.00680457976028, 0.0023868698587, -0.000185921731027), (0.00683861363917, 0.00239880805953, -0.000158471007615),
+            (0.00685803389185, 0.00240562017981, -0.000114903076951)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C025" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00624604178683, 0.00222803167827, -0.0002177), (0.00686438501867, 0.00271167172403, 0.0002177)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.00686438501867, 0.00240784799015, 0), (0.00685803389185, 0.00240562017981, 0.000114903076951), (0.00683861363917, 0.00239880805953, 0.000158471007615),
+            (0.00680457976028, 0.0023868698587, 0.000185921731027), (0.00675055434486, 0.00236791914606, 0.000209679320628), (0.00660807141565, 0.00231793983491, 0.0002177),
+            (0.00646558848244, 0.00226796052235, 0.000209679320628), (0.00641156306702, 0.00224900980971, 0.000185921731027), (0.00637752918813, 0.00223707160889, 0.000158471007615),
+            (0.00635810893544, 0.00223025948861, 0.000114903076951), (0.00635175780863, 0.00222803167827, 2.2874199392e-12), (0.00635810893544, 0.00223025948861, -0.000114903076951),
+            (0.00637752918813, 0.00223707160889, -0.000158471007615), (0.00641156306702, 0.00224900980971, -0.000185921731027), (0.00646558848244, 0.00226796052235, -0.000209679320628),
+            (0.00660807141017, 0.00231793983299, -0.0002177), (0.00675055434486, 0.00236791914606, -0.000209679320628), (0.00680457976028, 0.0023868698587, -0.000185921731027),
+            (0.00683861363917, 0.00239880805953, -0.000158471007615), (0.00685803389185, 0.00240562017981, -0.000114903076951), (0.00675013704226, 0.00271167172403, 0),
+            (0.00674389162096, 0.00270916280721, 0.000114903076951), (0.00672479459091, 0.00270149112942, 0.000158471007615), (0.00669132715778, 0.00268804655911, 0.000185921731027),
+            (0.00663820091896, 0.00266670463395, 0.000209679320628), (0.00649808941652, 0.00261041890271, 0.0002177), (0.00635797791013, 0.00255413316988, 0.000209679320628),
+            (0.00630485167131, 0.00253279124472, 0.000185921731027), (0.00627138423818, 0.00251934667441, 0.000158471007615), (0.00625228720812, 0.00251167499662, 0.000114903076951),
+            (0.00624604178683, 0.0025091660798, 2.2874199392e-12), (0.00625228720812, 0.00251167499662, -0.000114903076951), (0.00627138423818, 0.00251934667441, -0.000158471007615),
+            (0.00630485167131, 0.00253279124472, -0.000185921731027), (0.00635797791013, 0.00255413316988, -0.000209679320628), (0.00649808941113, 0.00261041890054, -0.0002177),
+            (0.00663820091896, 0.00266670463395, -0.000209679320628), (0.00669132715778, 0.00268804655911, -0.000185921731027), (0.00672479459091, 0.00270149112942, -0.000158471007615),
+            (0.00674389162096, 0.00270916280721, -0.000114903076951)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C026" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00612788957811, 0.0025091660798, -0.0002177), (0.00675013704226, 0.00301009638157, 0.0002177)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.00675013704226, 0.00271167172403, 0), (0.00674389162096, 0.00270916280721, 0.000114903076951), (0.00672479459091, 0.00270149112942, 0.000158471007615),
+            (0.00669132715778, 0.00268804655911, 0.000185921731027), (0.00663820091896, 0.00266670463395, 0.000209679320628), (0.00649808941652, 0.00261041890271, 0.0002177),
+            (0.00635797791013, 0.00255413316988, 0.000209679320628), (0.00630485167131, 0.00253279124472, 0.000185921731027), (0.00627138423818, 0.00251934667441, 0.000158471007615),
+            (0.00625228720812, 0.00251167499662, 0.000114903076951), (0.00624604178683, 0.0025091660798, 2.2874199392e-12), (0.00625228720812, 0.00251167499662, -0.000114903076951),
+            (0.00627138423818, 0.00251934667441, -0.000158471007615), (0.00630485167131, 0.00253279124472, -0.000185921731027), (0.00635797791013, 0.00255413316988, -0.000209679320628),
+            (0.00649808941113, 0.00261041890054, -0.0002177), (0.00663820091896, 0.00266670463395, -0.000209679320628), (0.00669132715778, 0.00268804655911, -0.000185921731027),
+            (0.00672479459091, 0.00270149112942, -0.000158471007615), (0.00674389162096, 0.00270916280721, -0.000114903076951), (0.00662244919965, 0.00301009638157, 0),
+            (0.00661632191882, 0.00300731135366, 0.000114903076951), (0.00659758613455, 0.00299879539307, 0.000158471007615), (0.00656475178254, 0.00298387122209, 0.000185921731027),
+            (0.00651263049737, 0.00296018057726, 0.000209679320628), (0.00637516939081, 0.00289770049368, 0.0002177), (0.00623770828039, 0.00283522040835, 0.000209679320628),
+            (0.00618558699522, 0.00281152976352, 0.000185921731027), (0.00615275264321, 0.00279660559254, 0.000158471007615), (0.00613401685894, 0.00278808963194, 0.000114903076951),
+            (0.00612788957811, 0.00278530460403, 2.2874199392e-12), (0.00613401685894, 0.00278808963194, -0.000114903076951), (0.00615275264321, 0.00279660559254, -0.000158471007615),
+            (0.00618558699522, 0.00281152976352, -0.000185921731027), (0.00623770828039, 0.00283522040835, -0.000209679320628), (0.00637516938553, 0.00289770049128, -0.0002177),
+            (0.00651263049737, 0.00296018057726, -0.000209679320628), (0.00656475178254, 0.00298387122209, -0.000185921731027), (0.00659758613455, 0.00299879539307, -0.000158471007615),
+            (0.00661632191882, 0.00300731135366, -0.000114903076951)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C027" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00599753642954, 0.00278530460403, -0.0002177), (0.00662244919965, 0.00330252778411, 0.0002177)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.00662244919965, 0.00301009638157, 0), (0.00661632191882, 0.00300731135366, 0.000114903076951), (0.00659758613455, 0.00299879539307, 0.000158471007615),
+            (0.00656475178254, 0.00298387122209, 0.000185921731027), (0.00651263049737, 0.00296018057726, 0.000209679320628), (0.00637516939081, 0.00289770049368, 0.0002177),
+            (0.00623770828039, 0.00283522040835, 0.000209679320628), (0.00618558699522, 0.00281152976352, 0.000185921731027), (0.00615275264321, 0.00279660559254, 0.000158471007615),
+            (0.00613401685894, 0.00278808963194, 0.000114903076951), (0.00612788957811, 0.00278530460403, 2.2874199392e-12), (0.00613401685894, 0.00278808963194, -0.000114903076951),
+            (0.00615275264321, 0.00279660559254, -0.000158471007615), (0.00618558699522, 0.00281152976352, -0.000185921731027), (0.00623770828039, 0.00283522040835, -0.000209679320628),
+            (0.00637516938553, 0.00289770049128, -0.0002177), (0.00651263049737, 0.00296018057726, -0.000209679320628), (0.00656475178254, 0.00298387122209, -0.000185921731027),
+            (0.00659758613455, 0.00299879539307, -0.000158471007615), (0.00661632191882, 0.00300731135366, -0.000114903076951), (0.00648157572381, 0.00330252778411, 0),
+            (0.00647557878318, 0.00329947219024, 0.000114903076951), (0.0064572415486, 0.00329012890254, 0.000158471007615), (0.00642510565258, 0.00327375484568, 0.000185921731027),
+            (0.00637409309718, 0.00324776265046, 0.000209679320628), (0.00623955607857, 0.00317921261558, 0.0002177), (0.00610501905617, 0.00311066257877, 0.000209679320628),
+            (0.00605400650077, 0.00308467038355, 0.000185921731027), (0.00602187060475, 0.00306829632669, 0.000158471007615), (0.00600353337017, 0.00305895303899, 0.000114903076951),
+            (0.00599753642954, 0.00305589744512, 2.2874199392e-12), (0.00600353337017, 0.00305895303899, -0.000114903076951), (0.00602187060475, 0.00306829632669, -0.000158471007615),
+            (0.00605400650077, 0.00308467038355, -0.000185921731027), (0.00610501905617, 0.00311066257877, -0.000209679320628), (0.00623955607339, 0.00317921261294, -0.0002177),
+            (0.00637409309718, 0.00324776265046, -0.000209679320628), (0.00642510565258, 0.00327375484568, -0.000185921731027), (0.0064572415486, 0.00329012890254, -0.000158471007615),
+            (0.00647557878318, 0.00329947219024, -0.000114903076951)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C028" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00585524188087, 0.00305589744512, -0.0002177), (0.00648157572381, 0.00358838368583, 0.0002177)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.00648157572381, 0.00330252778411, 0), (0.00647557878318, 0.00329947219024, 0.000114903076951), (0.0064572415486, 0.00329012890254, 0.000158471007615),
+            (0.00642510565258, 0.00327375484568, 0.000185921731027), (0.00637409309718, 0.00324776265046, 0.000209679320628), (0.00623955607857, 0.00317921261558, 0.0002177),
+            (0.00610501905617, 0.00311066257877, 0.000209679320628), (0.00605400650077, 0.00308467038355, 0.000185921731027), (0.00602187060475, 0.00306829632669, 0.000158471007615),
+            (0.00600353337017, 0.00305895303899, 0.000114903076951), (0.00599753642954, 0.00305589744512, 2.2874199392e-12), (0.00600353337017, 0.00305895303899, -0.000114903076951),
+            (0.00602187060475, 0.00306829632669, -0.000158471007615), (0.00605400650077, 0.00308467038355, -0.000185921731027), (0.00610501905617, 0.00311066257877, -0.000209679320628),
+            (0.00623955607339, 0.00317921261294, -0.0002177), (0.00637409309718, 0.00324776265046, -0.000209679320628), (0.00642510565258, 0.00327375484568, -0.000185921731027),
+            (0.0064572415486, 0.00329012890254, -0.000158471007615), (0.00647557878318, 0.00329947219024, -0.000114903076951), (0.00632779710101, 0.00358838368583, 0),
+            (0.00632194244079, 0.00358506360984, 0.000114903076951), (0.00630404026626, 0.00357491159801, 0.000158471007615), (0.00627266681043, 0.00355712025685, 0.000185921731027),
+            (0.0062228645534, 0.00352887826302, 0.000209679320628), (0.00609151949278, 0.00345439476344, 0.0002177), (0.00596017442847, 0.00337991126176, 0.000209679320628),
+            (0.00591037217144, 0.00335166926794, 0.000185921731027), (0.00587899871561, 0.00333387792677, 0.000158471007615), (0.00586109654108, 0.00332372591494, 0.000114903076951),
+            (0.00585524188087, 0.00332040583895, 2.2874199392e-12), (0.00586109654108, 0.00332372591494, -0.000114903076951), (0.00587899871561, 0.00333387792677, -0.000158471007615),
+            (0.00591037217144, 0.00335166926794, -0.000185921731027), (0.00596017442847, 0.00337991126176, -0.000209679320628), (0.00609151948773, 0.00345439476058, -0.0002177),
+            (0.0062228645534, 0.00352887826302, -0.000209679320628), (0.00627266681043, 0.00355712025685, -0.000185921731027), (0.00630404026626, 0.00357491159801, -0.000158471007615),
+            (0.00632194244079, 0.00358506360984, -0.000114903076951)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C029" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00570128924777, 0.00332040583895, -0.0002177), (0.00632779710101, 0.00386709493311, 0.0002177)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.00632779710101, 0.00358838368583, 0), (0.00632194244079, 0.00358506360984, 0.000114903076951), (0.00630404026626, 0.00357491159801, 0.000158471007615),
+            (0.00627266681043, 0.00355712025685, 0.000185921731027), (0.0062228645534, 0.00352887826302, 0.000209679320628), (0.00609151949278, 0.00345439476344, 0.0002177),
+            (0.00596017442847, 0.00337991126176, 0.000209679320628), (0.00591037217144, 0.00335166926794, 0.000185921731027), (0.00587899871561, 0.00333387792677, 0.000158471007615),
+            (0.00586109654108, 0.00332372591494, 0.000114903076951), (0.00585524188087, 0.00332040583895, 2.2874199392e-12), (0.00586109654108, 0.00332372591494, -0.000114903076951),
+            (0.00587899871561, 0.00333387792677, -0.000158471007615), (0.00591037217144, 0.00335166926794, -0.000185921731027), (0.00596017442847, 0.00337991126176, -0.000209679320628),
+            (0.00609151948773, 0.00345439476058, -0.0002177), (0.0062228645534, 0.00352887826302, -0.000209679320628), (0.00627266681043, 0.00355712025685, -0.000185921731027),
+            (0.00630404026626, 0.00357491159801, -0.000158471007615), (0.00632194244079, 0.00358506360984, -0.000114903076951), (0.0061614195123, 0.00386709493311, 0),
+            (0.00615571878943, 0.00386351698544, 0.000114903076951), (0.00613828731909, 0.00385257646265, 0.000158471007615), (0.0061077387696, 0.00383340326064, 0.000185921731027),
+            (0.00605924596976, 0.00380296769946, 0.000209679320628), (0.00593135438183, 0.00372269903561, 0.0002177), (0.00580346279031, 0.00364243036951, 0.000209679320628),
+            (0.00575496999047, 0.00361199480832, 0.000185921731027), (0.00572442144098, 0.00359282160632, 0.000158471007615), (0.00570698997064, 0.00358188108352, 0.000114903076951),
+            (0.00570128924777, 0.00357830313586, 2.2874199392e-12), (0.00570698997064, 0.00358188108352, -0.000114903076951), (0.00572442144098, 0.00359282160632, -0.000158471007615),
+            (0.00575496999047, 0.00361199480832, -0.000185921731027), (0.00580346279031, 0.00364243036951, -0.000209679320628), (0.00593135437692, 0.00372269903253, -0.0002177),
+            (0.00605924596976, 0.00380296769946, -0.000209679320628), (0.0061077387696, 0.00383340326064, -0.000185921731027), (0.00613828731909, 0.00385257646265, -0.000158471007615),
+            (0.00615571878943, 0.00386351698544, -0.000114903076951)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C030" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00553598505777, 0.00357830313586, -0.0002177), (0.0061614195123, 0.00413810659767, 0.0002177)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.0061614195123, 0.00386709493311, 0), (0.00615571878943, 0.00386351698544, 0.000114903076951), (0.00613828731909, 0.00385257646265, 0.000158471007615),
+            (0.0061077387696, 0.00383340326064, 0.000185921731027), (0.00605924596976, 0.00380296769946, 0.000209679320628), (0.00593135438183, 0.00372269903561, 0.0002177),
+            (0.00580346279031, 0.00364243036951, 0.000209679320628), (0.00575496999047, 0.00361199480832, 0.000185921731027), (0.00572442144098, 0.00359282160632, 0.000158471007615),
+            (0.00570698997064, 0.00358188108352, 0.000114903076951), (0.00570128924777, 0.00357830313586, 2.2874199392e-12), (0.00570698997064, 0.00358188108352, -0.000114903076951),
+            (0.00572442144098, 0.00359282160632, -0.000158471007615), (0.00575496999047, 0.00361199480832, -0.000185921731027), (0.00580346279031, 0.00364243036951, -0.000209679320628),
+            (0.00593135437692, 0.00372269903253, -0.0002177), (0.00605924596976, 0.00380296769946, -0.000209679320628), (0.0061077387696, 0.00383340326064, -0.000185921731027),
+            (0.00613828731909, 0.00385257646265, -0.000158471007615), (0.00615571878943, 0.00386351698544, -0.000114903076951), (0.00598277422394, 0.00413810659767, 0),
+            (0.00597723878883, 0.0041342779022, 0.000114903076951), (0.00596031272963, 0.00412257065158, 0.000158471007615), (0.00593064991019, 0.00410205376356, 0.000185921731027),
+            (0.00588356311918, 0.00406948523377, 0.000209679320628), (0.0057593796426, 0.00398359122465, 0.0002177), (0.00563519616252, 0.00389769721311, 0.000209679320628),
+            (0.00558810937151, 0.00386512868332, 0.000185921731027), (0.00555844655207, 0.00384461179529, 0.000158471007615), (0.00554152049287, 0.00383290454467, 0.000114903076951),
+            (0.00553598505777, 0.00382907584921, 2.2874199392e-12), (0.00554152049287, 0.00383290454467, -0.000114903076951), (0.00555844655207, 0.00384461179529, -0.000158471007615),
+            (0.00558810937151, 0.00386512868332, -0.000185921731027), (0.00563519616252, 0.00389769721311, -0.000209679320628), (0.00575937963782, 0.00398359122134, -0.0002177),
+            (0.00588356311918, 0.00406948523377, -0.000209679320628), (0.00593064991019, 0.00410205376356, -0.000185921731027), (0.00596031272963, 0.00412257065158, -0.000158471007615),
+            (0.00597723878883, 0.0041342779022, -0.000114903076951)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C031" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00535965843992, 0.00382907584921, -0.0002177), (0.00598277422394, 0.0044008790815, 0.0002177)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.00598277422394, 0.00413810659767, 0), (0.00597723878883, 0.0041342779022, 0.000114903076951), (0.00596031272963, 0.00412257065158, 0.000158471007615),
+            (0.00593064991019, 0.00410205376356, 0.000185921731027), (0.00588356311918, 0.00406948523377, 0.000209679320628), (0.0057593796426, 0.00398359122465, 0.0002177),
+            (0.00563519616252, 0.00389769721311, 0.000209679320628), (0.00558810937151, 0.00386512868332, 0.000185921731027), (0.00555844655207, 0.00384461179529, 0.000158471007615),
+            (0.00554152049287, 0.00383290454467, 0.000114903076951), (0.00553598505777, 0.00382907584921, 2.2874199392e-12), (0.00554152049287, 0.00383290454467, -0.000114903076951),
+            (0.00555844655207, 0.00384461179529, -0.000158471007615), (0.00558810937151, 0.00386512868332, -0.000185921731027), (0.00563519616252, 0.00389769721311, -0.000209679320628),
+            (0.00575937963782, 0.00398359122134, -0.0002177), (0.00588356311918, 0.00406948523377, -0.000209679320628), (0.00593064991019, 0.00410205376356, -0.000185921731027),
+            (0.00596031272963, 0.00412257065158, -0.000158471007615), (0.00597723878883, 0.0041342779022, -0.000114903076951), (0.00579221692777, 0.0044008790815, 0),
+            (0.00578685780176, 0.00439680726136, 0.000114903076951), (0.00577047085434, 0.00438435659264, 0.000158471007615), (0.00574175282514, 0.00436253686877, 0.000185921731027),
+            (0.00569616579515, 0.00432790021597, 0.000209679320628), (0.00557593768554, 0.00423655188092, 0.0002177), (0.00545570957253, 0.00414520354329, 0.000209679320628),
+            (0.00541012254255, 0.00411056689049, 0.000185921731027), (0.00538140451334, 0.00408874716662, 0.000158471007615), (0.00536501756593, 0.0040762964979, 0.000114903076951),
+            (0.00535965843992, 0.00407222467776, 2.2874199392e-12), (0.00536501756593, 0.0040762964979, -0.000114903076951), (0.00538140451334, 0.00408874716662, -0.000158471007615),
+            (0.00541012254255, 0.00411056689049, -0.000185921731027), (0.00545570957253, 0.00414520354329, -0.000209679320628), (0.00557593768091, 0.0042365518774, -0.0002177),
+            (0.00569616579515, 0.00432790021597, -0.000209679320628), (0.00574175282514, 0.00436253686877, -0.000185921731027), (0.00577047085434, 0.00438435659264, -0.000158471007615),
+            (0.00578685780176, 0.00439680726136, -0.000114903076951)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C032" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00517266046949, 0.00407222467776, -0.0002177), (0.00579221692777, 0.00465488919122, 0.0002177)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.00579221692777, 0.0044008790815, 0), (0.00578685780176, 0.00439680726136, 0.000114903076951), (0.00577047085434, 0.00438435659264, 0.000158471007615),
+            (0.00574175282514, 0.00436253686877, 0.000185921731027), (0.00569616579515, 0.00432790021597, 0.000209679320628), (0.00557593768554, 0.00423655188092, 0.0002177),
+            (0.00545570957253, 0.00414520354329, 0.000209679320628), (0.00541012254255, 0.00411056689049, 0.000185921731027), (0.00538140451334, 0.00408874716662, 0.000158471007615),
+            (0.00536501756593, 0.0040762964979, 0.000114903076951), (0.00535965843992, 0.00407222467776, 2.2874199392e-12), (0.00536501756593, 0.0040762964979, -0.000114903076951),
+            (0.00538140451334, 0.00408874716662, -0.000158471007615), (0.00541012254255, 0.00411056689049, -0.000185921731027), (0.00545570957253, 0.00414520354329, -0.000209679320628),
+            (0.00557593768091, 0.0042365518774, -0.0002177), (0.00569616579515, 0.00432790021597, -0.000209679320628), (0.00574175282514, 0.00436253686877, -0.000185921731027),
+            (0.00577047085434, 0.00438435659264, -0.000158471007615), (0.00578685780176, 0.00439680726136, -0.000114903076951), (0.00559012703306, 0.00465488919122, 0),
+            (0.00558495488645, 0.0046505823536, 0.000114903076951), (0.00556913967806, 0.00463741305671, 0.000158471007615), (0.00554142361815, 0.00461433394116, 0.000185921731027),
+            (0.00549742711528, 0.00457769812869, 0.000209679320628), (0.00538139375291, 0.00448107734689, 0.0002177), (0.00526536038727, 0.00438445656237, 0.000209679320628),
+            (0.0052213638844, 0.0043478207499, 0.000185921731027), (0.00519364782449, 0.00432474163435, 0.000158471007615), (0.0051778326161, 0.00431157233746, 0.000114903076951),
+            (0.00517266046949, 0.00430726549985, 2.2874199392e-12), (0.0051778326161, 0.00431157233746, -0.000114903076951), (0.00519364782449, 0.00432474163435, -0.000158471007615),
+            (0.0052213638844, 0.0043478207499, -0.000185921731027), (0.00526536038727, 0.00438445656237, -0.000209679320628), (0.00538139374845, 0.00448107734317, -0.0002177),
+            (0.00549742711528, 0.00457769812869, -0.000209679320628), (0.00554142361815, 0.00461433394116, -0.000185921731027), (0.00556913967806, 0.00463741305671, -0.000158471007615),
+            (0.00558495488645, 0.0046505823536, -0.000114903076951)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C033" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00497656987744, 0.00430726549985, -0.000229352975695), (0.00559012703306, 0.00489853185692, 0.000229352975695)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.00559012703306, 0.00465488919122, 0), (0.00558495488645, 0.0046505823536, 0.000114903076951), (0.00556913967806, 0.00463741305671, 0.000158471007615),
+            (0.00554142361815, 0.00461433394116, 0.000185921731027), (0.00549742711528, 0.00457769812869, 0.000209679320628), (0.00538139375291, 0.00448107734689, 0.0002177),
+            (0.00526536038727, 0.00438445656237, 0.000209679320628), (0.0052213638844, 0.0043478207499, 0.000185921731027), (0.00519364782449, 0.00432474163435, 0.000158471007615),
+            (0.0051778326161, 0.00431157233746, 0.000114903076951), (0.00517266046949, 0.00430726549985, 2.2874199392e-12), (0.0051778326161, 0.00431157233746, -0.000114903076951),
+            (0.00519364782449, 0.00432474163435, -0.000158471007615), (0.0052213638844, 0.0043478207499, -0.000185921731027), (0.00526536038727, 0.00438445656237, -0.000209679320628),
+            (0.00538139374845, 0.00448107734317, -0.0002177), (0.00549742711528, 0.00457769812869, -0.000209679320628), (0.00554142361815, 0.00461433394116, -0.000185921731027),
+            (0.00556913967806, 0.00463741305671, -0.000158471007615), (0.00558495488645, 0.0046505823536, -0.000114903076951), (0.00537570050259, 0.00489853185692, 0),
+            (0.00536958942432, 0.00489296322236, 0.000106769749913), (0.00535127080744, 0.00487627063908, 0.000157803877212), (0.00532050383828, 0.00484823466898, 0.000192976112013),
+            (0.00527515881344, 0.00480691464964, 0.000217933825973), (0.0051761351912, 0.00471668075958, 0.000229352975695), (0.00507711156658, 0.00462644686736, 0.000217933825973),
+            (0.00503176654174, 0.00458512684802, 0.000192976112013), (0.00500099957259, 0.00455709087792, 0.000157803877212), (0.00498268095571, 0.00454039829463, 0.000106769749913),
+            (0.00497656987744, 0.00453482966008, 1.72388402848e-12), (0.00498268095571, 0.00454039829463, -0.000106769749913), (0.00500099957259, 0.00455709087792, -0.000157803877212),
+            (0.00503176654174, 0.00458512684802, -0.000192976112013), (0.00507711156658, 0.00462644686736, -0.000217933825973), (0.00517613518796, 0.00471668075663, -0.000229352975695),
+            (0.00527515881344, 0.00480691464964, -0.000217933825973), (0.00532050383828, 0.00484823466898, -0.000192976112013), (0.00535127080744, 0.00487627063908, -0.000157803877212),
+            (0.00536958942432, 0.00489296322236, -0.000106769749913)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C034" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00477285320358, 0.00453482966008, -0.000265), (0.00537570050259, 0.00512994154042, 0.000265)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.00537570050259, 0.00489853185692, 0), (0.00536958942432, 0.00489296322236, 0.000106769749913), (0.00535127080744, 0.00487627063908, 0.000157803877212),
+            (0.00532050383828, 0.00484823466898, 0.000192976112013), (0.00527515881344, 0.00480691464964, 0.000217933825973), (0.0051761351912, 0.00471668075958, 0.000229352975695),
+            (0.00507711156658, 0.00462644686736, 0.000217933825973), (0.00503176654174, 0.00458512684802, 0.000192976112013), (0.00500099957259, 0.00455709087792, 0.000157803877212),
+            (0.00498268095571, 0.00454039829463, 0.000106769749913), (0.00497656987744, 0.00453482966008, 1.72388402848e-12), (0.00498268095571, 0.00454039829463, -0.000106769749913),
+            (0.00500099957259, 0.00455709087792, -0.000157803877212), (0.00503176654174, 0.00458512684802, -0.000192976112013), (0.00507711156658, 0.00462644686736, -0.000217933825973),
+            (0.00517613518796, 0.00471668075663, -0.000229352975695), (0.00527515881344, 0.00480691464964, -0.000217933825973), (0.00532050383828, 0.00484823466898, -0.000192976112013),
+            (0.00535127080744, 0.00487627063908, -0.000157803877212), (0.00536958942432, 0.00489296322236, -0.000106769749913), (0.00514828815701, 0.00512994154042, 0),
+            (0.00513910060975, 0.00512078673422, 8.18895035094e-05), (0.0051124373091, 0.00509421845182, 0.000155763091858), (0.00507090824471, 0.00505283738183, 0.000214389503509),
+            (0.00501857857074, 0.00500069419169, 0.000252029976818), (0.0049605706803, 0.00494289302015, 0.000265), (0.00490256278985, 0.00488509184862, 0.000252029976818),
+            (0.00485023311588, 0.00483294865848, 0.000214389503509), (0.00480870405149, 0.00479156758848, 0.000155763091858), (0.00478204075084, 0.00476499930609, 8.18895035094e-05),
+            (0.00477285320358, 0.00475584449989, 3.24531401774e-20), (0.00478204075084, 0.00476499930609, -8.18895035094e-05), (0.00480870405149, 0.00479156758848, -0.000155763091858),
+            (0.00485023311588, 0.00483294865848, -0.000214389503509), (0.00490256278985, 0.00488509184862, -0.000252029976818), (0.0049605706803, 0.00494289302015, -0.000265),
+            (0.00501857857074, 0.00500069419169, -0.000252029976818), (0.00507090824471, 0.00505283738183, -0.000214389503509), (0.0051124373091, 0.00509421845182, -0.000155763091858),
+            (0.00513910060975, 0.00512078673422, -8.18895035094e-05)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Mesh "C035" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(0.00455594307345, 0.00475584449989, -0.000265), (0.00514828815701, 0.00535450013191, 0.000265)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 21, 0, 21, 20, 0, 1, 0, 20, 20, 21,
+            1, 2, 22, 1, 22, 21, 0, 2, 1, 20, 21, 22,
+            2, 3, 23, 2, 23, 22, 0, 3, 2, 20, 22, 23,
+            3, 4, 24, 3, 24, 23, 0, 4, 3, 20, 23, 24,
+            4, 5, 25, 4, 25, 24, 0, 5, 4, 20, 24, 25,
+            5, 6, 26, 5, 26, 25, 0, 6, 5, 20, 25, 26,
+            6, 7, 27, 6, 27, 26, 0, 7, 6, 20, 26, 27,
+            7, 8, 28, 7, 28, 27, 0, 8, 7, 20, 27, 28,
+            8, 9, 29, 8, 29, 28, 0, 9, 8, 20, 28, 29,
+            9, 10, 30, 9, 30, 29, 0, 10, 9, 20, 29, 30,
+            10, 11, 31, 10, 31, 30, 0, 11, 10, 20, 30, 31,
+            11, 12, 32, 11, 32, 31, 0, 12, 11, 20, 31, 32,
+            12, 13, 33, 12, 33, 32, 0, 13, 12, 20, 32, 33,
+            13, 14, 34, 13, 34, 33, 0, 14, 13, 20, 33, 34,
+            14, 15, 35, 14, 35, 34, 0, 15, 14, 20, 34, 35,
+            15, 16, 36, 15, 36, 35, 0, 16, 15, 20, 35, 36,
+            16, 17, 37, 16, 37, 36, 0, 17, 16, 20, 36, 37,
+            17, 18, 38, 17, 38, 37, 0, 18, 17, 20, 37, 38,
+            18, 19, 39, 18, 39, 38, 0, 19, 18, 20, 38, 39,
+            19, 0, 20, 19, 20, 39, 0, 0, 19, 20, 39, 20
+            ]
+            point3f[] points = [
+            (0.00514828815701, 0.00512994154042, 0), (0.00513910060975, 0.00512078673422, 8.18895035094e-05), (0.0051124373091, 0.00509421845182, 0.000155763091858),
+            (0.00507090824471, 0.00505283738183, 0.000214389503509), (0.00501857857074, 0.00500069419169, 0.000252029976818), (0.0049605706803, 0.00494289302015, 0.000265),
+            (0.00490256278985, 0.00488509184862, 0.000252029976818), (0.00485023311588, 0.00483294865848, 0.000214389503509), (0.00480870405149, 0.00479156758848, 0.000155763091858),
+            (0.00478204075084, 0.00476499930609, 8.18895035094e-05), (0.00477285320358, 0.00475584449989, 3.24531401774e-20), (0.00478204075084, 0.00476499930609, -8.18895035094e-05),
+            (0.00480870405149, 0.00479156758848, -0.000155763091858), (0.00485023311588, 0.00483294865848, -0.000214389503509), (0.00490256278985, 0.00488509184862, -0.000252029976818),
+            (0.0049605706803, 0.00494289302015, -0.000265), (0.00501857857074, 0.00500069419169, -0.000252029976818), (0.00507090824471, 0.00505283738183, -0.000214389503509),
+            (0.0051124373091, 0.00509421845182, -0.000155763091858), (0.00513910060975, 0.00512078673422, -8.18895035094e-05), (0.0049143157706, 0.00535450013191, 0),
+            (0.00490554576647, 0.00534494458228, 8.18895035094e-05), (0.00488009422318, 0.00531721329714, 0.000155763091858), (0.00484045251513, 0.00527402080791, 0.000214389503509),
+            (0.00479050104889, 0.00521959509637, 0.000252029976818), (0.00473512942202, 0.00515926373038, 0.000265), (0.00467975779516, 0.00509893236438, 0.000252029976818),
+            (0.00462980632892, 0.00504450665284, 0.000214389503509), (0.00459016462087, 0.00500131416361, 0.000155763091858), (0.00456471307758, 0.00497358287848, 8.18895035094e-05),
+            (0.00455594307345, 0.00496402732884, 3.24531401774e-20), (0.00456471307758, 0.00497358287848, -8.18895035094e-05), (0.00459016462087, 0.00500131416361, -0.000155763091858),
+            (0.00462980632892, 0.00504450665284, -0.000214389503509), (0.00467975779516, 0.00509893236438, -0.000252029976818), (0.00473512942202, 0.00515926373038, -0.000265),
+            (0.00479050104889, 0.00521959509637, -0.000252029976818), (0.00484045251513, 0.00527402080791, -0.000214389503509), (0.00488009422318, 0.00531721329714, -0.000155763091858),
+            (0.00490554576647, 0.00534494458228, -8.18895035094e-05)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+        def Capsule "C036" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000479906040359
+            float radius = 0.000269112227853
+            float3[] extent = [(-0.000509065248032, -0.000269112227853, -0.000269112227853), (0.000509065248032, 0.000269112227853, 0.000269112227853)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00455289043472, 0.00531536114675, 0)
+            quatd xformOp:orient = (0.346786835844, 0, 0, 0.937943969801)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C037" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000479906040359
+            float radius = 0.000269112227853
+            float3[] extent = [(-0.000509065248032, -0.000269112227853, -0.000269112227853), (0.000509065248032, 0.000269112227853, 0.000269112227853)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00417814925534, 0.00561470784913, 0)
+            quatd xformOp:orient = (0.314444345849, 0, 0, 0.94927591003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C038" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000479906040359
+            float radius = 0.000269112227853
+            float3[] extent = [(-0.000509065248032, -0.000269112227853, -0.000269112227853), (0.000509065248032, 0.000269112227853, 0.000269112227853)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00378378573733, 0.00588768553211, 0)
+            quatd xformOp:orient = (0.281732556841, 0, 0, 0.959492973614)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C039" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000479906040359
+            float radius = 0.000269112227853
+            float3[] extent = [(-0.000509065248032, -0.000269112227853, -0.000269112227853), (0.000509065248032, 0.000269112227853, 0.000269112227853)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00337165197691, 0.00613301217817, 0)
+            quatd xformOp:orient = (0.248689887165, 0, 0, 0.968583161129)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C040" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000479906040359
+            float radius = 0.000269112227853
+            float3[] extent = [(-0.000509065248032, -0.000269112227853, -0.000269112227853), (0.000509065248032, 0.000269112227853, 0.000269112227853)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00294368352682, 0.00634953563065, 0)
+            quatd xformOp:orient = (0.215355143768, 0, 0, 0.976535796606)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C041" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000399945624232
+            float radius = 0.000267855799198
+            float3[] extent = [(-0.000467828611314, -0.000267855799198, -0.000267855799198), (0.000467828611314, 0.000267855799198, 0.000267855799198)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00253964004077, 0.00652301251115, 0)
+            quatd xformOp:orient = (0.184575148366, 0, 0, 0.982818403677)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C042" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000399945624232
+            float radius = 0.000255556162142
+            float3[] extent = [(-0.000455528974258, -0.000255556162142, -0.000255556162142), (0.000455528974258, 0.000255556162142, 0.000255556162142)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.0021631071243, 0.0066573591856, 0)
+            quatd xformOp:orient = (0.15643446504, 0, 0, 0.987688340595)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C043" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000399945624232
+            float radius = 0.000214125805743
+            float3[] extent = [(-0.000414098617859, -0.000214125805743, -0.000214125805743), (0.000414098617859, 0.000214125805743, 0.000214125805743)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00177951860199, 0.00676999093814, 0)
+            quatd xformOp:orient = (0.128166191521, 0, 0, 0.991752704736)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C044" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000399945624232
+            float radius = 0.00018483324907
+            float3[] extent = [(-0.000384806061186, -0.00018483324907, -0.00018483324907), (0.000384806061186, 0.00018483324907, 0.00018483324907)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.00139012565988, 0.00686054038739, 0)
+            quatd xformOp:orient = (0.0997933838178, 0, 0, 0.995008181145)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C045" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000399945624232
+            float radius = 0.000182855799198
+            float3[] extent = [(-0.000382828611314, -0.000182855799198, -0.000182855799198), (0.000382828611314, 0.000182855799198, 0.000182855799198)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.000996198416806, 0.00692871217988, 0)
+            quatd xformOp:orient = (0.0713391831992, 0, 0, 0.99745211461)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C046" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000399945624232
+            float radius = 0.000182855799198
+            float3[] extent = [(-0.000382828611314, -0.000182855799198, -0.000182855799198), (0.000382828611314, 0.000182855799198, 0.000182855799198)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.000599021781559, 0.00697428395339, 0)
+            quatd xformOp:orient = (0.0428267973196, 0, 0, 0.999082511823)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Capsule "C047" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            float height = 0.000399945624232
+            float radius = 0.000182855799198
+            float3[] extent = [(-0.000382828611314, -0.000182855799198, -0.000182855799198), (0.000382828611314, 0.000182855799198, 0.000182855799198)]
+            bool physics:collisionEnabled = true
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            double3 xformOp:translate = (0.000199891261769, 0.00699710706226, 0)
+            quatd xformOp:orient = (0.0142794812898, 0, 0, 0.999898043009)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+        def Mesh "PreciseTaperTip" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(4.28798901577e-19, -0.00702079430305, -4.98857660755e-05), (0.00105352194684, -0.00687492049523, 4.98857660755e-05)]
+            int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+            int[] faceVertexIndices = [
+            0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5,
+            0, 5, 6, 0, 6, 7, 0, 7, 8, 0, 8, 9,
+            0, 9, 10, 0, 10, 11, 0, 11, 12, 0, 12, 13,
+            0, 13, 14, 0, 14, 15, 0, 15, 16, 0, 16, 17,
+            0, 17, 18, 0, 18, 19, 0, 19, 20, 0, 20, 1,
+            1, 21, 22, 1, 22, 2, 2, 22, 23, 2, 23, 3,
+            3, 23, 24, 3, 24, 4, 4, 24, 25, 4, 25, 5,
+            5, 25, 26, 5, 26, 6, 6, 26, 27, 6, 27, 7,
+            7, 27, 28, 7, 28, 8, 8, 28, 29, 8, 29, 9,
+            9, 29, 30, 9, 30, 10, 10, 30, 31, 10, 31, 11,
+            11, 31, 32, 11, 32, 12, 12, 32, 33, 12, 33, 13,
+            13, 33, 34, 13, 34, 14, 14, 34, 35, 14, 35, 15,
+            15, 35, 36, 15, 36, 16, 16, 36, 37, 16, 37, 17,
+            17, 37, 38, 17, 38, 18, 18, 38, 39, 18, 39, 19,
+            19, 39, 40, 19, 40, 20, 20, 40, 21, 20, 21, 1,
+            21, 41, 42, 21, 42, 22, 22, 42, 43, 22, 43, 23,
+            23, 43, 44, 23, 44, 24, 24, 44, 45, 24, 45, 25,
+            25, 45, 46, 25, 46, 26, 26, 46, 47, 26, 47, 27,
+            27, 47, 48, 27, 48, 28, 28, 48, 49, 28, 49, 29,
+            29, 49, 50, 29, 50, 30, 30, 50, 51, 30, 51, 31,
+            31, 51, 52, 31, 52, 32, 32, 52, 53, 32, 53, 33,
+            33, 53, 54, 33, 54, 34, 34, 54, 55, 34, 55, 35,
+            35, 55, 56, 35, 56, 36, 36, 56, 57, 36, 57, 37,
+            37, 57, 58, 37, 58, 38, 38, 58, 59, 38, 59, 39,
+            39, 59, 60, 39, 60, 40, 40, 60, 41, 40, 41, 21,
+            41, 61, 62, 41, 62, 42, 42, 62, 63, 42, 63, 43,
+            43, 63, 64, 43, 64, 44, 44, 64, 65, 44, 65, 45,
+            45, 65, 66, 45, 66, 46, 46, 66, 67, 46, 67, 47,
+            47, 67, 68, 47, 68, 48, 48, 68, 69, 48, 69, 49,
+            49, 69, 70, 49, 70, 50, 50, 70, 71, 50, 71, 51,
+            51, 71, 72, 51, 72, 52, 52, 72, 73, 52, 73, 53,
+            53, 73, 74, 53, 74, 54, 54, 74, 75, 54, 75, 55,
+            55, 75, 76, 55, 76, 56, 56, 76, 77, 56, 77, 57,
+            57, 77, 78, 57, 78, 58, 58, 78, 79, 58, 79, 59,
+            59, 79, 80, 59, 80, 60, 60, 80, 61, 60, 61, 41,
+            61, 81, 82, 61, 82, 62, 62, 82, 83, 62, 83, 63,
+            63, 83, 84, 63, 84, 64, 64, 84, 85, 64, 85, 65,
+            65, 85, 86, 65, 86, 66, 66, 86, 87, 66, 87, 67,
+            67, 87, 88, 67, 88, 68, 68, 88, 89, 68, 89, 69,
+            69, 89, 90, 69, 90, 70, 70, 90, 91, 70, 91, 71,
+            71, 91, 92, 71, 92, 72, 72, 92, 93, 72, 93, 73,
+            73, 93, 94, 73, 94, 74, 74, 94, 95, 74, 95, 75,
+            75, 95, 96, 75, 96, 76, 76, 96, 97, 76, 97, 77,
+            77, 97, 98, 77, 98, 78, 78, 98, 99, 78, 99, 79,
+            79, 99, 100, 79, 100, 80, 80, 100, 81, 80, 81, 61,
+            81, 101, 102, 81, 102, 82, 82, 102, 103, 82, 103, 83,
+            83, 103, 104, 83, 104, 84, 84, 104, 105, 84, 105, 85,
+            85, 105, 106, 85, 106, 86, 86, 106, 107, 86, 107, 87,
+            87, 107, 108, 87, 108, 88, 88, 108, 109, 88, 109, 89,
+            89, 109, 110, 89, 110, 90, 90, 110, 111, 90, 111, 91,
+            91, 111, 112, 91, 112, 92, 92, 112, 113, 92, 113, 93,
+            93, 113, 114, 93, 114, 94, 94, 114, 115, 94, 115, 95,
+            95, 115, 116, 95, 116, 96, 96, 116, 117, 96, 117, 97,
+            97, 117, 118, 97, 118, 98, 98, 118, 119, 98, 119, 99,
+            99, 119, 120, 99, 120, 100, 100, 120, 101, 100, 101, 81,
+            101, 103, 102, 101, 104, 103, 101, 105, 104, 101, 106, 105,
+            101, 107, 106, 101, 108, 107, 101, 109, 108, 101, 110, 109,
+            101, 111, 110, 101, 112, 111, 101, 113, 112, 101, 114, 113,
+            101, 115, 114, 101, 116, 115, 101, 117, 116, 101, 118, 117,
+            101, 119, 118, 101, 120, 119
+            ]
+            point3f[] points = [
+            (4.28798901577e-19, -0.00700281749604, 0), (4.50765039095e-06, -0.00701472192864, 0), (4.50727593901e-06, -0.00701413921347, 3.67911953104e-06),
+            (4.50618923715e-06, -0.00701244810819, 6.99810120845e-06), (4.50449665931e-06, -0.00700981414996, 9.63205998093e-06), (4.50236388682e-06, -0.00700649516897, 1.1323165612e-05),
+            (4.4999996903e-06, -0.0070028160502, 1.19058808998e-05), (4.49763549378e-06, -0.00699913693143, 1.1323165612e-05), (4.49550272129e-06, -0.00699581795043, 9.63205998093e-06),
+            (4.49381014346e-06, -0.0069931839922, 6.99810120845e-06), (4.4927234416e-06, -0.00699149288692, 3.67911953104e-06), (4.49234898965e-06, -0.00699091017176, 1.4580498935e-21),
+            (4.4927234416e-06, -0.00699149288692, -3.67911953104e-06), (4.49381014346e-06, -0.0069931839922, -6.99810120845e-06), (4.49550272129e-06, -0.00699581795043, -9.63205998093e-06),
+            (4.49763549378e-06, -0.00699913693143, -1.1323165612e-05), (4.4999996903e-06, -0.0070028160502, -1.19058808998e-05), (4.50236388682e-06, -0.00700649516897, -1.1323165612e-05),
+            (4.50449665931e-06, -0.00700981414996, -9.63205998093e-06), (4.50618923715e-06, -0.00701244810819, -6.99810120845e-06), (4.50727593901e-06, -0.00701413921347, -3.67911953104e-06),
+            (1.80462472201e-05, -0.00702079430305, 0), (1.80439827499e-05, -0.00701991332325, 5.56230589875e-06), (1.80374110016e-05, -0.0070173566203, 1.05801345413e-05),
+            (1.80271752635e-05, -0.0070133744621, 1.45623058987e-05), (1.80142774811e-05, -0.00700835665003, 1.71190172933e-05), (1.79999801792e-05, -0.00700279436251, 1.8e-05),
+            (1.79856828773e-05, -0.00699723207499, 1.71190172933e-05), (1.79727850949e-05, -0.00699221426292, 1.45623058987e-05), (1.79625493569e-05, -0.00698823210472, 1.05801345413e-05),
+            (1.79559776085e-05, -0.00698567540177, 5.56230589875e-06), (1.79537131384e-05, -0.00698479442197, 2.20436423847e-21), (1.79559776085e-05, -0.00698567540177, -5.56230589875e-06),
+            (1.79625493569e-05, -0.00698823210472, -1.05801345413e-05), (1.79727850949e-05, -0.00699221426292, -1.45623058987e-05), (1.79856828773e-05, -0.00699723207499, -1.71190172933e-05),
+            (1.79999801792e-05, -0.00700279436251, -1.8e-05), (1.80142774811e-05, -0.00700835665003, -1.71190172933e-05), (1.80271752635e-05, -0.0070133744621, -1.45623058987e-05),
+            (1.80374110016e-05, -0.0070173566203, -1.05801345413e-05), (1.80439827499e-05, -0.00701991332325, -5.56230589875e-06), (0.000180447473962, -0.00701868012699, 0),
+            (0.000180424602962, -0.00701779053717, 5.61850501132e-06), (0.000180358228733, -0.00701520884696, 1.06870316057e-05), (0.000180254848449, -0.0070111877702, 1.47094370856e-05),
+            (0.000180124581692, -0.00700612091788, 1.72919803769e-05), (0.000179980179879, -0.00700050426882, 1.81818641485e-05), (0.000179835778066, -0.00699488761976, 1.72919803769e-05),
+            (0.000179705511309, -0.00698982076744, 1.47094370856e-05), (0.000179602131024, -0.00698579969067, 1.06870316057e-05), (0.000179535756796, -0.00698321800047, 5.61850501132e-06),
+            (0.000179512885796, -0.00698232841065, 2.2266361732e-21), (0.000179535756796, -0.00698321800047, -5.61850501132e-06), (0.000179602131024, -0.00698579969067, -1.06870316057e-05),
+            (0.000179705511309, -0.00698982076744, -1.47094370856e-05), (0.000179835778066, -0.00699488761976, -1.72919803769e-05), (0.000179980179879, -0.00700050426882, -1.81818641485e-05),
+            (0.000180124581692, -0.00700612091788, -1.72919803769e-05), (0.000180254848449, -0.0070111877702, -1.47094370856e-05), (0.000180358228733, -0.00701520884696, -1.06870316057e-05),
+            (0.000180424602962, -0.00701779053717, -5.61850501132e-06), (0.000420977821571, -0.00701070289389, 0), (0.000420917641958, -0.00700970070003, 6.33900059268e-06),
+            (0.000420742993918, -0.00700679222017, 1.20574956409e-05), (0.00042047097322, -0.00700226215659, 1.65957190064e-05), (0.000420128207143, -0.00699655394347, 1.95094377662e-05),
+            (0.00041974824802, -0.00699022634048, 2.05134368273e-05), (0.000419368288898, -0.00698389873749, 1.95094377662e-05), (0.000419025522821, -0.00697819052437, 1.65957190064e-05),
+            (0.000418753502123, -0.00697366046079, 1.20574956409e-05), (0.000418578854083, -0.00697075198094, 6.33900059268e-06), (0.00041851867447, -0.00696974978708, 2.51217147501e-21),
+            (0.000418578854083, -0.00697075198094, -6.33900059268e-06), (0.000418753502123, -0.00697366046079, -1.20574956409e-05), (0.000419025522821, -0.00697819052437, -1.65957190064e-05),
+            (0.000419368288898, -0.00698389873749, -1.95094377662e-05), (0.00041974824802, -0.00699022634048, -2.05134368273e-05), (0.000420128207143, -0.00699655394347, -1.95094377662e-05),
+            (0.00042047097322, -0.00700226215659, -1.65957190064e-05), (0.000420742993918, -0.00700679222017, -1.20574956409e-05), (0.000420917641958, -0.00700970070003, -6.33900059268e-06),
+            (0.000721782901531, -0.00699540390139, 0), (0.000721633586666, -0.00699395676571, 9.18536190437e-06), (0.000721200258052, -0.00698975701441, 1.74715965874e-05),
+            (0.000720525332911, -0.0069832157484, 2.40475896646e-05), (0.00071967487762, -0.00697497327238, 2.82696371161e-05), (0.000718732140668, -0.00696583641732, 2.97244555205e-05),
+            (0.000717789403715, -0.00695669956226, 2.82696371161e-05), (0.000716938948424, -0.00694845708624, 2.40475896646e-05), (0.000716264023284, -0.00694191582023, 1.74715965874e-05),
+            (0.00071583069467, -0.00693771606893, 9.18536190437e-06), (0.000715681379805, -0.00693626893325, 3.64019593096e-21), (0.00071583069467, -0.00693771606893, -9.18536190437e-06),
+            (0.000716264023284, -0.00694191582023, -1.74715965874e-05), (0.000716938948424, -0.00694845708624, -2.40475896646e-05), (0.000717789403715, -0.00695669956226, -2.82696371161e-05),
+            (0.000718732140668, -0.00696583641732, -2.97244555205e-05), (0.00071967487762, -0.00697497327238, -2.82696371161e-05), (0.000720525332911, -0.0069832157484, -2.40475896646e-05),
+            (0.000721200258052, -0.00698975701441, -1.74715965874e-05), (0.000721633586666, -0.00699395676571, -9.18536190437e-06), (0.00105352194684, -0.00697357260025, 0),
+            (0.00105315722691, -0.00697115841141, 1.54155494947e-05), (0.00105209876844, -0.00696415216249, 2.93221175985e-05), (0.00105045018072, -0.00695323967396, 4.03584325325e-05),
+            (0.001048372839, -0.00693948913624, 4.74441828965e-05), (0.00104607008797, -0.00692424654774, 4.98857660755e-05), (0.00104376733693, -0.00690900395925, 4.74441828965e-05),
+            (0.00104168999522, -0.00689525342153, 4.03584325325e-05), (0.0010400414075, -0.006884340933, 2.93221175985e-05), (0.00103898294903, -0.00687733468408, 1.54155494947e-05),
+            (0.00103861822909, -0.00687492049523, 6.10924437474e-21), (0.00103898294903, -0.00687733468408, -1.54155494947e-05), (0.0010400414075, -0.006884340933, -2.93221175985e-05),
+            (0.00104168999522, -0.00689525342153, -4.03584325325e-05), (0.00104376733693, -0.00690900395925, -4.74441828965e-05), (0.00104607008797, -0.00692424654774, -4.98857660755e-05),
+            (0.001048372839, -0.00693948913624, -4.74441828965e-05), (0.00105045018072, -0.00695323967396, -4.03584325325e-05), (0.00105209876844, -0.00696415216249, -2.93221175985e-05),
+            (0.00105315722691, -0.00697115841141, -1.54155494947e-05)
+            ]
+            bool physics:collisionEnabled = true
+            uniform token physics:approximation = "convexHull"
+            rel material:binding:physics = </DrAnmarNeedle22HalfCircleTaperCandidate/PhysicsMaterials/NeedleSteelPhysics>
+            token purpose = "guide"
+            token visibility = "invisible"
+            uniform token subdivisionScheme = "none"
+        }
+    }
+}

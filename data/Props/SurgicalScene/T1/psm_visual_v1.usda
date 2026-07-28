@@ -10,7 +10,7 @@ def Xform "psm" (
     prepend references = @../../../Robots/dVRK/PSM/psm_col.usd@</psm>
     assetInfo = {
         string name = "DrAnmarT1PSMVisualOverlay"
-        string version = "1.1.0"
+        string version = "1.2.0"
     }
     customData = {
         string drAnmarAssetRole = "render_overlay_only"
@@ -52,7 +52,7 @@ def Xform "psm" (
                 prepend apiSchemas = ["MaterialBindingAPI"]
             )
             {
-                rel material:binding = </psm/DrAnmarT1Looks/SatinSteel> (
+                rel material:binding = </psm/DrAnmarT1Looks/ShaftSatinSteel> (
                     bindMaterialAs = "strongerThanDescendants"
                 )
                 over "Shape_030"
@@ -131,7 +131,7 @@ def Xform "psm" (
                 prepend apiSchemas = ["MaterialBindingAPI"]
             )
             {
-                rel material:binding = </psm/DrAnmarT1Looks/SatinSteel> (
+                rel material:binding = </psm/DrAnmarT1Looks/JawSatinSteel> (
                     bindMaterialAs = "strongerThanDescendants"
                 )
                 over "Shape_022"
@@ -155,7 +155,7 @@ def Xform "psm" (
                 prepend apiSchemas = ["MaterialBindingAPI"]
             )
             {
-                rel material:binding = </psm/DrAnmarT1Looks/SatinSteel> (
+                rel material:binding = </psm/DrAnmarT1Looks/JawSatinSteel> (
                     bindMaterialAs = "strongerThanDescendants"
                 )
                 over "Shape_006"
@@ -179,7 +179,7 @@ def Xform "psm" (
                 prepend apiSchemas = ["MaterialBindingAPI"]
             )
             {
-                rel material:binding = </psm/DrAnmarT1Looks/SatinSteel> (
+                rel material:binding = </psm/DrAnmarT1Looks/WristSatinSteel> (
                     bindMaterialAs = "strongerThanDescendants"
                 )
                 over "Shape_001"
@@ -599,8 +599,13 @@ def Xform "psm" (
     {
         over "visuals_xform"
         {
-            over "tool_roll_link"
+            over "tool_roll_link" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
             {
+                rel material:binding = </psm/DrAnmarT1Looks/WristSatinSteel> (
+                    bindMaterialAs = "strongerThanDescendants"
+                )
                 over "Shape"
                 {
                     rel material:binding = None
@@ -631,15 +636,6 @@ def Xform "psm" (
                     rel material:binding = None
                 }
             }
-
-            over "visuals" (
-                prepend apiSchemas = ["MaterialBindingAPI"]
-            )
-            {
-                rel material:binding = </psm/DrAnmarT1Looks/SatinSteel> (
-                    bindMaterialAs = "strongerThanDescendants"
-                )
-            }
         }
     }
 
@@ -651,7 +647,7 @@ def Xform "psm" (
                 prepend apiSchemas = ["MaterialBindingAPI"]
             )
             {
-                rel material:binding = </psm/DrAnmarT1Looks/SatinSteel> (
+                rel material:binding = </psm/DrAnmarT1Looks/WristSatinSteel> (
                     bindMaterialAs = "strongerThanDescendants"
                 )
                 over "Shape_037"

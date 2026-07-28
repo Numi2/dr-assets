@@ -1,4 +1,4 @@
-DrAnmar Needle-Ready Tissue Unit 2.1.0
+DrAnmar Needle-Ready Tissue Unit 2.2.0
 
 The base geometry, topology, semantic sets, material seeds, and OpenUSD
 authoring code covered by `asset_manifest.json` were independently authored by

@@ -1,0 +1,212 @@
+{
+  "active_replacement": false,
+  "asset_id": "dranmar-needle-22mm-half-circle-taper-category-candidate-v1",
+  "asset_version": "1.0.0",
+  "clinical_validation": false,
+  "dependency_complete_directory": true,
+  "design_inputs": {
+    "comparison_only_physics_next": {
+      "path": "physics_next/needles/dr-anmar-needle-v1.json",
+      "sha256": "309981bb46ab14c86a6964d58dd623d9756c972f7ca83f7f0d1771af66d60d85",
+      "used_as_dimensional_authority": false
+    },
+    "manufacturer_category_source": {
+      "accessed_utc_date": "2026-07-28",
+      "category_facts_used": [
+        "22_mm_is_published_as_needle_length",
+        "one_half_circle_curvature_category",
+        "taper_point_category",
+        "longitudinal_ribbing_is_described_as_resisting_turning_rocking_and_twisting",
+        "swaging_is_described_as_a_smooth_factory_attachment"
+      ],
+      "document": "157677-230117-AH Suture Catalog",
+      "example_catalog_designations_not_modeled_as_twins": [
+        "SH-1",
+        "CT-3"
+      ],
+      "not_sourced_from_catalog": [
+        "body_diameter",
+        "tip_taper_length",
+        "swage_dimensions",
+        "rib_dimensions",
+        "mass_properties",
+        "friction",
+        "collision",
+        "textures"
+      ],
+      "provider": "Johnson & Johnson MedTech / Ethicon",
+      "url": "https://www.jnjmedtech.com/system/files/pdf/157677-230117-AH-Suture-Catalog-157677-230117.pdf"
+    },
+    "selected_dimensional_input": {
+      "path": "data/Props/SurgicalClosure/Needle/physics_profile.json",
+      "sha256": "746b3199e63cc42fefe42b94e883fb329f88c5f50c82844aa77c8573c39e9b6e"
+    }
+  },
+  "generator": {
+    "dependencies": {
+      "Pillow": "11.3.0",
+      "numpy": "2.2.6",
+      "usd-core": "25.11"
+    },
+    "deterministic": true,
+    "path": "tools/generate_needle_22_half_circle_taper_candidate.py",
+    "sha256": "07ab655d36d4067f734729e2e4d27fdf868e0f877e1f2922b6f979de82826a22",
+    "texture_size_px": 2048
+  },
+  "license": "mixed",
+  "licenses": {
+    "DrAnmar_authored_members": "Apache-2.0",
+    "NVIDIA_OpenPBR_members": "MIT-0"
+  },
+  "manufacturer_digital_twin": false,
+  "material_contexts": {
+    "fallback": "UsdPreviewSurface",
+    "native_rtx_appearance_qualified": false,
+    "primary": "OpenPBR_1.1_MaterialX_inherited"
+  },
+  "members": {
+    "LICENSE.txt": {
+      "bytes": 11358,
+      "license": "Apache-2.0",
+      "provenance": "canonical_Apache-2.0_text",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    "NOTICE.txt": {
+      "bytes": 683,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "112dc81889ecd5ae83474ed6455f4a8fd231599c3f2fb86dc3fb94ecf395e975"
+    },
+    "PROVENANCE.md": {
+      "bytes": 1403,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "8a8d011fde32021a2a52367a1d5b7dd993b478fcadc3f62e99c0dd42792bb519"
+    },
+    "README.md": {
+      "bytes": 2658,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "65347da75ded7c6a418c23f9b8e4bff9d211d60ae2ca6aa6ef6fd15ec13f0c2e"
+    },
+    "collision_report.json": {
+      "bytes": 35028,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "51d0cc578ae593d8052d21b28224387e10e70a7e5f2cf3d1300199f448e46c7a"
+    },
+    "dranmar_needle_22mm_half_circle_taper_candidate.usda": {
+      "bytes": 853,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "8282ed42ed486a29ea88f36d48fc373a4e06bb1b80f28a75741e4234af31e674"
+    },
+    "dranmar_needle_22mm_half_circle_taper_candidate_base.usda": {
+      "bytes": 3345,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "be710cb1c5a4799dcaf04d7a2270c896a176510c95ae459b420677c1f83d1ea1"
+    },
+    "dranmar_needle_22mm_half_circle_taper_candidate_geometry.usdc": {
+      "bytes": 4188671,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "c01ebde5872cdbc5dfcd6ecd29589f64b1be57619eb786269cadc4af671a170f"
+    },
+    "dranmar_needle_22mm_half_circle_taper_candidate_materials.usda": {
+      "bytes": 4751,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "bbe3a58718d9252d93f1b3960a24bb02a5e3c2ff49c0db12fc42b7692456142e"
+    },
+    "dranmar_needle_22mm_half_circle_taper_candidate_physics.usda": {
+      "bytes": 116058,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "2da4bcbc7b285c481695713abbf8defa26e593af820c5707b30468011bd0deba"
+    },
+    "dranmar_needle_22mm_half_circle_taper_candidate_physx.usda": {
+      "bytes": 11573,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "99c8ac1d7ec44d6e714f44eff6b60a8e4009e1e429fa4efddf33814b2cb1a1f0"
+    },
+    "geometry_contract.json": {
+      "bytes": 3834,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "34572317883d1567dd61d3f0d6df0ef193e2365d84e041938fffbe6e1d4a6090"
+    },
+    "geometry_report.json": {
+      "bytes": 2478,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "29ae480d3858e13af4be81704872bb4aea98c44ca0fd66a04a6254d47355af38"
+    },
+    "interaction_frames.json": {
+      "bytes": 3057,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "ee719d3eca07d7d96980f548fee710e46756db44cf9da859ec98c710b506528e"
+    },
+    "physics_profile.json": {
+      "bytes": 4531,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "161518626f0585a3442f0d6ba9dd7a2a40fbe3008316d30b2bf433ead760ded7"
+    },
+    "provenance.json": {
+      "bytes": 1140,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "9222ef7a142e2667ce9469161da2d3fa61afc5db856f9e72aca48493e5c8b33b"
+    },
+    "textures/needle_satin_basecolor.png": {
+      "bytes": 347098,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "2a0caea71ec471cb0cc09126ee166269d57385195719f23b49567b0c29921e08"
+    },
+    "textures/needle_satin_normal.png": {
+      "bytes": 1534939,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "2dbc9173c5dabfdcb333b3836dbdf41dadf09d59f0257347d4cfa22c11d26160"
+    },
+    "textures/needle_satin_roughness.png": {
+      "bytes": 257426,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "26e26e7874fc32ba2fc1a96654b8c375266ec78b784f7c3ec7b4c116e7aa6793"
+    },
+    "vendor/nvidia_physicalai_simready_materials_v0_2_0/LICENSE.md": {
+      "bytes": 1090,
+      "license": "MIT-0",
+      "provenance": "verbatim_NVIDIA_PhysicalAI_SimReady_Materials_v0.2.0",
+      "sha256": "18f74283f08ff1ed39a9c46dbe2622146d45f771023c3dbd9c631bb058e1421b"
+    },
+    "vendor/nvidia_physicalai_simready_materials_v0_2_0/PROVENANCE.md": {
+      "bytes": 621,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "ba8f1e2a4d1b0bb50b4eacdc5d704e4542f1de4323bedc74db950e34fc15b175"
+    },
+    "vendor/nvidia_physicalai_simready_materials_v0_2_0/open_pbr_uber_base_class.usda": {
+      "bytes": 47772,
+      "license": "MIT-0",
+      "provenance": "verbatim_NVIDIA_PhysicalAI_SimReady_Materials_v0.2.0",
+      "sha256": "bb76ff9fa9cd74b86b6be4ed3c6ed79cdca15eff6d603ca571bdf9ce21e10c5f"
+    }
+  },
+  "native_qualified": false,
+  "physics_calibration": false,
+  "primary_usd": "dranmar_needle_22mm_half_circle_taper_candidate.usda",
+  "quaternion_contract": {
+    "bare_orientation_wxyz_forbidden": true,
+    "explicit_conversion_fields": true,
+    "openusd_quat_serialization": "wxyz",
+    "runtime_and_JSON_canonical": "xyzw"
+  },
+  "schema": "dr.anmar.sim-ready-asset-manifest.v3",
+  "status": "inactive_unqualified_category_candidate"
+}

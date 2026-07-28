@@ -1,0 +1,160 @@
+{
+  "asset_id": "dranmar-needle-22mm-half-circle-taper-category-candidate-v1",
+  "coordinate_convention": {
+    "bare_orientation_wxyz_field_forbidden": true,
+    "frame_axes": "local_X_forward_local_Z_needle_plane_normal",
+    "needle_plane": "XY",
+    "openusd_orientation_field": "orientation_usd_wxyz",
+    "openusd_quaternion_serialization": "wxyz",
+    "runtime_orientation_field": "orientation_xyzw",
+    "runtime_quaternion_order": "xyzw",
+    "units": "meters",
+    "up_axis": "Z"
+  },
+  "needle_driver_grasp": {
+    "arc_fraction_from_tip": 0.65,
+    "orientation_usd_wxyz": [
+      0.5224985647159489,
+      0.0,
+      0.0,
+      0.8526401643540922
+    ],
+    "orientation_xyzw": [
+      0.0,
+      0.0,
+      0.8526401643540922,
+      0.5224985647159489
+    ],
+    "position_m": [
+      0.0062395560766751144,
+      0.0031792126146135825,
+      0.0
+    ],
+    "role": "preferred_flattened_ribbed_driver_grasp_frame",
+    "tangent_toward_swage_world": [
+      -0.4539904997395468,
+      0.8910065241883679,
+      0.0
+    ]
+  },
+  "needle_plane": {
+    "normal_world": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "orientation_usd_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "orientation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "role": "half_circle_plane_reference"
+  },
+  "needle_tip": {
+    "bodyward_tangent_world": [
+      1.0,
+      6.123233995736766e-17,
+      0.0
+    ],
+    "orientation_usd_wxyz": [
+      3.061616997868383e-17,
+      -0.0,
+      -0.0,
+      -1.0
+    ],
+    "orientation_xyzw": [
+      -0.0,
+      -0.0,
+      -1.0,
+      3.061616997868383e-17
+    ],
+    "penetration_forward_axis_world": [
+      -1.0,
+      -6.123233995736766e-17,
+      -0.0
+    ],
+    "position_m": [
+      4.287989015771313e-19,
+      -0.0070028174960433945,
+      0.0
+    ],
+    "role": "finite_curvature_taper_point_puncture_frame"
+  },
+  "runtime_spawn": {
+    "orientation_usd_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "orientation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "scale_xyz": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "schema": "dr.anmar.needle-interaction-frames.v2",
+  "swage_mouth": {
+    "orientation_usd_wxyz": [
+      1.0,
+      -0.0,
+      0.0,
+      -3.061616997868383e-17
+    ],
+    "orientation_xyzw": [
+      -0.0,
+      0.0,
+      -3.061616997868383e-17,
+      1.0
+    ],
+    "position_m": [
+      4.287989015771313e-19,
+      0.0070028174960433945,
+      0.0
+    ],
+    "recess_axis_toward_body_world": [
+      1.0,
+      -6.123233995736766e-17,
+      -0.0
+    ],
+    "role": "true_blind_swage_recess_mouth"
+  },
+  "swage_recess_bottom": {
+    "orientation_usd_wxyz": [
+      1.0,
+      -0.0,
+      0.0,
+      -3.061616997868383e-17
+    ],
+    "orientation_xyzw": [
+      -0.0,
+      0.0,
+      -3.061616997868383e-17,
+      1.0
+    ],
+    "position_m": [
+      0.000818127391690508,
+      0.006954863079447155,
+      0.0
+    ],
+    "role": "blind_swage_recess_bottom"
+  }
+}

@@ -10,7 +10,7 @@ def Xform "Needle" (
     prepend references = @../../Surgical_needle/needle_sdf.usd@</Needle>
     assetInfo = {
         string name = "DrAnmarT1LegacyNeedleVisualOverlay"
-        string version = "1.1.0"
+        string version = "1.2.0"
     }
     customData = {
         string drAnmarAssetRole = "render_overlay_only"

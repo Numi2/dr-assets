@@ -2,7 +2,7 @@
   "schema": "dr.anmar.sim-ready-asset-manifest.v2",
   "asset_id": "dranmar-needle-ready-tissue-v2",
   "asset_name": "DrAnmar Needle-Ready Tissue Unit",
-  "asset_version": "2.1.0",
+  "asset_version": "2.2.0",
   "primary_usd": "needle_ready_tissue_unit.usda",
   "default_lod": "contact",
   "dependency_complete_directory": false,
@@ -13,7 +13,7 @@
   "generated_geometry": true,
   "generator": {
     "path": "tools/generate_needle_ready_tissue.py",
-    "sha256": "eaaa057e9a12e9f2c4d274acc466bb37ee4169098af188e6d8b287b300521d44",
+    "sha256": "ae9a1452fc65f4866f33c23eb62851eb304ec02f48dd187227da7c3d759536bc",
     "dependency_policy": "Python_standard_library_only",
     "deterministic": true
   },
@@ -24,19 +24,19 @@
     },
     "NOTICE.txt": {
       "bytes": 1257,
-      "sha256": "1831d3b39bb6d96466e065341ef29084aa4378df08ea8fb796770cba5049932a"
+      "sha256": "9bfbc61e34d31309910a0166808b055943ec95b6f4b9472578ae15315dd67ddf"
     },
     "README.md": {
-      "bytes": 1718,
-      "sha256": "d7c4ac0d2aec8503b1b23f03ed46e7e5eaad66ee66cda623763cd902bc59908a"
+      "bytes": 2198,
+      "sha256": "ff1fe1dcba1d3cdb820d19963bd3ff7e87e089cd40769d6e09d11ffad4275aff"
     },
     "geometry_contract.json": {
-      "bytes": 8835,
-      "sha256": "75f0ca13e9780b31950f8d2f07da724d621cf80c60c707b643a90b6174b9e9e2"
+      "bytes": 9689,
+      "sha256": "b4a1e94dd29e7ed1ea643358e454530bf7a3ba379ddcca17e933a1ef25119866"
     },
     "geometry_report.json": {
-      "bytes": 7190,
-      "sha256": "31bd186229973560d26818ed33996f27b8c1c8cd8cb0ea26194a45c7f1cc9268"
+      "bytes": 8723,
+      "sha256": "54f01040c67c90ac544c399d38edf18b46b4a8e54c926a3bd76841351413ad27"
     },
     "interaction_frames.json": {
       "bytes": 586,
@@ -44,31 +44,31 @@
     },
     "lod_mapping.json": {
       "bytes": 51599,
-      "sha256": "2534a6633041b4fed297b7916db6a69581b8d6fe28994ecf10974bc0d9e42afb"
+      "sha256": "40ca93f884866df730ff0c8efb1d51ab7c2aabee6f7df3d49fd6d863096aa5f9"
     },
     "needle_ready_tissue_contact.usda": {
-      "bytes": 1397286,
-      "sha256": "2932c4d00b482deac30dda83c48159b0f4bc799b825b04e413c395e8393df764"
+      "bytes": 1851779,
+      "sha256": "b234193e135f016e83a8c2b7dbbd1245a6b4e3c0671c21b7d23fb52861af409e"
     },
     "needle_ready_tissue_training.usda": {
-      "bytes": 291208,
-      "sha256": "e267763c06c0b77aefc780b7c0a56cb1613bc52dc733bc56306482116bffa50a"
+      "bytes": 420653,
+      "sha256": "5d13933d13f72d5999607f40ebfc34f23113578eeb5a9ebe98cb6822a91e141c"
     },
     "needle_ready_tissue_unit.usda": {
       "bytes": 1423,
-      "sha256": "53b1fead7ef2a12702909c71396a71141446c415c3c3713834912dddc51aad64"
+      "sha256": "c0a8ac38066b3272b817c16afd655bb31e41538a891c6ee30d468a011b88745a"
     },
     "needle_ready_tissue_validation.usda": {
-      "bytes": 10486467,
-      "sha256": "ceb4198988315249253a7fa63c2967c8ad2a12d800319a616427492d30ec993f"
+      "bytes": 12290149,
+      "sha256": "09500cf0e47807b823ea0d7ff84c664dbda10cfe57e194da291a1c7014bfe54c"
     },
     "physics_profile.json": {
       "bytes": 1452,
-      "sha256": "84766420119349e8d35ce10613396c1f85adf048429247210edbeb52c6766ffa"
+      "sha256": "8a1a40de0cf727c6bba785300d8927ebd705135dfa1c4a9ef823fe4b08c7af52"
     },
     "qualification_contract.json": {
-      "bytes": 3000,
-      "sha256": "c70a692a4324f46837bf32ee05a69ebce624b7687ed2c1f05fe1130633e473ea"
+      "bytes": 3269,
+      "sha256": "46539a97831afdb95188ce3c7056a38c064357c64b772f42c6570791b83e5274"
     }
   },
   "license": "Apache-2.0",

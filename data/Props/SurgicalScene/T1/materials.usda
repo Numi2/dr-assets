@@ -18,25 +18,26 @@ def Scope "DrAnmarT1VisualMaterials" (
         string drAnmarPrimaryMaterialContext = "OpenPBR_1_1_MaterialX"
         string drAnmarTextureColorContract = "basecolor_sRGB_roughness_and_normal_raw"
         string drAnmarVendorDependency = "NVIDIA_PhysicalAI_SimReady_Materials_v0.2.0_MIT-0"
-        string drAnmarVersion = "1.1.0"
+        string drAnmarVersion = "1.2.0"
     }
 )
 {
-    def Material "SatinSteel" (
+    def Material "ShaftSatinSteel" (
         inherits = </open_pbr_uber_base>
     )
     {
-        token outputs:surface.connect = </DrAnmarT1VisualMaterials/SatinSteel/PreviewSurface.outputs:surface>
+        token outputs:surface.connect = </DrAnmarT1VisualMaterials/ShaftSatinSteel/PreviewSurface.outputs:surface>
         custom string drAnmarOpenPBRInputMode = "constants_no_uv_contract"
         custom string drAnmarPreviewFallback = "UsdPreviewSurface"
 
         float inputs:base_weight = 1
-        color3f inputs:base_color = (0.43, 0.47, 0.52)
+        color3f inputs:base_color = (0.4, 0.43, 0.47)
         float inputs:base_diffuse_roughness = 0
-        float inputs:base_metalness = 0.9
-        float inputs:specular_weight = 1
+        float inputs:base_metalness = 0.91
+        float inputs:specular_weight = 0.88
         color3f inputs:specular_color = (1, 1, 1)
-        float inputs:specular_roughness = 0.42
+        float inputs:specular_roughness = 0.58
+        float inputs:specular_roughness_anisotropy = 0.34
         float inputs:specular_ior = 1.5
         float inputs:coat_weight = 0
         float inputs:subsurface_weight = 0
@@ -46,9 +47,77 @@ def Scope "DrAnmarT1VisualMaterials" (
         def Shader "PreviewSurface"
         {
             uniform token info:id = "UsdPreviewSurface"
-            color3f inputs:diffuseColor = (0.43, 0.47, 0.52)
+            color3f inputs:diffuseColor = (0.4, 0.43, 0.47)
+            float inputs:metallic = 0.91
+            float inputs:roughness = 0.58
+            float inputs:ior = 1.5
+            float inputs:clearcoat = 0
+            float inputs:clearcoatRoughness = 1
+            token outputs:surface
+        }
+    }
+    def Material "WristSatinSteel" (
+        inherits = </open_pbr_uber_base>
+    )
+    {
+        token outputs:surface.connect = </DrAnmarT1VisualMaterials/WristSatinSteel/PreviewSurface.outputs:surface>
+        custom string drAnmarOpenPBRInputMode = "constants_no_uv_contract"
+        custom string drAnmarPreviewFallback = "UsdPreviewSurface"
+
+        float inputs:base_weight = 1
+        color3f inputs:base_color = (0.43, 0.46, 0.5)
+        float inputs:base_diffuse_roughness = 0
+        float inputs:base_metalness = 0.91
+        float inputs:specular_weight = 0.88
+        color3f inputs:specular_color = (1, 1, 1)
+        float inputs:specular_roughness = 0.54
+        float inputs:specular_roughness_anisotropy = 0.2
+        float inputs:specular_ior = 1.5
+        float inputs:coat_weight = 0
+        float inputs:subsurface_weight = 0
+        float inputs:transmission_weight = 0
+        bool inputs:geometry_thin_walled = false
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor = (0.43, 0.46, 0.5)
+            float inputs:metallic = 0.91
+            float inputs:roughness = 0.54
+            float inputs:ior = 1.5
+            float inputs:clearcoat = 0
+            float inputs:clearcoatRoughness = 1
+            token outputs:surface
+        }
+    }
+    def Material "JawSatinSteel" (
+        inherits = </open_pbr_uber_base>
+    )
+    {
+        token outputs:surface.connect = </DrAnmarT1VisualMaterials/JawSatinSteel/PreviewSurface.outputs:surface>
+        custom string drAnmarOpenPBRInputMode = "constants_no_uv_contract"
+        custom string drAnmarPreviewFallback = "UsdPreviewSurface"
+
+        float inputs:base_weight = 1
+        color3f inputs:base_color = (0.36, 0.39, 0.42)
+        float inputs:base_diffuse_roughness = 0
+        float inputs:base_metalness = 0.9
+        float inputs:specular_weight = 0.84
+        color3f inputs:specular_color = (1, 1, 1)
+        float inputs:specular_roughness = 0.62
+        float inputs:specular_roughness_anisotropy = 0.1
+        float inputs:specular_ior = 1.5
+        float inputs:coat_weight = 0
+        float inputs:subsurface_weight = 0
+        float inputs:transmission_weight = 0
+        bool inputs:geometry_thin_walled = false
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor = (0.36, 0.39, 0.42)
             float inputs:metallic = 0.9
-            float inputs:roughness = 0.42
+            float inputs:roughness = 0.62
             float inputs:ior = 1.5
             float inputs:clearcoat = 0
             float inputs:clearcoatRoughness = 1
@@ -64,12 +133,13 @@ def Scope "DrAnmarT1VisualMaterials" (
         custom string drAnmarPreviewFallback = "UsdPreviewSurface"
 
         float inputs:base_weight = 1
-        color3f inputs:base_color = (0.5, 0.54, 0.6)
+        color3f inputs:base_color = (0.39, 0.42, 0.46)
         float inputs:base_diffuse_roughness = 0
-        float inputs:base_metalness = 0.92
-        float inputs:specular_weight = 1
+        float inputs:base_metalness = 0.88
+        float inputs:specular_weight = 0.78
         color3f inputs:specular_color = (1, 1, 1)
-        float inputs:specular_roughness = 0.36
+        float inputs:specular_roughness = 0.62
+        float inputs:specular_roughness_anisotropy = 0.16
         float inputs:specular_ior = 1.5
         float inputs:coat_weight = 0
         float inputs:subsurface_weight = 0
@@ -79,9 +149,9 @@ def Scope "DrAnmarT1VisualMaterials" (
         def Shader "PreviewSurface"
         {
             uniform token info:id = "UsdPreviewSurface"
-            color3f inputs:diffuseColor = (0.5, 0.54, 0.6)
-            float inputs:metallic = 0.92
-            float inputs:roughness = 0.36
+            color3f inputs:diffuseColor = (0.39, 0.42, 0.46)
+            float inputs:metallic = 0.88
+            float inputs:roughness = 0.62
             float inputs:ior = 1.5
             float inputs:clearcoat = 0
             float inputs:clearcoatRoughness = 1
@@ -97,12 +167,13 @@ def Scope "DrAnmarT1VisualMaterials" (
         custom string drAnmarPreviewFallback = "UsdPreviewSurface"
 
         float inputs:base_weight = 1
-        color3f inputs:base_color = (0.035, 0.043, 0.05)
+        color3f inputs:base_color = (0.028, 0.034, 0.04)
         float inputs:base_diffuse_roughness = 0
         float inputs:base_metalness = 0
-        float inputs:specular_weight = 1
+        float inputs:specular_weight = 0.3
         color3f inputs:specular_color = (1, 1, 1)
-        float inputs:specular_roughness = 0.72
+        float inputs:specular_roughness = 0.82
+        float inputs:specular_roughness_anisotropy = 0
         float inputs:specular_ior = 1.46
         float inputs:coat_weight = 0
         float inputs:subsurface_weight = 0
@@ -112,9 +183,9 @@ def Scope "DrAnmarT1VisualMaterials" (
         def Shader "PreviewSurface"
         {
             uniform token info:id = "UsdPreviewSurface"
-            color3f inputs:diffuseColor = (0.035, 0.043, 0.05)
+            color3f inputs:diffuseColor = (0.028, 0.034, 0.04)
             float inputs:metallic = 0
-            float inputs:roughness = 0.72
+            float inputs:roughness = 0.82
             float inputs:ior = 1.46
             float inputs:clearcoat = 0
             float inputs:clearcoatRoughness = 1
@@ -130,21 +201,22 @@ def Scope "DrAnmarT1VisualMaterials" (
         custom string drAnmarPreviewFallback = "UsdPreviewSurface"
 
         float inputs:base_weight = 1
-        color3f inputs:base_color = (0.42, 0.46, 0.5)
+        color3f inputs:base_color = (0.39, 0.42, 0.46)
         asset inputs:base_color_texture_file = @textures/steel_basecolor.png@ (
             colorSpace = "sRGB"
         )
         float inputs:base_diffuse_roughness = 0
         float inputs:base_metalness = 0.86
-        float inputs:specular_weight = 1
+        float inputs:specular_weight = 0.86
         color3f inputs:specular_color = (1, 1, 1)
-        float inputs:specular_roughness = 0.46
+        float inputs:specular_roughness = 0.58
+        float inputs:specular_roughness_anisotropy = 0.24
         asset inputs:specular_roughness_texture_file = @textures/steel_roughness.png@ (
             colorSpace = "raw"
         )
         float inputs:specular_ior = 1.5
         float inputs:fuzz_weight = 0
-        color3f inputs:fuzz_color = (0.42, 0.46, 0.5)
+        color3f inputs:fuzz_color = (0.39, 0.42, 0.46)
         float inputs:fuzz_roughness = 0.92
         float inputs:coat_weight = 0
         float inputs:subsurface_weight = 0
@@ -226,9 +298,10 @@ def Scope "DrAnmarT1VisualMaterials" (
         )
         float inputs:base_diffuse_roughness = 0
         float inputs:base_metalness = 0
-        float inputs:specular_weight = 1
+        float inputs:specular_weight = 0.32
         color3f inputs:specular_color = (1, 1, 1)
-        float inputs:specular_roughness = 0.68
+        float inputs:specular_roughness = 0.78
+        float inputs:specular_roughness_anisotropy = 0
         asset inputs:specular_roughness_texture_file = @textures/pad_roughness.png@ (
             colorSpace = "raw"
         )
@@ -241,7 +314,7 @@ def Scope "DrAnmarT1VisualMaterials" (
         float inputs:transmission_weight = 0
         bool inputs:geometry_thin_walled = false
         float inputs:geometry_normal_scale = 1
-        asset inputs:geometry_normal_texture_file = @textures/pad_normal.jpg@ (
+        asset inputs:geometry_normal_texture_file = @textures/pad_normal.png@ (
             colorSpace = "raw"
         )
         bool inputs:geometry_normal_texture_flip_g = false
@@ -291,7 +364,7 @@ def Scope "DrAnmarT1VisualMaterials" (
         def Shader "NormalTexture"
         {
             uniform token info:id = "UsdUVTexture"
-            asset inputs:file = @textures/pad_normal.jpg@
+            asset inputs:file = @textures/pad_normal.png@
             token inputs:sourceColorSpace = "raw"
             float4 inputs:scale = (2, 2, 2, 1)
             float4 inputs:bias = (-1, -1, -1, 0)
@@ -316,9 +389,10 @@ def Scope "DrAnmarT1VisualMaterials" (
         )
         float inputs:base_diffuse_roughness = 0
         float inputs:base_metalness = 0
-        float inputs:specular_weight = 1
+        float inputs:specular_weight = 0.12
         color3f inputs:specular_color = (1, 1, 1)
-        float inputs:specular_roughness = 0.86
+        float inputs:specular_roughness = 0.9
+        float inputs:specular_roughness_anisotropy = 0
         asset inputs:specular_roughness_texture_file = @textures/drape_roughness.png@ (
             colorSpace = "raw"
         )
@@ -331,7 +405,7 @@ def Scope "DrAnmarT1VisualMaterials" (
         float inputs:transmission_weight = 0
         bool inputs:geometry_thin_walled = true
         float inputs:geometry_normal_scale = 1
-        asset inputs:geometry_normal_texture_file = @textures/drape_normal.jpg@ (
+        asset inputs:geometry_normal_texture_file = @textures/drape_normal.png@ (
             colorSpace = "raw"
         )
         bool inputs:geometry_normal_texture_flip_g = false
@@ -381,7 +455,7 @@ def Scope "DrAnmarT1VisualMaterials" (
         def Shader "NormalTexture"
         {
             uniform token info:id = "UsdUVTexture"
-            asset inputs:file = @textures/drape_normal.jpg@
+            asset inputs:file = @textures/drape_normal.png@
             token inputs:sourceColorSpace = "raw"
             float4 inputs:scale = (2, 2, 2, 1)
             float4 inputs:bias = (-1, -1, -1, 0)

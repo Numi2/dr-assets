@@ -17,7 +17,7 @@ import sys
 import types
 
 import pytest
-from PIL import Image, JpegImagePlugin
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_ROOT = ROOT / "data/Props/SurgicalTissue/NeedleReadyTissueUnit"
@@ -30,7 +30,14 @@ BASE_PHYSICS_FILES = {
     "needle_ready_tissue_unit.usda",
 }
 LODS = ("training", "contact", "validation")
-TISSUE_MATERIALS = ("surface", "bulk", "fascia", "wound")
+TISSUE_MATERIALS = (
+    "surface",
+    "bulk",
+    "fascia",
+    "wound_surface",
+    "wound_bulk",
+    "wound_fascia",
+)
 NVIDIA_VENDOR_MEMBERS = {
     "visual/vendor/nvidia_physicalai_simready_materials_v0_2_0/LICENSE.md",
     "visual/vendor/nvidia_physicalai_simready_materials_v0_2_0/Skin_Medium_normal.jpg",
@@ -122,7 +129,7 @@ def test_clean_temp_regeneration_is_byte_exact_and_removes_legacy_normals(
         destination = candidate / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(ASSET_ROOT / relative, destination)
-    stale = candidate / "visual/textures/surface_normal.png"
+    stale = candidate / "visual/textures/surface_normal.jpg"
     stale.parent.mkdir(parents=True, exist_ok=True)
     stale.write_bytes(b"stale-lossless-normal")
 
@@ -170,20 +177,19 @@ def test_visual_texture_contract_is_2048_and_color_spaces_are_explicit():
             path = VISUAL_ROOT / "textures" / f"{material}_{suffix}.png"
             width, height = _png_dimensions(path)
             assert (width, height) == (2048, 2048)
-        normal = VISUAL_ROOT / "textures" / f"{material}_normal.jpg"
+        normal = VISUAL_ROOT / "textures" / f"{material}_normal.png"
         with Image.open(normal) as image:
             assert image.size == (2048, 2048)
-            assert image.format == "JPEG"
+            assert image.format == "PNG"
             assert image.mode == "RGB"
-            assert JpegImagePlugin.get_sampling(image) == 0
         assert f"@textures/{material}_basecolor.png@" in materials
         assert f"@textures/{material}_roughness.png@" in materials
-        assert f"@textures/{material}_normal.jpg@" in materials
+        assert f"@textures/{material}_normal.png@" in materials
     for material in TISSUE_MATERIALS:
         path = VISUAL_ROOT / "textures" / f"{material}_subsurface_weight.png"
         assert _png_dimensions(path) == (2048, 2048)
         assert f"@textures/{material}_subsurface_weight.png@" in materials
-    for material in ("surface", "wound"):
+    for material in ("surface", "wound_surface", "wound_bulk"):
         roughness = Image.open(
             VISUAL_ROOT / "textures" / f"{material}_roughness.png"
         )
@@ -194,26 +200,31 @@ def test_visual_texture_contract_is_2048_and_color_spaces_are_explicit():
     assert payload["texture_color_contract"]["roughness"] == "raw"
     assert payload["texture_color_contract"]["normal"].startswith("raw_")
     assert payload["texture_color_contract"]["subsurface_weight"] == "raw"
-    assert payload["texture_encoding"]["normal"] == {
-        "format": "JPEG",
-        "subsampling": "4:4:4",
-        "quality": 99,
+    assert payload["texture_encoding"] == {
+        "basecolor_roughness_subsurface_normal": "lossless_PNG",
     }
-    assert materials.count('token inputs:sourceColorSpace = "sRGB"') == 6
-    assert materials.count('token inputs:sourceColorSpace = "raw"') == 12
+    assert materials.count('token inputs:sourceColorSpace = "sRGB"') == 8
+    assert materials.count('token inputs:sourceColorSpace = "raw"') == 16
 
 
 def test_materials_supply_openpbr_and_portable_restrained_preview_contexts():
     materials = (VISUAL_ROOT / "materials.usda").read_text(encoding="utf-8")
-    assert materials.count('uniform token info:id = "UsdPreviewSurface"') == 6
+    assert materials.count('uniform token info:id = "UsdPreviewSurface"') == 8
     assert "OmniSurfaceBase.mdl" not in materials
-    assert materials.count("inherits = </open_pbr_uber_base>") == 6
+    assert materials.count("inherits = </open_pbr_uber_base>") == 8
     assert "open_pbr_uber_base_class.usda" in materials
-    assert materials.count("bool inputs:geometry_thin_walled = false") == 6
-    assert materials.count("float inputs:coat_weight = 0") == 6
-    assert materials.count("float inputs:metallic = 0") == 6
-    assert materials.count("float inputs:clearcoat = 0") == 6
-    for material in ("Surface", "Bulk", "Fascia", "Wound"):
+    assert materials.count("bool inputs:geometry_thin_walled = false") == 8
+    assert materials.count("float inputs:coat_weight = 0") == 8
+    assert materials.count("float inputs:metallic = 0") == 8
+    assert materials.count("float inputs:clearcoat = 0") == 8
+    for material in (
+        "Surface",
+        "Bulk",
+        "Fascia",
+        "WoundSurface",
+        "WoundBulk",
+        "WoundFascia",
+    ):
         block = materials.split(f'def Material "{material}"', 1)[1].split(
             "        def Material ",
             1,
@@ -285,7 +296,18 @@ def test_each_overlay_reuses_base_visual_topology_and_has_face_varying_uvs():
         )
         expected_corners = 3 * report["lods"][lod]["surface_triangle_count"]
         assert uv_count == expected_corners
-        for material in ("Surface", "Bulk", "Fascia", "Wound"):
+        assert (
+            'string drAnmar:uvContract = '
+            '"semantic_metric_islands_sign_aware_tangent_handedness"'
+        ) in overlay
+        for material in (
+            "Surface",
+            "Bulk",
+            "Fascia",
+            "WoundSurface",
+            "WoundBulk",
+            "WoundFascia",
+        ):
             assert (
                 f"rel material:binding = </DrAnmarNeedleReadyTissue/VisualMaterials/{material}>"
             ) in overlay

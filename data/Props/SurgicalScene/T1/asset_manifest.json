@@ -46,6 +46,7 @@
   "entrypoints": {
     "legacy_needle": "legacy_needle_visual_v1.usda",
     "psm": "psm_visual_v1.usda",
+    "reference_or_rig": "reference_or_rig_v1.usda",
     "table": "table_visual_v1.usda"
   },
   "generator": {
@@ -55,7 +56,7 @@
       "pad": 58733,
       "steel": 41117
     },
-    "sha256": "2cbcb7b6d4b264313466e28d2542443908709a0bef3945bf4200b94e485f295f",
+    "sha256": "555b5f5f92af517806cfd9bdf0157e600cf90a465e08d7813ba489a13637bd34",
     "texture_size_px": 2048,
     "versions": {
       "Pillow": "11.3.0",
@@ -118,49 +119,56 @@
       "license": "Apache-2.0",
       "provenance": "authored_by_DrAnmar",
       "relative_path": "NOTICE.txt",
-      "sha256": "517531499372c9c49be79f549999da62f65eaf8d9430c1d54e0ba529ffdfd077"
+      "sha256": "95366df1df269c2393d0ff7dbd72c47ea87e01fcd2e505dae9fb7ccba53a55bc"
     },
     "PROVENANCE.md": {
       "bytes": 2185,
       "license": "Apache-2.0",
       "provenance": "authored_by_DrAnmar",
       "relative_path": "PROVENANCE.md",
-      "sha256": "6348f0c34470ed00537748abd8c2e325d813b6414609dacaac3cdc214e788005"
+      "sha256": "c8b1b4b873abb4021185b25da85ec2795e51f9272429f57a32a6c5813a8b405d"
     },
     "README.md": {
-      "bytes": 2370,
+      "bytes": 2589,
       "license": "Apache-2.0",
       "provenance": "authored_by_DrAnmar",
       "relative_path": "README.md",
-      "sha256": "940517715ba4d760f403afc9cef22725d3e0f9c734166ca7606a547d5ff00389"
+      "sha256": "9f5852c66b12d17c4cbcc60bbd13addf874e25c9dbb4e0cfe551443e7f3cd716"
     },
     "legacy_needle_visual_v1.usda": {
       "bytes": 1410,
       "license": "Apache-2.0",
       "provenance": "deterministically_generated_by_DrAnmar",
       "relative_path": "legacy_needle_visual_v1.usda",
-      "sha256": "0173b3d9cdf7d22d5f928cc35f5e09fdfe1470353e83d7a536c61e8c732a65fe"
+      "sha256": "b5a65906ff4fc3eb2778168498252ba6a18717b8c188156eeed1ed9d882d164d"
     },
     "materials.usda": {
-      "bytes": 16020,
+      "bytes": 19107,
       "license": "Apache-2.0",
       "provenance": "deterministically_generated_by_DrAnmar",
       "relative_path": "materials.usda",
-      "sha256": "144158d62f749e386d323ce84dd11348d218167adcd06b67e6873b3aff2930c8"
+      "sha256": "e954eebad10eb78618d4c2dd98a211ea93a316a3f6310ada54e5d8b5f7aab6db"
     },
     "psm_visual_v1.usda": {
-      "bytes": 16261,
+      "bytes": 16231,
       "license": "Apache-2.0",
       "provenance": "deterministically_generated_by_DrAnmar",
       "relative_path": "psm_visual_v1.usda",
-      "sha256": "534b8072d9e05a82df7707124c5a88715176fba1c58231aa09d8d8af062c2e84"
+      "sha256": "55ef56fc3c4de717478c0121278c755707d3b1ca924a41ec77f4234bf8353f6c"
+    },
+    "reference_or_rig_v1.usda": {
+      "bytes": 3447,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_by_DrAnmar",
+      "relative_path": "reference_or_rig_v1.usda",
+      "sha256": "409548cf967d41ece0cbcd32369277b5595a8b38e7ce943a1c0f802dd4774629"
     },
     "table_visual_v1.usda": {
-      "bytes": 748175,
+      "bytes": 1359976,
       "license": "Apache-2.0",
       "provenance": "deterministically_generated_by_DrAnmar",
       "relative_path": "table_visual_v1.usda",
-      "sha256": "9d0eea19c3e01941e5119a2f2f6e8f3a32abaff34eec9548c7f2fb34bd50edfe"
+      "sha256": "bdf611e904c89fbb790b1d181df9d36414239e7b4e4df21204997ec385740614"
     },
     "textures/drape_basecolor.png": {
       "bytes": 1638772,
@@ -169,19 +177,19 @@
       "relative_path": "textures/drape_basecolor.png",
       "sha256": "525da13dc2d563401fb1087af5db12606712eb98276a84fe0924231774326cc6"
     },
-    "textures/drape_normal.jpg": {
-      "bytes": 3621807,
+    "textures/drape_normal.png": {
+      "bytes": 4317759,
       "license": "Apache-2.0",
-      "provenance": "authored_by_DrAnmar",
-      "relative_path": "textures/drape_normal.jpg",
-      "sha256": "4453839d52bb8cd41128912eebbf383f73f4b00ba1f3fbfc0cd0dde20cd363c7"
+      "provenance": "deterministically_generated_by_DrAnmar",
+      "relative_path": "textures/drape_normal.png",
+      "sha256": "afbddb3a62efba64d8005501a2cbbe08ea8607f885d9e208b93b9e9d74177264"
     },
     "textures/drape_roughness.png": {
-      "bytes": 810516,
+      "bytes": 757279,
       "license": "Apache-2.0",
       "provenance": "deterministically_generated_by_DrAnmar",
       "relative_path": "textures/drape_roughness.png",
-      "sha256": "372b296dbdc491f92438ea95e02ca2a5d9ba0d525b634fdab387da7af4c4c523"
+      "sha256": "f6d0f4fd9c069b36547fc661a84a7cc81dfb663aea8fa550f3aeca8e57247c3d"
     },
     "textures/pad_basecolor.png": {
       "bytes": 346344,
@@ -190,19 +198,19 @@
       "relative_path": "textures/pad_basecolor.png",
       "sha256": "f7d677bcbd64cfedf36e02fbddfc53a8d5f3f2645f540386a6956044e413a3e1"
     },
-    "textures/pad_normal.jpg": {
-      "bytes": 1774106,
+    "textures/pad_normal.png": {
+      "bytes": 2115022,
       "license": "Apache-2.0",
-      "provenance": "authored_by_DrAnmar",
-      "relative_path": "textures/pad_normal.jpg",
-      "sha256": "115fa4e5f8d3fdd6796922010cd214afa593d507c5f55b84ffa56acf742465d7"
+      "provenance": "deterministically_generated_by_DrAnmar",
+      "relative_path": "textures/pad_normal.png",
+      "sha256": "b5127eb78c4265fe1029c732134693e0c25015bf005d8e485c27eb81ee913708"
     },
     "textures/pad_roughness.png": {
-      "bytes": 757354,
+      "bytes": 718418,
       "license": "Apache-2.0",
       "provenance": "deterministically_generated_by_DrAnmar",
       "relative_path": "textures/pad_roughness.png",
-      "sha256": "f97263e00d134c6e82f1f9fbc1f826d49f82802103732ce74875be6990ba3b87"
+      "sha256": "db5e1a8b903f66fcbf7aefddb48135dbea7a544cc15f5737104119d13845981c"
     },
     "textures/steel_basecolor.png": {
       "bytes": 488270,
@@ -219,11 +227,11 @@
       "sha256": "2384bd1b8ba6cf202b18f2b08a91dc2a71ad2b02a1a60080a1a370fc29988f9a"
     },
     "textures/steel_roughness.png": {
-      "bytes": 417475,
+      "bytes": 404394,
       "license": "Apache-2.0",
       "provenance": "deterministically_generated_by_DrAnmar",
       "relative_path": "textures/steel_roughness.png",
-      "sha256": "40dd6f466a0ea553069078a6e8ab6c2944582da6d14d04c8b96db7f27c6aad6d"
+      "sha256": "e96c16999e68d6acf03dc31be85933bc32268b8e951b517bbfaf252003ed3481"
     },
     "vendor/nvidia_physicalai_simready_materials_v0_2_0/LICENSE.md": {
       "bytes": 1090,
@@ -265,17 +273,12 @@
     "roughness": "raw"
   },
   "texture_encoding": {
-    "basecolor_roughness_and_steel_normal": "lossless_PNG",
-    "pad_and_drape_normal": {
-      "format": "JPEG",
-      "native_rtx_qualified": false,
-      "quality": 99,
-      "subsampling": "4:4:4"
-    }
+    "all_basecolor_roughness_and_normal_maps": "lossless_PNG",
+    "native_rtx_qualified": false
   },
   "validator": {
     "path": "test/test_t1_non_tissue_visuals.py",
-    "sha256": "32ad1daacc46160e13d4e32ac2f127480edd9ce578d170caeaa3a9a16f6bcae7"
+    "sha256": "e575df35c83d75457f9a13b548ef4f7ff209915c30427558148eeb3e153f8e9e"
   },
   "vendor_assets_modified": false,
   "vendor_dependencies": {
@@ -301,6 +304,6 @@
       "upstream": "https://github.com/NVIDIA-Omniverse/PhysicalAI-SimReady-Materials"
     }
   },
-  "version": "1.1.0",
+  "version": "1.2.0",
   "visual_only": true
 }

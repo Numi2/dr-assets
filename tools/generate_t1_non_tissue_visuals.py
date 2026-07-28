@@ -12,7 +12,9 @@ creates stronger OpenUSD composition layers that:
 * replace only the table's rendered appearance with a UV-authored operating
   table, while retaining the referenced legacy collision mesh; and
 * give the legacy needle a restrained satin-steel appearance while labeling
-  it compatibility-only.
+  it compatibility-only; and
+* provide a neutral surgical-field reference camera and soft-light rig without
+  adding any task, physics, or clinical authority.
 
 All geometry and 2048 px texture maps in this package are deterministic,
 procedurally authored DrAnmar content.  NVIDIA's unmodified MIT-0 OpenPBR 1.1
@@ -49,9 +51,7 @@ ASSET_SUBPATH = Path("data/Props/SurgicalScene/T1")
 DEFAULT_ASSET_ROOT = REPOSITORY_ROOT / ASSET_SUBPATH
 MATERIAL_ROOT = "DrAnmarT1VisualMaterials"
 TEXTURE_SIZE = 2048
-NORMAL_JPEG_QUALITY = 99
-JPEG_NORMAL_STEMS = frozenset({"pad", "drape"})
-PACKAGE_VERSION = "1.1.0"
+PACKAGE_VERSION = "1.2.0"
 GENERATOR_VERSIONS = {
     "numpy": "2.2.6",
     "Pillow": "11.3.0",
@@ -95,6 +95,7 @@ EXPECTED_MEMBER_PATHS = {
     "legacy_needle_visual_v1.usda",
     "materials.usda",
     "psm_visual_v1.usda",
+    "reference_or_rig_v1.usda",
     "table_visual_v1.usda",
     (
         "vendor/nvidia_physicalai_simready_materials_v0_2_0/"
@@ -114,15 +115,19 @@ EXPECTED_MEMBER_PATHS = {
         for suffix in ("basecolor", "roughness")
     },
     "textures/steel_normal.png",
-    "textures/pad_normal.jpg",
-    "textures/drape_normal.jpg",
+    "textures/pad_normal.png",
+    "textures/drape_normal.png",
 }
 
-PSM_STEEL_MESHES = (
+PSM_SHAFT_STEEL_MESHES = (
     "/psm/psm_main_insertion_link_2/visuals_xform/tool_main_insert",
-    "/psm/psm_tool_roll_link/visuals_xform/visuals",
+)
+PSM_WRIST_STEEL_MESHES = (
+    "/psm/psm_tool_roll_link/visuals_xform/tool_roll_link",
     "/psm/psm_tool_pitch_link/visuals_xform/tool_pitch_link",
     "/psm/psm_tool_yaw_link/visuals_xform/tool_yaw_link",
+)
+PSM_JAW_STEEL_MESHES = (
     "/psm/psm_tool_gripper1_link/visuals_xform/gripper_right",
     "/psm/psm_tool_gripper2_link/visuals_xform/gripper_left",
 )
@@ -157,20 +162,6 @@ def _save_png(path: Path, values: np.ndarray) -> None:
         format="PNG",
         compress_level=9,
         optimize=False,
-    )
-
-
-def _save_normal_jpeg(path: Path, values: np.ndarray) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    clipped = np.clip(values, 0.0, 1.0)
-    pixels = np.round(clipped * 255.0).astype(np.uint8)
-    Image.fromarray(pixels).save(
-        path,
-        format="JPEG",
-        quality=NORMAL_JPEG_QUALITY,
-        subsampling=0,
-        optimize=False,
-        progressive=False,
     )
 
 
@@ -247,9 +238,9 @@ def _author_steel_textures(output: Path) -> list[Path]:
         axis=-1,
     )
     roughness = np.clip(
-        0.43 + (coarse - 0.5) * 0.11 + (directional - 0.5) * 0.08,
-        0.31,
-        0.57,
+        0.58 + (coarse - 0.5) * 0.10 + (directional - 0.5) * 0.07,
+        0.48,
+        0.68,
     )
     height = 0.30 * coarse + 0.70 * directional
     normal = _normal_from_height(height, 2.2)
@@ -286,9 +277,9 @@ def _author_pad_textures(output: Path) -> list[Path]:
         axis=-1,
     )
     roughness = np.clip(
-        0.67 + (coarse - 0.5) * 0.10 + (pores - 0.5) * 0.07,
-        0.56,
-        0.80,
+        0.78 + (coarse - 0.5) * 0.09 + (pores - 0.5) * 0.06,
+        0.68,
+        0.88,
     )
     normal = _normal_from_height(
         0.55 * coarse + 0.45 * pores,
@@ -297,12 +288,12 @@ def _author_pad_textures(output: Path) -> list[Path]:
     paths = [
         output / "pad_basecolor.png",
         output / "pad_roughness.png",
-        output / "pad_normal.jpg",
+        output / "pad_normal.png",
     ]
-    (output / "pad_normal.png").unlink(missing_ok=True)
+    (output / "pad_normal.jpg").unlink(missing_ok=True)
     _save_png(paths[0], base)
     _save_png(paths[1], roughness)
-    _save_normal_jpeg(paths[2], normal)
+    _save_png(paths[2], normal)
     return paths
 
 
@@ -336,21 +327,21 @@ def _author_drape_textures(output: Path) -> list[Path]:
         axis=-1,
     )
     roughness = np.clip(
-        0.86 + (coarse - 0.5) * 0.08 + (weave - 0.5) * 0.04,
-        0.78,
-        0.94,
+        0.90 + (coarse - 0.5) * 0.07 + (weave - 0.5) * 0.035,
+        0.84,
+        0.96,
     )
     height = 0.34 * coarse + 0.66 * weave
     normal = _normal_from_height(height, 3.3)
     paths = [
         output / "drape_basecolor.png",
         output / "drape_roughness.png",
-        output / "drape_normal.jpg",
+        output / "drape_normal.png",
     ]
-    (output / "drape_normal.png").unlink(missing_ok=True)
+    (output / "drape_normal.jpg").unlink(missing_ok=True)
     _save_png(paths[0], base)
     _save_png(paths[1], roughness)
-    _save_normal_jpeg(paths[2], normal)
+    _save_png(paths[2], normal)
     return paths
 
 
@@ -385,6 +376,8 @@ def _uniform_material(
     metallic: float,
     roughness: float,
     ior: float,
+    specular_weight: float,
+    roughness_anisotropy: float = 0.0,
 ) -> str:
     path = f"/{MATERIAL_ROOT}/{name}"
     return f'''    def Material "{name}" (
@@ -399,9 +392,10 @@ def _uniform_material(
         color3f inputs:base_color = {_usd_vec(diffuse)}
         float inputs:base_diffuse_roughness = 0
         float inputs:base_metalness = {_usd_number(metallic)}
-        float inputs:specular_weight = 1
+        float inputs:specular_weight = {_usd_number(specular_weight)}
         color3f inputs:specular_color = (1, 1, 1)
         float inputs:specular_roughness = {_usd_number(roughness)}
+        float inputs:specular_roughness_anisotropy = {_usd_number(roughness_anisotropy)}
         float inputs:specular_ior = {_usd_number(ior)}
         float inputs:coat_weight = 0
         float inputs:subsurface_weight = 0
@@ -430,11 +424,13 @@ def _textured_material(
     metallic: float,
     roughness_fallback: float,
     ior: float,
+    specular_weight: float,
+    roughness_anisotropy: float = 0.0,
     thin_walled: bool = False,
     fuzz_weight: float = 0.0,
 ) -> str:
     path = f"/{MATERIAL_ROOT}/{name}"
-    normal_extension = "jpg" if texture_stem in JPEG_NORMAL_STEMS else "png"
+    normal_extension = "png"
     return f'''    def Material "{name}" (
         inherits = </open_pbr_uber_base>
     )
@@ -450,9 +446,10 @@ def _textured_material(
         )
         float inputs:base_diffuse_roughness = 0
         float inputs:base_metalness = {_usd_number(metallic)}
-        float inputs:specular_weight = 1
+        float inputs:specular_weight = {_usd_number(specular_weight)}
         color3f inputs:specular_color = (1, 1, 1)
         float inputs:specular_roughness = {_usd_number(roughness_fallback)}
+        float inputs:specular_roughness_anisotropy = {_usd_number(roughness_anisotropy)}
         asset inputs:specular_roughness_texture_file = @textures/{texture_stem}_roughness.png@ (
             colorSpace = "raw"
         )
@@ -530,49 +527,76 @@ def _textured_material(
 def author_materials() -> str:
     blocks = [
         _uniform_material(
-            "SatinSteel",
-            diffuse=(0.43, 0.47, 0.52),
-            metallic=0.90,
-            roughness=0.42,
+            "ShaftSatinSteel",
+            diffuse=(0.40, 0.43, 0.47),
+            metallic=0.91,
+            roughness=0.58,
             ior=1.50,
+            specular_weight=0.88,
+            roughness_anisotropy=0.34,
+        ),
+        _uniform_material(
+            "WristSatinSteel",
+            diffuse=(0.43, 0.46, 0.50),
+            metallic=0.91,
+            roughness=0.54,
+            ior=1.50,
+            specular_weight=0.88,
+            roughness_anisotropy=0.20,
+        ),
+        _uniform_material(
+            "JawSatinSteel",
+            diffuse=(0.36, 0.39, 0.42),
+            metallic=0.90,
+            roughness=0.62,
+            ior=1.50,
+            specular_weight=0.84,
+            roughness_anisotropy=0.10,
         ),
         _uniform_material(
             "NeedleSatinSteel",
-            diffuse=(0.50, 0.54, 0.60),
-            metallic=0.92,
-            roughness=0.36,
+            diffuse=(0.39, 0.42, 0.46),
+            metallic=0.88,
+            roughness=0.62,
             ior=1.50,
+            specular_weight=0.78,
+            roughness_anisotropy=0.16,
         ),
         _uniform_material(
             "MattePolymer",
-            diffuse=(0.035, 0.043, 0.050),
+            diffuse=(0.028, 0.034, 0.040),
             metallic=0.0,
-            roughness=0.72,
+            roughness=0.82,
             ior=1.46,
+            specular_weight=0.30,
         ),
         _textured_material(
             "TableFrameSteel",
             texture_stem="steel",
-            diffuse_fallback=(0.42, 0.46, 0.50),
+            diffuse_fallback=(0.39, 0.42, 0.46),
             metallic=0.86,
-            roughness_fallback=0.46,
+            roughness_fallback=0.58,
             ior=1.50,
+            specular_weight=0.86,
+            roughness_anisotropy=0.24,
         ),
         _textured_material(
             "TablePad",
             texture_stem="pad",
             diffuse_fallback=(0.055, 0.064, 0.071),
             metallic=0.0,
-            roughness_fallback=0.68,
+            roughness_fallback=0.78,
             ior=1.46,
+            specular_weight=0.32,
         ),
         _textured_material(
             "SterileDrape",
             texture_stem="drape",
             diffuse_fallback=(0.050, 0.27, 0.30),
             metallic=0.0,
-            roughness_fallback=0.86,
+            roughness_fallback=0.90,
             ior=1.43,
+            specular_weight=0.12,
             thin_walled=True,
             fuzz_weight=0.12,
         ),
@@ -695,8 +719,12 @@ def _dangling_psm_material_prim_paths() -> tuple[str, ...]:
 
 def author_psm_overlay() -> str:
     tree = _new_tree_node()
-    for path in PSM_STEEL_MESHES:
-        _tree_insert(tree, path, root="psm", material="SatinSteel")
+    for path in PSM_SHAFT_STEEL_MESHES:
+        _tree_insert(tree, path, root="psm", material="ShaftSatinSteel")
+    for path in PSM_WRIST_STEEL_MESHES:
+        _tree_insert(tree, path, root="psm", material="WristSatinSteel")
+    for path in PSM_JAW_STEEL_MESHES:
+        _tree_insert(tree, path, root="psm", material="JawSatinSteel")
     for path in PSM_MATTE_POLYMER_MESHES:
         _tree_insert(tree, path, root="psm", material="MattePolymer")
     for path in _dangling_psm_material_prim_paths():
@@ -846,42 +874,72 @@ def _rounded_rectangle_perimeter(
     return points
 
 
-def _pad_geometry() -> tuple[
+def _rounded_prism_geometry(
+    center: tuple[float, float, float],
+    size: tuple[float, float, float],
+    *,
+    corner_radius: float,
+    edge_bevel: float,
+    segments_per_corner: int = 8,
+) -> tuple[
     list[tuple[float, float, float]],
     list[int],
     list[int],
     list[tuple[float, float, float]],
     list[tuple[float, float]],
 ]:
-    half_x = 0.83
-    half_y = 0.35
-    radius = 0.065
-    bevel = 0.009
-    z_bottom = 0.3915
-    z_top = 0.4565
+    cx, cy, cz = center
+    half_x, half_y, half_z = (value * 0.5 for value in size)
+    if not 0.0 < edge_bevel < min(half_x, half_y, half_z):
+        raise ValueError("edge bevel must fit inside the rounded prism")
+    if not edge_bevel < corner_radius < min(half_x, half_y):
+        raise ValueError("corner radius must exceed bevel and fit footprint")
+    z_bottom = cz - half_z
+    z_top = cz + half_z
     outer = _rounded_rectangle_perimeter(
         half_x,
         half_y,
-        radius,
-        12,
+        corner_radius,
+        segments_per_corner,
     )
     inner = _rounded_rectangle_perimeter(
-        half_x - bevel,
-        half_y - bevel,
-        radius - bevel,
-        12,
+        half_x - edge_bevel,
+        half_y - edge_bevel,
+        corner_radius - edge_bevel,
+        segments_per_corner,
     )
     rings = (
         (inner, z_top, 0.0, 1.0),
-        (outer, z_top - bevel, 1.0, 1.0),
-        (outer, z_bottom + bevel, 1.0, -1.0),
+        (outer, z_top - edge_bevel, 1.0, 1.0),
+        (outer, z_bottom + edge_bevel, 1.0, -1.0),
         (inner, z_bottom, 0.0, -1.0),
     )
-    points: list[tuple[float, float, float]] = [(0.0, 0.0, z_top)]
+    points: list[tuple[float, float, float]] = [(cx, cy, z_top)]
     normals: list[tuple[float, float, float]] = [(0.0, 0.0, 1.0)]
     for ring, z_value, radial_weight, z_weight in rings:
         for x_value, y_value in ring:
-            radial = np.asarray((x_value / half_x, y_value / half_y, 0.0))
+            corner_center_x = float(
+                np.clip(
+                    x_value,
+                    -half_x + corner_radius,
+                    half_x - corner_radius,
+                )
+            )
+            corner_center_y = float(
+                np.clip(
+                    y_value,
+                    -half_y + corner_radius,
+                    half_y - corner_radius,
+                )
+            )
+            radial = np.asarray(
+                (
+                    x_value - corner_center_x,
+                    y_value - corner_center_y,
+                    0.0,
+                ),
+                dtype=np.float64,
+            )
             radial /= max(float(np.linalg.norm(radial)), 1.0e-8)
             normal = np.asarray(
                 (
@@ -892,10 +950,10 @@ def _pad_geometry() -> tuple[
                 dtype=np.float64,
             )
             normal /= max(float(np.linalg.norm(normal)), 1.0e-8)
-            points.append((x_value, y_value, z_value))
+            points.append((cx + x_value, cy + y_value, z_value))
             normals.append(tuple(map(float, normal)))
     bottom_center = len(points)
-    points.append((0.0, 0.0, z_bottom))
+    points.append((cx, cy, z_bottom))
     normals.append((0.0, 0.0, -1.0))
     count = len(outer)
     ring_offsets = tuple(1 + index * count for index in range(4))
@@ -932,7 +990,9 @@ def _pad_geometry() -> tuple[
     uvs: list[tuple[float, float]] = []
     for face in faces:
         for point_index in face:
-            x_value, y_value, z_value = points[point_index]
+            world_x, world_y, z_value = points[point_index]
+            x_value = world_x - cx
+            y_value = world_y - cy
             if z_value >= z_top - 1.0e-9:
                 uvs.append(
                     (
@@ -961,14 +1021,30 @@ def _pad_geometry() -> tuple[
     return points, face_counts, face_indices, normals, uvs
 
 
+def _pad_geometry() -> tuple[
+    list[tuple[float, float, float]],
+    list[int],
+    list[int],
+    list[tuple[float, float, float]],
+    list[tuple[float, float]],
+]:
+    return _rounded_prism_geometry(
+        center=(0.0, 0.0, 0.424),
+        size=(1.66, 0.70, 0.065),
+        corner_radius=0.065,
+        edge_bevel=0.009,
+        segments_per_corner=12,
+    )
+
+
 def _smoothstep(value: np.ndarray) -> np.ndarray:
     clipped = np.clip(value, 0.0, 1.0)
     return clipped * clipped * (3.0 - 2.0 * clipped)
 
 
 def _drape_geometry(
-    nx: int = 65,
-    ny: int = 41,
+    nx: int = 81,
+    ny: int = 49,
 ) -> tuple[
     list[tuple[float, float, float]],
     list[int],
@@ -1046,17 +1122,49 @@ def _drape_geometry(
 
 def _table_meshes() -> str:
     frame_parts = (
-        ("DeckFrame", (0.0, 0.0, 0.368), (1.74, 0.76, 0.050)),
-        ("CenterColumn", (0.0, 0.0, -0.035), (0.22, 0.32, 0.756)),
-        ("FloorBase", (0.0, 0.0, -0.425), (1.02, 0.60, 0.058)),
-        ("LeftFoot", (-0.61, 0.0, -0.420), (0.26, 0.16, 0.068)),
-        ("RightFoot", (0.61, 0.0, -0.420), (0.26, 0.16, 0.068)),
+        (
+            "DeckFrame",
+            (0.0, 0.0, 0.368),
+            (1.74, 0.76, 0.050),
+            0.025,
+            0.008,
+        ),
+        (
+            "CenterColumn",
+            (0.0, 0.0, -0.035),
+            (0.22, 0.32, 0.756),
+            0.035,
+            0.012,
+        ),
+        (
+            "FloorBase",
+            (0.0, 0.0, -0.425),
+            (1.02, 0.60, 0.058),
+            0.040,
+            0.010,
+        ),
+        (
+            "LeftFoot",
+            (-0.61, 0.0, -0.420),
+            (0.26, 0.16, 0.068),
+            0.028,
+            0.010,
+        ),
+        (
+            "RightFoot",
+            (0.61, 0.0, -0.420),
+            (0.26, 0.16, 0.068),
+            0.028,
+            0.010,
+        ),
     )
     blocks: list[str] = []
-    for name, center, size in frame_parts:
-        points, counts, indices, normals, uvs = _box_geometry(
+    for name, center, size, radius, bevel in frame_parts:
+        points, counts, indices, normals, uvs = _rounded_prism_geometry(
             center,
             size,
+            corner_radius=radius,
+            edge_bevel=bevel,
         )
         blocks.append(
             _mesh_block(
@@ -1067,7 +1175,7 @@ def _table_meshes() -> str:
                 normals=normals,
                 normal_interpolation="vertex",
                 uvs=uvs,
-                uv_interpolation="vertex",
+                uv_interpolation="faceVarying",
                 material="TableFrameSteel",
                 indent="            ",
             )
@@ -1210,6 +1318,127 @@ def Xform "Needle" (
 '''
 
 
+def _look_at_matrix(
+    position: tuple[float, float, float],
+    target: tuple[float, float, float],
+) -> str:
+    position_vector = np.asarray(position, dtype=np.float64)
+    target_vector = np.asarray(target, dtype=np.float64)
+    backward = position_vector - target_vector
+    backward /= max(float(np.linalg.norm(backward)), 1.0e-12)
+    world_up = np.asarray((0.0, 0.0, 1.0), dtype=np.float64)
+    right = np.cross(world_up, backward)
+    if float(np.linalg.norm(right)) < 1.0e-8:
+        world_up = np.asarray((0.0, 1.0, 0.0), dtype=np.float64)
+        right = np.cross(world_up, backward)
+    right /= max(float(np.linalg.norm(right)), 1.0e-12)
+    camera_up = np.cross(backward, right)
+    camera_up /= max(float(np.linalg.norm(camera_up)), 1.0e-12)
+    rows = (
+        (*map(float, right), 0.0),
+        (*map(float, camera_up), 0.0),
+        (*map(float, backward), 0.0),
+        (*map(float, position_vector), 1.0),
+    )
+    return "(" + ", ".join(_usd_vec(row) for row in rows) + ")"
+
+
+def author_reference_or_rig() -> str:
+    field_target = (0.0, 0.0, 0.455)
+    key_transform = _look_at_matrix((0.52, -0.48, 1.32), field_target)
+    fill_transform = _look_at_matrix((-0.58, -0.18, 1.08), field_target)
+    rim_transform = _look_at_matrix((0.12, 0.68, 1.15), field_target)
+    camera_transform = _look_at_matrix((0.72, -0.78, 0.96), field_target)
+    return f'''#usda 1.0
+(
+    defaultPrim = "DrAnmarT1ReferenceRig"
+    doc = "Neutral render-reference camera and soft surgical-field lighting for DrAnmar T1 asset review."
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "DrAnmarT1ReferenceRig" (
+    assetInfo = {{
+        string name = "DrAnmarT1ReferenceORRig"
+        string version = "{PACKAGE_VERSION}"
+    }}
+    customData = {{
+        string drAnmarAssetRole = "render_reference_only"
+        bool drAnmarClinicalValidation = false
+        bool drAnmarPhysicsAuthority = false
+        string drAnmarLightingIntent = "neutral_soft_4300K_surgical_field_asset_review"
+        string drAnmarQualification = "source_authored_native_RTX_review_pending"
+    }}
+    kind = "component"
+)
+{{
+    def Scope "Lighting"
+    {{
+        def DomeLight "NeutralAmbient"
+        {{
+            color3f inputs:color = (0.91, 0.94, 1)
+            float inputs:exposure = 0
+            float inputs:intensity = 0.18
+            bool inputs:normalize = true
+        }}
+
+        def RectLight "SurgicalKey"
+        {{
+            color3f inputs:color = (1, 1, 1)
+            float inputs:colorTemperature = 4300
+            bool inputs:enableColorTemperature = true
+            float inputs:exposure = 0
+            float inputs:height = 0.42
+            float inputs:intensity = 1450
+            bool inputs:normalize = true
+            float inputs:width = 0.90
+            matrix4d xformOp:transform = {key_transform}
+            uniform token[] xformOpOrder = ["xformOp:transform"]
+        }}
+
+        def RectLight "SoftFill"
+        {{
+            color3f inputs:color = (1, 1, 1)
+            float inputs:colorTemperature = 5000
+            bool inputs:enableColorTemperature = true
+            float inputs:exposure = 0
+            float inputs:height = 0.48
+            float inputs:intensity = 650
+            bool inputs:normalize = true
+            float inputs:width = 0.72
+            matrix4d xformOp:transform = {fill_transform}
+            uniform token[] xformOpOrder = ["xformOp:transform"]
+        }}
+
+        def RectLight "EdgeSeparation"
+        {{
+            color3f inputs:color = (1, 1, 1)
+            float inputs:colorTemperature = 4600
+            bool inputs:enableColorTemperature = true
+            float inputs:exposure = 0
+            float inputs:height = 0.30
+            float inputs:intensity = 520
+            bool inputs:normalize = true
+            float inputs:width = 0.62
+            matrix4d xformOp:transform = {rim_transform}
+            uniform token[] xformOpOrder = ["xformOp:transform"]
+        }}
+    }}
+
+    def Camera "ReferenceCamera"
+    {{
+        float2 clippingRange = (0.05, 8)
+        double focalLength = 58
+        float horizontalAperture = 20.955
+        token projection = "perspective"
+        float verticalAperture = 15.2908
+        matrix4d xformOp:transform = {camera_transform}
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }}
+}}
+'''
+
+
 def author_readme() -> str:
     return f"""# DrAnmar T1 Non-Tissue Visual Package {PACKAGE_VERSION}
 
@@ -1218,9 +1447,12 @@ This package supplies render-only OpenUSD overlays for the active T1 scene:
 - `psm_visual_v1.usda` repairs unresolved visual bindings and assigns restrained
   satin steel and matte polymer without changing the referenced articulation;
 - `table_visual_v1.usda` hides only the legacy table render mesh and adds an
-  independently generated UV-authored table frame, rounded pad, and sterile
-  drape while retaining legacy collision; and
-- `legacy_needle_visual_v1.usda` improves only the legacy needle's appearance.
+  independently generated UV-authored rounded-edge table frame, upholstered
+  pad, and woven sterile drape while retaining legacy collision;
+- `legacy_needle_visual_v1.usda` deliberately subdues the compatibility
+  needle instead of making its obsolete geometry visually dominant; and
+- `reference_or_rig_v1.usda` provides a neutral 58 mm reference camera and
+  three broad surgical-field lights for consistent asset review.
 
 The legacy needle remains compatibility-only. Its disconnected source geometry,
 mass properties, and collision contract are not repaired or promoted here.
@@ -1241,11 +1473,11 @@ unchanged from PhysicalAI-SimReady-Materials v0.2.0 under MIT-0.
 
 The UV-authored table frame, pad, and drape feed their 2K base-color,
 specular-roughness, and tangent-normal maps into both the OpenPBR and Preview
-paths. Steel normals remain lossless PNG; the higher-entropy pad and drape
-normals use quality-99 JPEG with full 4:4:4 sampling and no resolution loss.
-The PSM and compatibility needle source meshes do not provide a
-qualified UV contract, so their OpenPBR and Preview materials deliberately use
-constants rather than pretending texture fidelity.
+paths. Every normal map is lossless PNG. PSM shaft, wrist, jaws, and polymer
+parts receive distinct, restrained material responses; none use a chrome-like
+clear coat. The PSM and compatibility needle source meshes do not provide a
+qualified UV contract, so their materials deliberately use constants rather
+than pretending texture fidelity.
 
 ## Regeneration
 
@@ -1536,6 +1768,7 @@ def author_manifest(asset_root: Path) -> dict[str, Any]:
             "psm": "psm_visual_v1.usda",
             "table": "table_visual_v1.usda",
             "legacy_needle": "legacy_needle_visual_v1.usda",
+            "reference_or_rig": "reference_or_rig_v1.usda",
         },
         "generator": {
             "path": Path(__file__).resolve()
@@ -1582,13 +1815,8 @@ def author_manifest(asset_root: Path) -> dict[str, Any]:
             ),
         },
         "texture_encoding": {
-            "basecolor_roughness_and_steel_normal": "lossless_PNG",
-            "pad_and_drape_normal": {
-                "format": "JPEG",
-                "quality": NORMAL_JPEG_QUALITY,
-                "subsampling": "4:4:4",
-                "native_rtx_qualified": False,
-            },
+            "all_basecolor_roughness_and_normal_maps": "lossless_PNG",
+            "native_rtx_qualified": False,
         },
         "material_input_contract": {
             "table_uv_authored": True,
@@ -1640,6 +1868,10 @@ def generate(asset_root: Path) -> None:
     _write_text(
         asset_root / "legacy_needle_visual_v1.usda",
         author_legacy_needle_overlay(),
+    )
+    _write_text(
+        asset_root / "reference_or_rig_v1.usda",
+        author_reference_or_rig(),
     )
     _write_text(asset_root / "README.md", author_readme())
     _write_text(asset_root / "PROVENANCE.md", author_provenance())

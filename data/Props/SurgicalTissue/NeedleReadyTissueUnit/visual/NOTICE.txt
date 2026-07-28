@@ -1,6 +1,7 @@
-DrAnmar Needle-Ready Tissue Visual Package 1.0.0
+DrAnmar Needle-Ready Tissue Visual Package 1.1.0
 
-All texture maps, UV opinions, support geometry, material graphs, and
+All texture maps, semantic metric UV opinions, two-edge clamp/drape support
+geometry, material graphs, and
 authoring code outside the explicitly vendored NVIDIA inputs were independently
 and procedurally authored by the Dr.Anmar project. No patient imagery or
 scanned anatomy is included.

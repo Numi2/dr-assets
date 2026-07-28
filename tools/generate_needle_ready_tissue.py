@@ -24,7 +24,7 @@ from typing import Any
 
 ASSET_ID = "dranmar-needle-ready-tissue-v2"
 ASSET_NAME = "DrAnmar Needle-Ready Tissue Unit"
-ASSET_VERSION = "2.1.0"
+ASSET_VERSION = "2.2.0"
 ROOT_PRIM = "DrAnmarNeedleReadyTissue"
 CATALOG_SUBPATH = Path("data/Props/SurgicalTissue/NeedleReadyTissueUnit")
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -271,6 +271,109 @@ def _fiber_for_layer(layer_id: str, component: int) -> Vec3:
     return (sign, 0.0, 0.0)
 
 
+def _weighted_sines(
+    coordinate_m: float,
+    terms: tuple[tuple[float, float, float], ...],
+) -> float:
+    """Evaluate a bounded deterministic multi-scale rest-shape field."""
+
+    return sum(
+        weight * math.sin(2.0 * math.pi * coordinate_m / wavelength + phase)
+        for wavelength, weight, phase in terms
+    )
+
+
+def _wound_lip_offsets(
+    y: float,
+    geometry: dict[str, Any],
+) -> tuple[float, float]:
+    """Return correlated but non-identical left/right wound-lip offsets."""
+
+    primary_wavelength = float(geometry["wound_irregularity_wavelength_m"])
+    shared_amplitude = float(geometry["wound_irregularity_amplitude_m"])
+    independent_amplitude = float(
+        geometry["wound_lip_independent_amplitude_m"]
+    )
+    shared = shared_amplitude * _weighted_sines(
+        y,
+        (
+            (primary_wavelength, 0.62, 0.18),
+            (primary_wavelength * 0.53, 0.25, 1.17),
+            (primary_wavelength * 1.71, 0.13, -0.64),
+        ),
+    )
+    left_detail = independent_amplitude * _weighted_sines(
+        y,
+        (
+            (primary_wavelength * 0.79, 0.68, 0.83),
+            (primary_wavelength * 0.41, 0.32, -1.28),
+        ),
+    )
+    right_detail = independent_amplitude * _weighted_sines(
+        y,
+        (
+            (primary_wavelength * 0.91, 0.64, -0.47),
+            (primary_wavelength * 0.46, 0.36, 1.61),
+        ),
+    )
+    return shared + left_detail, shared + right_detail
+
+
+def _rest_vertical_profile(
+    component: int,
+    u_fraction: float,
+    v_fraction: float,
+    geometry: dict[str, Any],
+) -> tuple[float, float]:
+    """Return local mid-surface elevation and positive local thickness."""
+
+    depth = float(geometry["depth_m"])
+    nominal_thickness = float(geometry["thickness_m"])
+    topography = float(geometry["surface_topography_amplitude_m"])
+    topography_wavelength = float(geometry["surface_topography_wavelength_m"])
+    secondary_topography = float(
+        geometry["surface_secondary_topography_amplitude_m"]
+    )
+    thickness_variation = float(
+        geometry["thickness_variation_amplitude_m"]
+    )
+    y = -depth / 2.0 + depth * v_fraction
+    woundward = u_fraction if component == 0 else 1.0 - u_fraction
+    free_weight = math.sin(0.5 * math.pi * max(0.0, min(1.0, woundward)))
+    component_phase = 0.37 if component == 0 else -0.29
+
+    center_elevation = free_weight * (
+        topography
+        * _weighted_sines(
+            y,
+            (
+                (topography_wavelength, 0.67, component_phase),
+                (topography_wavelength * 0.48, 0.33, 1.12 - component_phase),
+            ),
+        )
+        + secondary_topography
+        * math.sin(
+            2.0 * math.pi * (0.73 * woundward + 1.31 * v_fraction)
+            + (0.54 if component == 0 else -0.71)
+        )
+    )
+    local_thickness = nominal_thickness + free_weight * thickness_variation * (
+        0.61
+        * math.sin(
+            2.0 * math.pi * y / (depth * 0.82)
+            + (0.31 if component == 0 else -0.23)
+        )
+        + 0.39
+        * math.sin(
+            2.0 * math.pi * (0.57 * woundward - 0.88 * v_fraction)
+            + (1.09 if component == 0 else -0.94)
+        )
+    )
+    if local_thickness <= nominal_thickness * 0.75:
+        raise ValueError("local tissue thickness fell below the safety bound")
+    return center_elevation, local_thickness
+
+
 def _point_distance_from_wound(
     point: Vec3,
     parametric: Vec4,
@@ -281,16 +384,12 @@ def _point_distance_from_wound(
     depth = float(geometry["depth_m"])
     gap = float(geometry["rest_wound_gap_m"])
     bevel = float(geometry["wound_bevel_m"])
-    amplitude = float(geometry["wound_irregularity_amplitude_m"])
-    wavelength = float(geometry["wound_irregularity_wavelength_m"])
     y = -depth / 2.0 + depth * v_fraction
-    center_offset = amplitude * math.sin(
-        2.0 * math.pi * (y + depth / 2.0) / wavelength
-    )
+    left_offset, right_offset = _wound_lip_offsets(y, geometry)
     if int(component) == 0:
-        inner_x = -gap / 2.0 + center_offset - bevel * w_fraction
+        inner_x = -gap / 2.0 + left_offset - bevel * w_fraction
     else:
-        inner_x = gap / 2.0 + center_offset + bevel * w_fraction
+        inner_x = gap / 2.0 + right_offset + bevel * w_fraction
     return abs(point[0] - inner_x)
 
 
@@ -299,13 +398,8 @@ def build_mesh(contract: dict[str, Any], lod: str) -> TissueMesh:
     lod_contract = contract["lods"][lod]
     width = float(geometry["overall_width_m"])
     depth = float(geometry["depth_m"])
-    thickness = float(geometry["thickness_m"])
     gap = float(geometry["rest_wound_gap_m"])
     bevel = float(geometry["wound_bevel_m"])
-    irregularity = float(geometry["wound_irregularity_amplitude_m"])
-    wavelength = float(geometry["wound_irregularity_wavelength_m"])
-    topography = float(geometry["surface_topography_amplitude_m"])
-    topography_wavelength = float(geometry["surface_topography_wavelength_m"])
     cells_x = int(lod_contract["cells_per_flap_x"])
     cells_y = int(lod_contract["cells_y"])
     z_fractions = tuple(map(float, lod_contract["z_fractions"]))
@@ -330,18 +424,19 @@ def build_mesh(contract: dict[str, Any], lod: str) -> TissueMesh:
 
     for component in range(2):
         for z_index, w_fraction in enumerate(z_fractions):
-            base_z = -thickness / 2.0 + thickness * w_fraction
             for y_index in range(cells_y + 1):
                 v_fraction = y_index / cells_y
                 y = -depth / 2.0 + depth * v_fraction
-                wound_offset = irregularity * math.sin(
-                    2.0 * math.pi * (y + depth / 2.0) / wavelength
-                )
+                left_offset, right_offset = _wound_lip_offsets(y, geometry)
                 if component == 0:
                     outer_x = -width / 2.0
-                    inner_x = -gap / 2.0 + wound_offset - bevel * w_fraction
+                    inner_x = (
+                        -gap / 2.0 + left_offset - bevel * w_fraction
+                    )
                 else:
-                    inner_x = gap / 2.0 + wound_offset + bevel * w_fraction
+                    inner_x = (
+                        gap / 2.0 + right_offset + bevel * w_fraction
+                    )
                     outer_x = width / 2.0
                 for x_index in range(cells_x + 1):
                     u_fraction = x_index / cells_x
@@ -351,20 +446,23 @@ def build_mesh(contract: dict[str, Any], lod: str) -> TissueMesh:
                     else:
                         shaped_u = u_fraction**edge_power
                         x = inner_x + (outer_x - inner_x) * shaped_u
-                    centrality = max(0.0, 1.0 - abs(x) / max(width / 2.0, 1.0e-9))
-                    z_offset = (
-                        topography
-                        * centrality
-                        * math.sin(
-                            2.0
-                            * math.pi
-                            * (y + depth / 2.0)
-                            / topography_wavelength
-                            + (0.35 if component == 0 else -0.35)
+                    center_elevation, local_thickness = (
+                        _rest_vertical_profile(
+                            component,
+                            u_fraction,
+                            v_fraction,
+                            geometry,
                         )
                     )
                     point_index[(component, x_index, y_index, z_index)] = len(points)
-                    points.append((x, y, base_z + z_offset))
+                    points.append(
+                        (
+                            x,
+                            y,
+                            center_elevation
+                            + local_thickness * (w_fraction - 0.5),
+                        )
+                    )
                     parametric_coordinates.append(
                         (float(component), u_fraction, v_fraction, w_fraction)
                     )
@@ -431,7 +529,9 @@ def build_mesh(contract: dict[str, Any], lod: str) -> TissueMesh:
         "surface": [],
         "bulk": [],
         "fascia": [],
-        "wound": [],
+        "wound_surface": [],
+        "wound_bulk": [],
+        "wound_fascia": [],
     }
     semantic_face_sets: dict[str, list[int]] = {
         "safe_bite_surface": [],
@@ -464,7 +564,12 @@ def build_mesh(contract: dict[str, Any], lod: str) -> TissueMesh:
         elif all_bottom:
             material_face_sets["fascia"].append(face_index)
         elif all_wound:
-            material_face_sets["wound"].append(face_index)
+            average_depth = sum(value[3] for value in params) / 3.0
+            _, wound_layer = _layer_for_fraction(
+                contract["layers"],
+                average_depth,
+            )
+            material_face_sets[f"wound_{wound_layer}"].append(face_index)
             semantic_face_sets["wound_surface"].append(face_index)
         else:
             material_face_sets["bulk"].append(face_index)
@@ -613,13 +718,56 @@ def _encoded_vectors(values: tuple[tuple[float, ...], ...]) -> str:
     return ",\n            ".join(usd_vec(value) for value in values)
 
 
+def _usd_identifier(identifier: str) -> str:
+    return "".join(part.title() for part in identifier.split("_"))
+
+
+def _normalized(vector: Vec3) -> Vec3:
+    length = math.sqrt(sum(value * value for value in vector))
+    if length <= 1.0e-30:
+        return (0.0, 0.0, 1.0)
+    return tuple(value / length for value in vector)
+
+
+def smooth_face_varying_normals(mesh: TissueMesh) -> tuple[Vec3, ...]:
+    """Build area-weighted smooth normals without smoothing material seams."""
+
+    face_material: dict[int, str] = {}
+    for material, face_indices in mesh.material_face_sets.items():
+        for face_index in face_indices:
+            if face_index in face_material:
+                raise ValueError("surface face belongs to multiple materials")
+            face_material[face_index] = material
+    if len(face_material) != len(mesh.surface_triangles):
+        raise ValueError("surface material partition is incomplete")
+
+    accumulated: dict[tuple[int, str], list[float]] = {}
+    for face_index, triangle in enumerate(mesh.surface_triangles):
+        material = face_material[face_index]
+        a, b, c = (mesh.points[index] for index in triangle)
+        face_normal = _triangle_normal(a, b, c)
+        for point_index in triangle:
+            values = accumulated.setdefault(
+                (point_index, material),
+                [0.0, 0.0, 0.0],
+            )
+            for axis in range(3):
+                values[axis] += face_normal[axis]
+
+    return tuple(
+        _normalized(tuple(accumulated[(point_index, face_material[face_index])]))
+        for face_index, triangle in enumerate(mesh.surface_triangles)
+        for point_index in triangle
+    )
+
+
 def _materials_block(contract: dict[str, Any]) -> str:
     appearance = contract["appearance"]
     blocks: list[str] = []
     for identifier, values in appearance["materials"].items():
         color = tuple(map(float, values["diffuse_color"]))
         roughness = float(values["roughness"])
-        name = identifier.title()
+        name = _usd_identifier(identifier)
         blocks.append(
             f'''        def Material "{name}"
         {{
@@ -640,7 +788,7 @@ def _materials_block(contract: dict[str, Any]) -> str:
 def _material_subsets(mesh: TissueMesh) -> str:
     blocks = []
     for group, indices in mesh.material_face_sets.items():
-        name = group.title()
+        name = _usd_identifier(group)
         blocks.append(
             f'''        def GeomSubset "{name}Faces" (
             prepend apiSchemas = ["MaterialBindingAPI"]
@@ -666,6 +814,76 @@ def _custom_integer_arrays(
     )
 
 
+def _interaction_frame_positions(
+    contract: dict[str, Any],
+) -> tuple[Vec3, Vec3, Vec3]:
+    """Place curriculum seed frames on the authored non-planar rest surface."""
+
+    geometry = contract["geometry"]
+    width = float(geometry["overall_width_m"])
+    gap = float(geometry["rest_wound_gap_m"])
+    bevel = float(geometry["wound_bevel_m"])
+    left_offset, right_offset = _wound_lip_offsets(0.0, geometry)
+    left_inner = -gap / 2.0 + left_offset - bevel
+    right_inner = gap / 2.0 + right_offset + bevel
+    safe_distance = sum(
+        map(float, contract["semantics"]["safe_bite_distance_from_wound_m"])
+    ) / 2.0
+    edge_power = float(contract["lods"]["contact"]["wound_edge_refinement_power"])
+
+    left_target_x = left_inner - safe_distance
+    left_shaped = (left_target_x + width / 2.0) / (
+        left_inner + width / 2.0
+    )
+    left_u = 1.0 - max(0.0, 1.0 - left_shaped) ** (1.0 / edge_power)
+    right_target_x = right_inner + safe_distance
+    right_shaped = (right_target_x - right_inner) / (
+        width / 2.0 - right_inner
+    )
+    right_u = max(0.0, right_shaped) ** (1.0 / edge_power)
+
+    left_center, left_thickness = _rest_vertical_profile(
+        0,
+        left_u,
+        0.5,
+        geometry,
+    )
+    right_center, right_thickness = _rest_vertical_profile(
+        1,
+        right_u,
+        0.5,
+        geometry,
+    )
+    left_lip_center, left_lip_thickness = _rest_vertical_profile(
+        0,
+        1.0,
+        0.5,
+        geometry,
+    )
+    right_lip_center, right_lip_thickness = _rest_vertical_profile(
+        1,
+        0.0,
+        0.5,
+        geometry,
+    )
+    wound_center = (
+        0.5 * (left_inner + right_inner),
+        0.0,
+        0.5
+        * (
+            left_lip_center
+            + 0.5 * left_lip_thickness
+            + right_lip_center
+            + 0.5 * right_lip_thickness
+        ),
+    )
+    return (
+        wound_center,
+        (left_target_x, 0.0, left_center + 0.5 * left_thickness),
+        (right_target_x, 0.0, right_center + 0.5 * right_thickness),
+    )
+
+
 def author_lod(contract: dict[str, Any], mesh: TissueMesh) -> str:
     points = _encoded_vectors(mesh.points)
     parametric = _encoded_vectors(mesh.parametric_coordinates)
@@ -681,16 +899,11 @@ def author_lod(contract: dict[str, Any], mesh: TissueMesh) -> str:
     surface_indices = ", ".join(
         str(index) for face in mesh.surface_triangles for index in face
     )
+    normals = _encoded_vectors(smooth_face_varying_normals(mesh))
     fibers = _encoded_vectors(mesh.tetrahedron_fibers)
-    geometry = contract["geometry"]
-    top_z = float(geometry["thickness_m"]) / 2.0
-    safe_distance = sum(
-        map(float, contract["semantics"]["safe_bite_distance_from_wound_m"])
-    ) / 2.0
-    half_gap = float(geometry["rest_wound_gap_m"]) / 2.0
-    bevel = float(geometry["wound_bevel_m"])
-    left_safe = (-half_gap - bevel - safe_distance, 0.0, top_z)
-    right_safe = (half_gap + bevel + safe_distance, 0.0, top_z)
+    wound_center, left_safe, right_safe = _interaction_frame_positions(
+        contract
+    )
     custom_data = f'''customData = {{
         string drAnmarAssetId = "{ASSET_ID}"
         string drAnmarAssetName = "{ASSET_NAME}"
@@ -728,7 +941,7 @@ def Xform "{ROOT_PRIM}" (
         }}
         def Xform "WoundCenter"
         {{
-            double3 xformOp:translate = (0, 0, {usd_float(top_z)})
+            double3 xformOp:translate = {usd_vec(wound_center)}
             uniform token[] xformOpOrder = ["xformOp:translate"]
         }}
         def Xform "LeftSafeBiteSeed"
@@ -777,6 +990,12 @@ def Xform "{ROOT_PRIM}" (
         point3f[] points = [
             {points}
         ]
+        normal3f[] normals = [
+            {normals}
+        ] (
+            interpolation = "faceVarying"
+        )
+        custom string drAnmar:normalContract = "area_weighted_smooth_with_material_seams"
         uniform token subdivisionScheme = "none"
         uniform token orientation = "rightHanded"
         uniform token subsetFamily:materialBind:familyType = "partition"
@@ -888,6 +1107,39 @@ def build_report(
         quality = tetrahedron_quality(mesh)
         quality_gates = contract["lods"][lod]["quality_gates"]
         validate_tetrahedron_quality(lod, quality, quality_gates)
+        points_by_semantic = {
+            _semantic_key(values): point
+            for point, values in zip(
+                mesh.points,
+                mesh.parametric_coordinates,
+                strict=True,
+            )
+        }
+        thicknesses = []
+        wound_gaps = []
+        for values in mesh.parametric_coordinates:
+            component, u_fraction, v_fraction, w_fraction = values
+            if abs(w_fraction) <= 1.0e-12:
+                top_key = _semantic_key(
+                    (component, u_fraction, v_fraction, 1.0)
+                )
+                thicknesses.append(
+                    abs(
+                        points_by_semantic[top_key][2]
+                        - points_by_semantic[_semantic_key(values)][2]
+                    )
+                )
+            is_left_wound = (
+                int(component) == 0
+                and abs(u_fraction - 1.0) <= 1.0e-12
+            )
+            if is_left_wound:
+                right_key = _semantic_key(
+                    (1.0, 0.0, v_fraction, w_fraction)
+                )
+                left_point = points_by_semantic[_semantic_key(values)]
+                right_point = points_by_semantic[right_key]
+                wound_gaps.append(right_point[0] - left_point[0])
         lod_reports[lod] = {
             "usd": path.name,
             "usd_sha256": sha256(path),
@@ -898,6 +1150,17 @@ def build_report(
             "volume_m3": mesh.volume_m3,
             "mass_kg_seed": mesh.volume_m3 * density,
             "minimum_tetra_volume_m3": mesh.minimum_tetra_volume_m3,
+            "local_thickness_range_m": [
+                min(thicknesses),
+                max(thicknesses),
+            ],
+            "rest_wound_gap_range_m": [
+                min(wound_gaps),
+                max(wound_gaps),
+            ],
+            "visual_schema_normal_count": len(
+                smooth_face_varying_normals(mesh)
+            ),
             "tetrahedron_quality": quality,
             "tetrahedron_quality_gates": quality_gates,
             "node_set_counts": {
@@ -909,6 +1172,10 @@ def build_report(
             "face_set_counts": {
                 name: len(values)
                 for name, values in mesh.semantic_face_sets.items()
+            },
+            "material_face_counts": {
+                name: len(values)
+                for name, values in mesh.material_face_sets.items()
             },
             "layer_tetrahedron_counts": {
                 layer_name: mesh.tetrahedron_layers.count(index)

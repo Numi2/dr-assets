@@ -8,7 +8,7 @@ The checked-in training, contact, and validation USD layers are physics
 authority and are never rewritten by this tool.  Generated overlay layers
 reference those assets, add face-varying UVs to the existing one-to-one
 deforming Visual mesh, rebind its material subsets, and add a render-purpose
-support cassette.  The textures are deterministic procedural research art;
+two-edge clamp and folded drape.  The textures are deterministic procedural research art;
 they contain no patient data and are not clinically calibrated.
 
 Run from the asset-extension root:
@@ -38,7 +38,9 @@ ASSET_SUBPATH = Path("data/Props/SurgicalTissue/NeedleReadyTissueUnit")
 DEFAULT_ASSET_ROOT = REPOSITORY_ROOT / ASSET_SUBPATH
 BASE_GENERATOR_PATH = REPOSITORY_ROOT / "tools/generate_needle_ready_tissue.py"
 TEXTURE_SIZE = 2048
-NORMAL_JPEG_QUALITY = 99
+VISUAL_ASSET_ID = "dranmar-needle-ready-tissue-visual-v1"
+VISUAL_ASSET_VERSION = "1.1.0"
+NORMAL_EXTENSION = "png"
 GENERATOR_VERSIONS = {
     "numpy": "2.2.6",
     "Pillow": "11.3.0",
@@ -69,67 +71,102 @@ LODS = ("training", "contact", "validation")
 MATERIALS: dict[str, dict[str, Any]] = {
     "surface": {
         "seed": 14071,
-        "base_srgb": (0.54, 0.18, 0.16),
-        "variation": (0.095, 0.060, 0.050),
-        "roughness": 0.74,
-        "roughness_variation": 0.12,
-        "moisture_drop": 0.20,
+        "base_srgb": (0.55, 0.215, 0.185),
+        "variation": (0.125, 0.082, 0.068),
+        "roughness": 0.81,
+        "roughness_variation": 0.15,
+        "moisture_drop": 0.08,
         "normal_strength": 2.2,
         "vascular_strength": 1.0,
-        "specular_weight": 0.22,
-        "specular_roughness": 0.66,
-        "subsurface_weight": 0.72,
-        "subsurface_color": (0.70, 0.27, 0.20),
-        "subsurface_radius_m": (0.0010, 0.00045, 0.00022),
+        "specular_weight": 0.16,
+        "specular_roughness": 0.74,
+        "subsurface_weight": 0.48,
+        "subsurface_color": (0.67, 0.30, 0.24),
+        "subsurface_radius_m": (0.00078, 0.00036, 0.00018),
     },
     "bulk": {
         "seed": 27103,
-        "base_srgb": (0.60, 0.25, 0.22),
-        "variation": (0.085, 0.055, 0.045),
-        "roughness": 0.79,
-        "roughness_variation": 0.11,
-        "moisture_drop": 0.15,
+        "base_srgb": (0.60, 0.275, 0.235),
+        "variation": (0.115, 0.078, 0.065),
+        "roughness": 0.83,
+        "roughness_variation": 0.14,
+        "moisture_drop": 0.06,
         "normal_strength": 1.8,
         "fiber": True,
-        "fiber_color_strength": 0.52,
+        "fiber_color_strength": 0.38,
         "fiber_height_strength": 0.20,
-        "specular_weight": 0.18,
-        "specular_roughness": 0.71,
-        "subsurface_weight": 0.80,
-        "subsurface_color": (0.72, 0.31, 0.23),
-        "subsurface_radius_m": (0.0013, 0.00058, 0.00028),
+        "specular_weight": 0.14,
+        "specular_roughness": 0.77,
+        "subsurface_weight": 0.58,
+        "subsurface_color": (0.70, 0.34, 0.27),
+        "subsurface_radius_m": (0.0010, 0.00048, 0.00024),
     },
     "fascia": {
         "seed": 39019,
-        "base_srgb": (0.66, 0.49, 0.34),
-        "variation": (0.070, 0.060, 0.045),
-        "roughness": 0.84,
-        "roughness_variation": 0.10,
-        "moisture_drop": 0.11,
-        "normal_strength": 3.0,
+        "base_srgb": (0.68, 0.51, 0.37),
+        "variation": (0.105, 0.090, 0.070),
+        "roughness": 0.87,
+        "roughness_variation": 0.12,
+        "moisture_drop": 0.04,
+        "normal_strength": 2.5,
         "fiber": True,
-        "fiber_color_strength": 1.15,
-        "fiber_height_strength": 0.48,
-        "specular_weight": 0.13,
-        "specular_roughness": 0.77,
-        "subsurface_weight": 0.42,
-        "subsurface_color": (0.70, 0.53, 0.36),
-        "subsurface_radius_m": (0.00070, 0.00036, 0.00019),
+        "fiber_color_strength": 0.68,
+        "fiber_height_strength": 0.36,
+        "specular_weight": 0.10,
+        "specular_roughness": 0.82,
+        "subsurface_weight": 0.28,
+        "subsurface_color": (0.71, 0.55, 0.40),
+        "subsurface_radius_m": (0.00056, 0.00029, 0.00015),
     },
-    "wound": {
+    "wound_surface": {
         "seed": 51283,
-        "base_srgb": (0.29, 0.045, 0.035),
-        "variation": (0.080, 0.035, 0.030),
-        "roughness": 0.69,
+        "base_srgb": (0.46, 0.12, 0.095),
+        "variation": (0.135, 0.072, 0.060),
+        "roughness": 0.78,
+        "roughness_variation": 0.16,
+        "moisture_drop": 0.14,
+        "normal_strength": 1.8,
+        "vascular_strength": 0.55,
+        "specular_weight": 0.18,
+        "specular_roughness": 0.70,
+        "subsurface_weight": 0.56,
+        "subsurface_color": (0.58, 0.16, 0.12),
+        "subsurface_radius_m": (0.00092, 0.00041, 0.00020),
+    },
+    "wound_bulk": {
+        "seed": 51287,
+        "base_srgb": (0.54, 0.19, 0.15),
+        "variation": (0.145, 0.090, 0.073),
+        "roughness": 0.80,
+        "roughness_variation": 0.15,
+        "moisture_drop": 0.12,
+        "normal_strength": 1.9,
+        "fiber": True,
+        "fiber_color_strength": 0.34,
+        "fiber_height_strength": 0.18,
+        "vascular_strength": 0.38,
+        "specular_weight": 0.16,
+        "specular_roughness": 0.73,
+        "subsurface_weight": 0.62,
+        "subsurface_color": (0.65, 0.25, 0.19),
+        "subsurface_radius_m": (0.00108, 0.00050, 0.00024),
+    },
+    "wound_fascia": {
+        "seed": 51291,
+        "base_srgb": (0.61, 0.39, 0.25),
+        "variation": (0.125, 0.105, 0.077),
+        "roughness": 0.84,
         "roughness_variation": 0.13,
-        "moisture_drop": 0.21,
-        "normal_strength": 1.7,
-        "vascular_strength": 0.42,
-        "specular_weight": 0.24,
-        "specular_roughness": 0.62,
-        "subsurface_weight": 0.86,
-        "subsurface_color": (0.49, 0.08, 0.055),
-        "subsurface_radius_m": (0.0016, 0.00062, 0.00028),
+        "moisture_drop": 0.08,
+        "normal_strength": 2.2,
+        "fiber": True,
+        "fiber_color_strength": 0.58,
+        "fiber_height_strength": 0.31,
+        "specular_weight": 0.12,
+        "specular_roughness": 0.79,
+        "subsurface_weight": 0.36,
+        "subsurface_color": (0.68, 0.43, 0.29),
+        "subsurface_radius_m": (0.00066, 0.00033, 0.00016),
     },
     "drape": {
         "seed": 62861,
@@ -152,12 +189,12 @@ MATERIALS: dict[str, dict[str, Any]] = {
         "seed": 74093,
         "base_srgb": (0.065, 0.080, 0.088),
         "variation": (0.018, 0.020, 0.022),
-        "roughness": 0.57,
+        "roughness": 0.68,
         "roughness_variation": 0.08,
         "moisture_drop": 0.0,
         "normal_strength": 1.2,
-        "specular_weight": 0.18,
-        "specular_roughness": 0.63,
+        "specular_weight": 0.14,
+        "specular_roughness": 0.72,
         "subsurface_weight": 0.0,
         "subsurface_color": (0.065, 0.080, 0.088),
         "subsurface_radius_m": (0.0, 0.0, 0.0),
@@ -247,7 +284,11 @@ def _fiber_pattern(
     """Build irregular anisotropic bundles instead of periodic sine stripes."""
 
     def directional(coarse_size: int, angle_degrees: float) -> np.ndarray:
-        values = rng.random((1, coarse_size), dtype=np.float32)
+        transverse_samples = max(7, coarse_size // 11)
+        values = rng.random(
+            (transverse_samples, coarse_size),
+            dtype=np.float32,
+        )
         image = Image.fromarray(np.round(values * 65535.0).astype(np.uint16))
         image = image.resize(
             (size * 2, size * 2),
@@ -361,20 +402,6 @@ def _save_png(path: Path, array: np.ndarray) -> None:
     )
 
 
-def _save_normal_jpeg(path: Path, array: np.ndarray) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    clipped = np.clip(array, 0.0, 1.0)
-    encoded = np.round(clipped * 255.0).astype(np.uint8)
-    Image.fromarray(encoded).save(
-        path,
-        format="JPEG",
-        quality=NORMAL_JPEG_QUALITY,
-        subsampling=0,
-        optimize=False,
-        progressive=False,
-    )
-
-
 def _blend_published_skin_microstructure(
     procedural_normal: np.ndarray,
     source_path: Path,
@@ -456,11 +483,18 @@ def generate_material_textures(
         ),
         axis=-1,
     )
+    perfusion = np.clip(
+        0.52 * macro
+        + 0.28 * chroma_a
+        + 0.20 * (1.0 - chroma_b),
+        0.0,
+        1.0,
+    )
     base_color = (
         base[None, None, :]
         + signed_macro * variation[None, None, :]
-        + 0.32 * chroma * variation[None, None, :]
-        + 0.10 * signed_micro * variation[None, None, :]
+        + 0.44 * chroma * variation[None, None, :]
+        + 0.16 * signed_micro * variation[None, None, :]
     )
     if bool(spec.get("fiber", False)):
         base_color += (
@@ -478,15 +512,21 @@ def generate_material_textures(
         base_color[..., 0] -= 0.080 * vascular_strength * vessels
         base_color[..., 1] -= 0.050 * vascular_strength * vessels
         base_color[..., 2] += 0.020 * vascular_strength * vessels
+        perfusion = np.clip(
+            perfusion + 0.32 * vascular_strength * vessels,
+            0.0,
+            1.0,
+        )
     base_color *= 1.0 - 0.025 * moisture[..., None]
 
     roughness = (
         float(spec["roughness"])
-        + float(spec["roughness_variation"]) * (0.58 * macro + 0.42 * micro - 0.5)
+        + float(spec["roughness_variation"])
+        * (0.48 * macro + 0.34 * micro + 0.18 * (1.0 - perfusion) - 0.5)
         - float(spec["moisture_drop"]) * moisture
     )
-    minimum_roughness = 0.58 if name in {"surface", "wound"} else 0.55
-    roughness = np.clip(roughness, minimum_roughness, 0.96)
+    minimum_roughness = 0.64 if name.startswith("wound_") else 0.68
+    roughness = np.clip(roughness, minimum_roughness, 0.97)
 
     height = 0.58 * micro + 0.30 * macro
     if bool(spec.get("fiber", False)):
@@ -509,15 +549,20 @@ def generate_material_textures(
     paths = [
         output_dir / f"{name}_basecolor.png",
         output_dir / f"{name}_roughness.png",
-        output_dir / f"{name}_normal.jpg",
+        output_dir / f"{name}_normal.{NORMAL_EXTENSION}",
     ]
     _save_png(paths[0], base_color)
     _save_png(paths[1], roughness)
-    _save_normal_jpeg(paths[2], normal)
+    _save_png(paths[2], normal)
     if float(spec["subsurface_weight"]) > 0.0:
         subsurface_weight = np.clip(
             float(spec["subsurface_weight"])
-            * (0.88 + 0.18 * macro + 0.06 * moisture),
+            * (
+                0.82
+                + 0.16 * macro
+                + 0.13 * perfusion
+                + 0.035 * moisture
+            ),
             0.0,
             1.0,
         )
@@ -534,8 +579,12 @@ def _usd_vec(values: tuple[float, ...] | list[float]) -> str:
     return "(" + ", ".join(_usd_number(value) for value in values) + ")"
 
 
+def _usd_identifier(identifier: str) -> str:
+    return "".join(part.title() for part in identifier.split("_"))
+
+
 def _preview_material_block(name: str, spec: dict[str, Any]) -> str:
-    title = name.title()
+    title = _usd_identifier(name)
     texture_stem = name.lower()
     base_color = tuple(float(value) for value in spec["base_srgb"])
     sss_color = tuple(float(value) for value in spec["subsurface_color"])
@@ -582,7 +631,7 @@ def _preview_material_block(name: str, spec: dict[str, Any]) -> str:
             float inputs:coat_weight = 0
             bool inputs:geometry_thin_walled = false
             float inputs:geometry_normal_scale = 1
-                asset inputs:geometry_normal_texture_file = @textures/{texture_stem}_normal.jpg@ (
+            asset inputs:geometry_normal_texture_file = @textures/{texture_stem}_normal.{NORMAL_EXTENSION}@ (
                 colorSpace = "raw"
             )
             bool inputs:geometry_normal_texture_flip_g = false
@@ -632,7 +681,7 @@ def _preview_material_block(name: str, spec: dict[str, Any]) -> str:
             def Shader "NormalTexture"
             {{
                 uniform token info:id = "UsdUVTexture"
-                asset inputs:file = @textures/{texture_stem}_normal.jpg@
+                asset inputs:file = @textures/{texture_stem}_normal.{NORMAL_EXTENSION}@
                 token inputs:sourceColorSpace = "raw"
                 float4 inputs:scale = (2, 2, 2, 1)
                 float4 inputs:bias = (-1, -1, -1, 0)
@@ -678,24 +727,48 @@ def Scope "{MATERIAL_ROOT}" (
 '''
 
 
-def _box(
+def _capsule(
     name: str,
     *,
     center: tuple[float, float, float],
-    size: tuple[float, float, float],
+    height: float,
+    radius: float,
     material: str,
+    axis: str = "Y",
 ) -> str:
-    scale = tuple(value / 2.0 for value in size)
-    return f'''        def Cube "{name}" (
+    return f'''            def Capsule "{name}" (
             prepend apiSchemas = ["MaterialBindingAPI"]
         )
         {{
-            double size = 2
+            uniform token axis = "{axis}"
+            double height = {_usd_number(height)}
+            double radius = {_usd_number(radius)}
             token purpose = "render"
             rel material:binding = <{_support_material_path(material)}>
             double3 xformOp:translate = {_usd_vec(center)}
-            double3 xformOp:scale = {_usd_vec(scale)}
-            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }}'''
+
+
+def _cylinder(
+    name: str,
+    *,
+    center: tuple[float, float, float],
+    height: float,
+    radius: float,
+    material: str,
+) -> str:
+    return f'''            def Cylinder "{name}" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {{
+            uniform token axis = "Z"
+            double height = {_usd_number(height)}
+            double radius = {_usd_number(radius)}
+            token purpose = "render"
+            rel material:binding = <{_support_material_path(material)}>
+            double3 xformOp:translate = {_usd_vec(center)}
+            uniform token[] xformOpOrder = ["xformOp:translate"]
         }}'''
 
 
@@ -703,67 +776,144 @@ def _support_material_path(title: str) -> str:
     return f"/{SUPPORT_ROOT}/Materials/{title}"
 
 
+def _drape_elevation(x: float, y: float) -> float:
+    return (
+        -0.0197
+        + 0.00048
+        * np.sin(2.0 * np.pi * x / 0.078 + 0.35)
+        * (0.72 + 0.28 * np.cos(2.0 * np.pi * y / 0.092))
+        + 0.00031 * np.sin(2.0 * np.pi * y / 0.051 - 0.72)
+        + 0.00016 * np.sin(2.0 * np.pi * (x + 0.63 * y) / 0.037 + 1.11)
+    )
+
+
+def _author_folded_drape() -> str:
+    cells_x = 12
+    cells_y = 9
+    width = 0.120
+    depth = 0.090
+    points: list[tuple[float, float, float]] = []
+    normals: list[tuple[float, float, float]] = []
+    uvs: list[tuple[float, float]] = []
+    epsilon = 1.0e-5
+    for y_index in range(cells_y + 1):
+        y = -depth / 2.0 + depth * y_index / cells_y
+        for x_index in range(cells_x + 1):
+            x = -width / 2.0 + width * x_index / cells_x
+            z = float(_drape_elevation(x, y))
+            dz_dx = float(
+                (_drape_elevation(x + epsilon, y) - _drape_elevation(x - epsilon, y))
+                / (2.0 * epsilon)
+            )
+            dz_dy = float(
+                (_drape_elevation(x, y + epsilon) - _drape_elevation(x, y - epsilon))
+                / (2.0 * epsilon)
+            )
+            normal = np.asarray((-dz_dx, -dz_dy, 1.0), dtype=np.float64)
+            normal /= np.linalg.norm(normal)
+            points.append((x, y, z))
+            normals.append(tuple(float(value) for value in normal))
+            uvs.append((x / 0.018, y / 0.018))
+
+    faces = []
+    for y_index in range(cells_y):
+        for x_index in range(cells_x):
+            lower_left = y_index * (cells_x + 1) + x_index
+            faces.append(
+                (
+                    lower_left,
+                    lower_left + 1,
+                    lower_left + cells_x + 2,
+                    lower_left + cells_x + 1,
+                )
+            )
+    counts = ", ".join("4" for _ in faces)
+    indices = ", ".join(str(index) for face in faces for index in face)
+    point_payload = ",\n                ".join(_usd_vec(point) for point in points)
+    normal_payload = ",\n                ".join(_usd_vec(normal) for normal in normals)
+    uv_payload = ",\n                ".join(_usd_vec(uv) for uv in uvs)
+    z_values = [point[2] for point in points]
+    return f'''        def Mesh "SurgicalDrape" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {{
+            float3[] extent = [
+                ({_usd_number(-width / 2.0)}, {_usd_number(-depth / 2.0)}, {_usd_number(min(z_values))}),
+                ({_usd_number(width / 2.0)}, {_usd_number(depth / 2.0)}, {_usd_number(max(z_values))})
+            ]
+            int[] faceVertexCounts = [{counts}]
+            int[] faceVertexIndices = [{indices}]
+            normal3f[] normals = [
+                {normal_payload}
+            ] (
+                interpolation = "vertex"
+            )
+            point3f[] points = [
+                {point_payload}
+            ]
+            texCoord2f[] primvars:st = [
+                {uv_payload}
+            ] (
+                interpolation = "vertex"
+            )
+            uniform token subdivisionScheme = "catmullClark"
+            token purpose = "render"
+            rel material:binding = <{_support_material_path("Drape")}>
+        }}'''
+
+
 def author_support() -> str:
-    boxes = [
-        _box(
-            "RailLeft",
-            center=(-0.0425, 0.0, -0.0055),
-            size=(0.0050, 0.058, 0.0050),
-            material="Cassette",
-        ),
-        _box(
-            "RailRight",
-            center=(0.0425, 0.0, -0.0055),
-            size=(0.0050, 0.058, 0.0050),
-            material="Cassette",
-        ),
-        _box(
-            "RailAnterior",
-            center=(0.0, -0.0265, -0.0055),
-            size=(0.080, 0.0050, 0.0050),
-            material="Cassette",
-        ),
-        _box(
-            "RailPosterior",
-            center=(0.0, 0.0265, -0.0055),
-            size=(0.080, 0.0050, 0.0050),
-            material="Cassette",
-        ),
-        _box(
-            "ColumnLeftAnterior",
-            center=(-0.0425, -0.0265, -0.0120),
-            size=(0.0050, 0.0050, 0.0130),
-            material="Cassette",
-        ),
-        _box(
-            "ColumnLeftPosterior",
-            center=(-0.0425, 0.0265, -0.0120),
-            size=(0.0050, 0.0050, 0.0130),
-            material="Cassette",
-        ),
-        _box(
-            "ColumnRightAnterior",
-            center=(0.0425, -0.0265, -0.0120),
-            size=(0.0050, 0.0050, 0.0130),
-            material="Cassette",
-        ),
-        _box(
-            "ColumnRightPosterior",
-            center=(0.0425, 0.0265, -0.0120),
-            size=(0.0050, 0.0050, 0.0130),
-            material="Cassette",
-        ),
-        _box(
-            "SurgicalDrape",
-            center=(0.0, 0.0, -0.0197),
-            size=(0.120, 0.090, 0.0006),
-            material="Drape",
-        ),
-    ]
+    clamp_blocks = []
+    for side_name, sign in (("Left", -1.0), ("Right", 1.0)):
+        jaw_x = sign * 0.033
+        spine_x = sign * 0.0372
+        parts = [
+            _capsule(
+                "UpperJaw",
+                center=(jaw_x, 0.0, 0.00345),
+                height=0.041,
+                radius=0.00115,
+                material="Cassette",
+            ),
+            _capsule(
+                "LowerJaw",
+                center=(jaw_x, 0.0, -0.00345),
+                height=0.041,
+                radius=0.00115,
+                material="Cassette",
+            ),
+            _capsule(
+                "OuterSpine",
+                center=(spine_x, 0.0, 0.0),
+                height=0.044,
+                radius=0.00135,
+                material="Cassette",
+            ),
+            _cylinder(
+                "AnteriorSupport",
+                center=(spine_x, -0.0205, -0.0116),
+                height=0.0148,
+                radius=0.0011,
+                material="Cassette",
+            ),
+            _cylinder(
+                "PosteriorSupport",
+                center=(spine_x, 0.0205, -0.0116),
+                height=0.0148,
+                radius=0.0011,
+                material="Cassette",
+            ),
+        ]
+        clamp_blocks.append(
+            f'''        def Xform "Clamp{side_name}"
+        {{
+{chr(10).join(parts)}
+        }}'''
+        )
     return f'''#usda 1.0
 (
     defaultPrim = "{SUPPORT_ROOT}"
-    doc = "Render-only support cassette and drape spanning the 17 mm tissue-to-table offset."
+    doc = "Render-only paired outer-band clamp and folded drape spanning the tissue-to-table offset."
     metersPerUnit = 1
     upAxis = "Z"
 )
@@ -775,7 +925,10 @@ def Xform "{SUPPORT_ROOT}" (
         bool drAnmarCollisionAuthority = false
         bool drAnmarPhysicsAuthority = false
         double drAnmarSupportedGapM = 0.017
-        string drAnmarSupportExplanation = "tissue_bottom_minus_0p003_to_table_plane_minus_0p020"
+        double drAnmarAttachmentBandInnerXM = 0.031
+        double drAnmarAttachmentBandOuterXM = 0.035
+        string drAnmarAttachmentSides = "left_right_only"
+        string drAnmarSupportExplanation = "paired jaws overlap the authored outer attachment bands; supports descend to a folded render-only drape"
     }}
 )
 {{
@@ -789,36 +942,60 @@ def Xform "{SUPPORT_ROOT}" (
 
     def Xform "CassetteGeometry"
     {{
-{chr(10).join(boxes)}
+{chr(10).join(clamp_blocks)}
+{_author_folded_drape()}
     }}
 }}
 '''
 
 
+UV_METERS_PER_TILE = {
+    "top": 0.016,
+    "wound": 0.010,
+    "bottom": 0.016,
+    "outer": 0.014,
+}
+
+
 def _face_varying_uvs(mesh) -> tuple[tuple[float, float], ...]:
-    minimum = np.asarray(mesh.extent_min, dtype=np.float64)
-    maximum = np.asarray(mesh.extent_max, dtype=np.float64)
-    span = np.maximum(maximum - minimum, 1.0e-12)
+    face_material = {
+        face_index: material
+        for material, face_indices in mesh.material_face_sets.items()
+        for face_index in face_indices
+    }
+    if len(face_material) != len(mesh.surface_triangles):
+        raise ValueError("visual UV generation requires a material partition")
     result: list[tuple[float, float]] = []
-    for triangle in mesh.surface_triangles:
+    for face_index, triangle in enumerate(mesh.surface_triangles):
         a, b, c = (np.asarray(mesh.points[index], dtype=np.float64) for index in triangle)
         normal = np.cross(b - a, c - a)
-        axis = int(np.argmax(np.abs(normal)))
+        material = face_material[face_index]
+        if material == "surface":
+            island = "top"
+        elif material == "fascia":
+            island = "bottom"
+        elif material.startswith("wound_"):
+            island = "wound"
+        else:
+            island = "outer"
+        scale = UV_METERS_PER_TILE[island]
         for index in triangle:
             point = np.asarray(mesh.points[index], dtype=np.float64)
-            if axis == 2:
-                u = (point[0] - minimum[0]) / span[0]
-                v = (point[1] - minimum[1]) / span[1]
-                tile = 3.0
-            elif axis == 0:
-                u = (point[1] - minimum[1]) / span[1]
-                v = (point[2] - minimum[2]) / span[2]
-                tile = 2.0
+            if island == "top":
+                u, v = point[0] / scale, point[1] / scale
+            elif island == "bottom":
+                u, v = point[0] / scale, -point[1] / scale
+            elif island == "wound":
+                component = int(mesh.parametric_coordinates[index][0])
+                handed_y = point[1] if component == 0 else -point[1]
+                u, v = handed_y / scale, point[2] / scale
+            elif abs(normal[0]) >= abs(normal[1]):
+                handed_y = point[1] if normal[0] >= 0.0 else -point[1]
+                u, v = handed_y / scale, point[2] / scale
             else:
-                u = (point[0] - minimum[0]) / span[0]
-                v = (point[2] - minimum[2]) / span[2]
-                tile = 2.0
-            result.append((float(u * tile), float(v * tile)))
+                handed_x = -point[0] if normal[1] >= 0.0 else point[0]
+                u, v = handed_x / scale, point[2] / scale
+            result.append((float(u), float(v)))
     return tuple(result)
 
 
@@ -838,7 +1015,10 @@ def author_overlay(lod: str, mesh) -> str:
             {{
                 rel material:binding = </{ROOT_PRIM}/VisualMaterials/{title}>
             }}'''
-        for title in ("Surface", "Bulk", "Fascia", "Wound")
+        for title in (
+            _usd_identifier(material)
+            for material in mesh.material_face_sets
+        )
     )
     return f'''#usda 1.0
 (
@@ -879,6 +1059,8 @@ def Xform "{ROOT_PRIM}" (
             interpolation = "faceVarying"
         )
         custom string drAnmar:visualOverlay = "uv_and_material_opinions_only"
+        custom string drAnmar:uvContract = "semantic_metric_islands_sign_aware_tangent_handedness"
+        custom string drAnmar:uvMetersPerTile = "top=0.016,wound=0.010,bottom=0.016,outer=0.014"
 
 {subset_bindings}
     }}
@@ -912,8 +1094,8 @@ def Xform "{ROOT_PRIM}" (
     }}
     prepend variantSets = "geometryLod"
     customData = {{
-        string drAnmarAssetId = "dranmar-needle-ready-tissue-visual-v1"
-        string drAnmarAssetVersion = "1.0.0"
+        string drAnmarAssetId = "{VISUAL_ASSET_ID}"
+        string drAnmarAssetVersion = "{VISUAL_ASSET_VERSION}"
         bool drAnmarClinicalValidation = false
         bool drAnmarPhysicsAuthority = false
     }}
@@ -979,8 +1161,8 @@ def write_visual_manifest(
     )
     return {
         "schema": "dr.anmar.visual-asset-manifest.v1",
-        "asset_id": "dranmar-needle-ready-tissue-visual-v1",
-        "asset_version": "1.0.0",
+        "asset_id": VISUAL_ASSET_ID,
+        "asset_version": VISUAL_ASSET_VERSION,
         "primary_usd": "needle_ready_tissue_visual_unit.usda",
         "default_lod": "validation",
         "visual_only": True,
@@ -990,18 +1172,11 @@ def write_visual_manifest(
         "texture_color_contract": {
             "basecolor": "sRGB",
             "roughness": "raw",
-            "normal": (
-                "raw_tangent_space_OpenGL_JPEG_quality_99_4:4:4"
-            ),
+            "normal": "raw_tangent_space_OpenGL_lossless_PNG",
             "subsurface_weight": "raw",
         },
         "texture_encoding": {
-            "basecolor_roughness_subsurface": "lossless_PNG",
-            "normal": {
-                "format": "JPEG",
-                "subsampling": "4:4:4",
-                "quality": NORMAL_JPEG_QUALITY,
-            },
+            "basecolor_roughness_subsurface_normal": "lossless_PNG",
         },
         "materials": {
             "portable_context": "UsdPreviewSurface",
@@ -1011,6 +1186,7 @@ def write_visual_manifest(
             "coat_weight": 0.0,
             "specular_policy": "restrained_and_rough_no_uniform_wet_gloss",
             "subsurface_policy": "texture_modulated_volumetric_research_seed_not_clinically_calibrated",
+            "wound_material_policy": "depth_resolved_surface_bulk_fascia",
         },
         "support": {
             "asset": "visual/support_cassette.usda",
@@ -1018,6 +1194,9 @@ def write_visual_manifest(
             "collision_authority": False,
             "physics_authority": False,
             "explained_tissue_to_table_gap_m": 0.017,
+            "attachment_sides": ["left", "right"],
+            "attachment_band_abs_x_m": [0.031, 0.035],
+            "geometry": "paired_rounded_jaws_with_support_posts_and_folded_subdivision_drape",
         },
         "base_asset": {
             "asset_id": geometry_contract["id"],
@@ -1066,15 +1245,17 @@ an NVIDIA-derived OpenPBR 1.1 MaterialX graph, portable `UsdPreviewSurface`
 fallbacks, and a render-purpose support cassette/drape. It does not replace
 or modify the training, contact, or validation TetMesh assets.
 
-The overlays reuse the existing `Visual` mesh and author face-varying UVs on
-that mesh. This preserves the one-to-one particle/visual point order required
-by the Isaac Lab Newton/Fabric visual sync. No detached high-resolution mesh
-is introduced.
+The overlays reuse the existing `Visual` mesh and author semantic metric-scale
+face-varying UV islands on that mesh. The base geometry supplies explicit
+area-weighted smooth schema normals with material seams. This preserves the
+one-to-one particle/visual point order required by the Isaac Lab Newton/Fabric
+visual sync. No detached high-resolution mesh is introduced.
 
-The support cassette spans from the tissue lower face near -3 mm to the draped
-table plane near -20 mm, making the 17 mm scene offset visually intelligible.
-It is explicitly render-only: it has no collision API, rigid-body API, mass,
-contact material, or solver authority.
+The support presentation uses two rounded clamp assemblies centered on the
+actual left/right outer attachment bands. Their posts descend to a gently
+folded subdivision drape near -20 mm, making the approximately 17 mm scene
+offset visually intelligible. It is explicitly render-only: it has no
+collision API, rigid-body API, mass, contact material, or solver authority.
 
 Regenerate from the asset-extension root:
 
@@ -1085,11 +1266,11 @@ uv run --no-project --with numpy==2.2.6 --with Pillow==11.3.0 \\
 
 The generator is deterministic. `visual_manifest.json` recursively hashes the
 generated package and records the immutable base-physics hashes. Base color
-maps use sRGB; roughness and subsurface-weight maps use raw PNG data. Normal
-maps use raw tangent-space quality-99 JPEG with 4:4:4 sampling, matching the
-portable texture practice in NVIDIA's source library without reducing the 2K
-resolution. Moisture is sparse and bounded rather than a uniform glossy
-coating.
+maps use sRGB; roughness, subsurface-weight, and tangent-space normal maps use
+lossless PNG data. Albedo, roughness, scattering, perfusion, fibers, and sparse
+moisture derive from correlated seeded fields rather than independent noise.
+Moisture is sparse and bounded rather than a uniform glossy coating. Exposed
+wound walls use distinct surface, bulk, and fascia materials.
 
 The unchanged OpenPBR base class and a medium-skin micro-normal input come
 from NVIDIA `PhysicalAI-SimReady-Materials` release `v0.2.0` under MIT-0.
@@ -1099,9 +1280,10 @@ not supply geometry, biomechanics, patient imagery, or clinical calibration.
 
 These colors, scattering distances, geometry, and textures are research
 seeds. They are not patient-specific, clinically color-calibrated, physically
-calibrated, or approved for patient care. Native RTX material compilation,
-lighting/camera calibration, and screenshot qualification remain separate
-runtime gates.
+calibrated, or approved for patient care. The base asset is a generic
+full-thickness layered research surrogate, not a named anatomical site.
+Native RTX material compilation, lighting/camera calibration, live visual
+synchronization, and screenshot qualification remain separate runtime gates.
 """,
         encoding="utf-8",
     )
@@ -1129,9 +1311,10 @@ limitations under the License.
 
 def write_visual_notice(path: Path) -> None:
     path.write_text(
-        """DrAnmar Needle-Ready Tissue Visual Package 1.0.0
+        f"""DrAnmar Needle-Ready Tissue Visual Package {VISUAL_ASSET_VERSION}
 
-All texture maps, UV opinions, support geometry, material graphs, and
+All texture maps, semantic metric UV opinions, two-edge clamp/drape support
+geometry, material graphs, and
 authoring code outside the explicitly vendored NVIDIA inputs were independently
 and procedurally authored by the Dr.Anmar project. No patient imagery or
 scanned anatomy is included.
@@ -1206,6 +1389,16 @@ def main() -> int:
     write_nvidia_vendor_provenance(
         asset_root / NVIDIA_VENDOR_SUBPATH / "PROVENANCE.md"
     )
+    for legacy_name in (
+        "wound_basecolor.png",
+        "wound_roughness.png",
+        "wound_normal.jpg",
+        "wound_normal.png",
+        "wound_subsurface_weight.png",
+    ):
+        legacy_path = texture_root / legacy_name
+        if legacy_path.is_file():
+            legacy_path.unlink()
 
     base_hashes = {name: sha256(asset_root / name) for name in BASE_PHYSICS_FILES}
     geometry_generator = _load_base_generator()
@@ -1213,9 +1406,12 @@ def main() -> int:
     meshes = {lod: geometry_generator.build_mesh(contract, lod) for lod in LODS}
 
     for name, spec in MATERIALS.items():
-        legacy_normal = texture_root / f"{name}_normal.png"
-        if legacy_normal.is_file():
-            legacy_normal.unlink()
+        for legacy_extension in ("jpg", "jpeg"):
+            legacy_normal = (
+                texture_root / f"{name}_normal.{legacy_extension}"
+            )
+            if legacy_normal.is_file():
+                legacy_normal.unlink()
         generate_material_textures(
             texture_root,
             name,

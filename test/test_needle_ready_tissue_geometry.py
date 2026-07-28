@@ -39,6 +39,9 @@ def test_mesh_counts_layer_conformity_and_semantics():
         mesh = GENERATOR.build_mesh(payload, lod)
         assert len(mesh.points) == lod_contract["expected_points"]
         assert len(mesh.tetrahedra) == lod_contract["expected_tetrahedra"]
+        assert len(GENERATOR.smooth_face_varying_normals(mesh)) == (
+            3 * len(mesh.surface_triangles)
+        )
         assert mesh.minimum_tetra_volume_m3 > 0.0
         assert sum(map(len, mesh.material_face_sets.values())) == len(
             mesh.surface_triangles
@@ -49,6 +52,14 @@ def test_mesh_counts_layer_conformity_and_semantics():
         assert set(mesh.tetrahedron_layers) == set(
             range(len(payload["layers"]))
         )
+        assert set(mesh.material_face_sets) == {
+            "surface",
+            "bulk",
+            "fascia",
+            "wound_surface",
+            "wound_bulk",
+            "wound_fascia",
+        }
 
 
 def test_lods_are_exactly_point_nested():

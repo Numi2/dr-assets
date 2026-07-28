@@ -1,13 +1,16 @@
-# DrAnmar T1 Non-Tissue Visual Package 1.1.0
+# DrAnmar T1 Non-Tissue Visual Package 1.2.0
 
 This package supplies render-only OpenUSD overlays for the active T1 scene:
 
 - `psm_visual_v1.usda` repairs unresolved visual bindings and assigns restrained
   satin steel and matte polymer without changing the referenced articulation;
 - `table_visual_v1.usda` hides only the legacy table render mesh and adds an
-  independently generated UV-authored table frame, rounded pad, and sterile
-  drape while retaining legacy collision; and
-- `legacy_needle_visual_v1.usda` improves only the legacy needle's appearance.
+  independently generated UV-authored rounded-edge table frame, upholstered
+  pad, and woven sterile drape while retaining legacy collision;
+- `legacy_needle_visual_v1.usda` deliberately subdues the compatibility
+  needle instead of making its obsolete geometry visually dominant; and
+- `reference_or_rig_v1.usda` provides a neutral 58 mm reference camera and
+  three broad surgical-field lights for consistent asset review.
 
 The legacy needle remains compatibility-only. Its disconnected source geometry,
 mass properties, and collision contract are not repaired or promoted here.
@@ -28,11 +31,11 @@ unchanged from PhysicalAI-SimReady-Materials v0.2.0 under MIT-0.
 
 The UV-authored table frame, pad, and drape feed their 2K base-color,
 specular-roughness, and tangent-normal maps into both the OpenPBR and Preview
-paths. Steel normals remain lossless PNG; the higher-entropy pad and drape
-normals use quality-99 JPEG with full 4:4:4 sampling and no resolution loss.
-The PSM and compatibility needle source meshes do not provide a
-qualified UV contract, so their OpenPBR and Preview materials deliberately use
-constants rather than pretending texture fidelity.
+paths. Every normal map is lossless PNG. PSM shaft, wrist, jaws, and polymer
+parts receive distinct, restrained material responses; none use a chrome-like
+clear coat. The PSM and compatibility needle source meshes do not provide a
+qualified UV contract, so their materials deliberately use constants rather
+than pretending texture fidelity.
 
 ## Regeneration
 

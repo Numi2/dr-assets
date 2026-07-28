@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from PIL import Image, JpegImagePlugin
+from PIL import Image
 from pxr import Sdf, Usd, UsdGeom, UsdShade, UsdUtils
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,19 +37,32 @@ ENTRYPOINTS = {
     "table": ASSET_ROOT / "table_visual_v1.usda",
     "legacy_needle": ASSET_ROOT / "legacy_needle_visual_v1.usda",
 }
+REFERENCE_RIG = ASSET_ROOT / "reference_or_rig_v1.usda"
 BASE_ASSETS = {
     "psm": ROOT / "data/Robots/dVRK/PSM/psm_col.usd",
     "table": ROOT / "data/Props/Table/table.usd",
     "legacy_needle": ROOT / "data/Props/Surgical_needle/needle_sdf.usd",
 }
-PSM_STEEL_MESHES = (
-    "/psm/psm_main_insertion_link_2/visuals_xform/tool_main_insert",
-    "/psm/psm_tool_roll_link/visuals_xform/visuals",
-    "/psm/psm_tool_pitch_link/visuals_xform/tool_pitch_link",
-    "/psm/psm_tool_yaw_link/visuals_xform/tool_yaw_link",
-    "/psm/psm_tool_gripper1_link/visuals_xform/gripper_right",
-    "/psm/psm_tool_gripper2_link/visuals_xform/gripper_left",
-)
+PSM_STEEL_MESHES = {
+    "/psm/psm_main_insertion_link_2/visuals_xform/tool_main_insert": (
+        "ShaftSatinSteel"
+    ),
+    "/psm/psm_tool_roll_link/visuals_xform/tool_roll_link": (
+        "WristSatinSteel"
+    ),
+    "/psm/psm_tool_pitch_link/visuals_xform/tool_pitch_link": (
+        "WristSatinSteel"
+    ),
+    "/psm/psm_tool_yaw_link/visuals_xform/tool_yaw_link": (
+        "WristSatinSteel"
+    ),
+    "/psm/psm_tool_gripper1_link/visuals_xform/gripper_right": (
+        "JawSatinSteel"
+    ),
+    "/psm/psm_tool_gripper2_link/visuals_xform/gripper_left": (
+        "JawSatinSteel"
+    ),
+}
 PSM_MATTE_POLYMER_MESHES = (
     "/psm/psm_pitch_end_link/visuals_xform/visuals",
     "/psm/psm_main_insertion_link/visuals_xform/visuals",
@@ -253,8 +266,8 @@ def test_clean_temp_regeneration_is_byte_exact_and_removes_legacy_normals(
 ):
     candidate = tmp_path / "T1"
     stale_paths = (
-        candidate / "textures/pad_normal.png",
-        candidate / "textures/drape_normal.png",
+        candidate / "textures/pad_normal.jpg",
+        candidate / "textures/drape_normal.jpg",
     )
     for stale in stale_paths:
         stale.parent.mkdir(parents=True, exist_ok=True)
@@ -300,6 +313,11 @@ def test_all_local_composition_dependencies_resolve():
         for asset in assets:
             text = str(asset)
             assert Path(text).is_file(), text
+    rig = _stage(REFERENCE_RIG)
+    assert str(rig.GetDefaultPrim().GetPath()) == "/DrAnmarT1ReferenceRig"
+    assert rig.GetPrimAtPath(
+        "/DrAnmarT1ReferenceRig/ReferenceCamera"
+    ).IsA(UsdGeom.Camera)
 
 
 def test_overlay_layers_author_no_physics_or_existing_transform_opinions():
@@ -334,9 +352,9 @@ def test_psm_has_no_dangling_material_targets_and_strong_restrained_bindings():
                     if not stage.GetPrimAtPath(target).IsValid():
                         dangling.append((str(prim.GetPath()), str(target)))
     assert dangling == []
-    for path in PSM_STEEL_MESHES:
+    for path, material in PSM_STEEL_MESHES.items():
         assert _binding_target(stage, path) == (
-            "/psm/DrAnmarT1Looks/SatinSteel",
+            f"/psm/DrAnmarT1Looks/{material}",
             "strongerThanDescendants",
         )
     for path in PSM_MATTE_POLYMER_MESHES:
@@ -431,41 +449,36 @@ def test_textures_are_exactly_2048_and_material_color_spaces_are_explicit():
             path = ASSET_ROOT / "textures" / f"{stem}_{suffix}.png"
             assert _png_dimensions(path) == (2048, 2048)
             assert f"@textures/{stem}_{suffix}.png@" in materials
-        normal_extension = "jpg" if stem in {"pad", "drape"} else "png"
-        normal = ASSET_ROOT / "textures" / f"{stem}_normal.{normal_extension}"
-        if normal_extension == "png":
-            assert _png_dimensions(normal) == (2048, 2048)
-        else:
-            with Image.open(normal) as image:
-                assert image.size == (2048, 2048)
-                assert image.format == "JPEG"
-                assert image.mode == "RGB"
-                assert JpegImagePlugin.get_sampling(image) == 0
-        assert f"@textures/{stem}_normal.{normal_extension}@" in materials
+        normal = ASSET_ROOT / "textures" / f"{stem}_normal.png"
+        assert _png_dimensions(normal) == (2048, 2048)
+        with Image.open(normal) as image:
+            assert image.mode == "RGB"
+        assert f"@textures/{stem}_normal.png@" in materials
     manifest = _manifest()
     assert manifest["texture_encoding"] == {
-        "basecolor_roughness_and_steel_normal": "lossless_PNG",
-        "pad_and_drape_normal": {
-            "format": "JPEG",
-            "quality": 99,
-            "subsampling": "4:4:4",
-            "native_rtx_qualified": False,
-        },
+        "all_basecolor_roughness_and_normal_maps": "lossless_PNG",
+        "native_rtx_qualified": False,
     }
     assert materials.count('token inputs:sourceColorSpace = "sRGB"') == 3
     assert materials.count('token inputs:sourceColorSpace = "raw"') == 6
-    assert materials.count('uniform token info:id = "UsdPreviewSurface"') == 6
-    assert materials.count("inherits = </open_pbr_uber_base>") == 6
+    assert materials.count('uniform token info:id = "UsdPreviewSurface"') == 8
+    assert materials.count("inherits = </open_pbr_uber_base>") == 8
     assert "OmniSurface" not in materials
     assert "outputs:mdl:surface" not in materials
-    assert "float inputs:roughness = 0.36" in materials
-    assert "float inputs:roughness = 0.42" in materials
-    assert "float inputs:roughness = 0.72" in materials
+    assert materials.count("float inputs:coat_weight = 0") == 8
+    for roughness in ("0.54", "0.58", "0.62", "0.78", "0.82", "0.9"):
+        assert f"float inputs:specular_roughness = {roughness}" in materials
 
 
 def test_openpbr_materialx_is_primary_and_preview_is_real_fallback():
     stage = _stage(MATERIALS_PATH)
-    uniform_names = ("SatinSteel", "NeedleSatinSteel", "MattePolymer")
+    uniform_names = (
+        "ShaftSatinSteel",
+        "WristSatinSteel",
+        "JawSatinSteel",
+        "NeedleSatinSteel",
+        "MattePolymer",
+    )
     textured = {
         "TableFrameSteel": "steel",
         "TablePad": "pad",
@@ -506,7 +519,6 @@ def test_openpbr_materialx_is_primary_and_preview_is_real_fallback():
         assert prim.GetAttribute("drAnmarOpenPBRInputMode").Get() == (
             "uv_texture_maps"
         )
-        normal_extension = "jpg" if stem in {"pad", "drape"} else "png"
         expected = {
             "inputs:base_color_texture_file": (
                 f"textures/{stem}_basecolor.png"
@@ -515,7 +527,7 @@ def test_openpbr_materialx_is_primary_and_preview_is_real_fallback():
                 f"textures/{stem}_roughness.png"
             ),
             "inputs:geometry_normal_texture_file": (
-                f"textures/{stem}_normal.{normal_extension}"
+                f"textures/{stem}_normal.png"
             ),
         }
         for attribute_name, relative in expected.items():
@@ -577,4 +589,5 @@ def test_package_provenance_rejects_unrecorded_third_party_content():
     assert "does not rewrite or relicense" in notice
     assert "compatibility-only" in readme
     assert "not clinically validated" in readme
-    assert "constants rather than pretending texture fidelity" in readme
+    assert "deliberately use constants" in readme
+    assert "pretending texture fidelity" in readme
