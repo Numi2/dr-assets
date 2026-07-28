@@ -1,0 +1,85 @@
+{
+  "active_replacement": false,
+  "asset_id": "dranmar-needle-t1-legacy-envelope-candidate-v1",
+  "clinical_validation": false,
+  "collision": {
+    "capsule_count": 96,
+    "contact_offset_m": 1.5e-05,
+    "continuous_by_shared_centerline_endpoints": true,
+    "maximum_centerline_segment_m": 0.0006267852151474765,
+    "maximum_radius_m": 0.000825,
+    "minimum_radius_m": 3.6715852568726104e-05,
+    "rest_offset_m": 0.0
+  },
+  "mass_properties": {
+    "center_of_mass_m": [
+      0.0072816199600989895,
+      0.0010067334266879394,
+      3.9480845092955484e-10
+    ],
+    "density_kg_m3": 8000.0,
+    "diagonal_inertia_kg_m2": [
+      2.886051342709055e-08,
+      1.6923519078570365e-07,
+      1.977698351604087e-07
+    ],
+    "inertia_tensor_kg_m2": [
+      [
+        1.683827174371418e-07,
+        -1.0905914012647556e-08,
+        -3.570073817747644e-15
+      ],
+      [
+        -1.0905914012647556e-08,
+        2.971298677565332e-08,
+        7.608195568175281e-15
+      ],
+      [
+        -3.570073817747644e-15,
+        7.608195568175281e-15,
+        1.9776983516040775e-07
+      ]
+    ],
+    "mass_kg": 0.0009714360915530493,
+    "principal_axes_convention": {
+      "openusd_serialization": "wxyz",
+      "runtime": "xyzw"
+    },
+    "principal_axes_usd_wxyz": [
+      6.809929687679495e-08,
+      0.7341418278034434,
+      0.6789961536484677,
+      3.352167058525161e-08
+    ],
+    "principal_axes_xyzw": [
+      0.7341418278034434,
+      0.6789961536484677,
+      3.352167058525161e-08,
+      6.809929687679495e-08
+    ],
+    "source": "actual_connected_watertight_render_mesh_tetrahedral_integration",
+    "volume_m3": 1.2142951144413116e-07
+  },
+  "material": {
+    "class": "surgical_stainless_steel_engineering_proxy",
+    "density_kg_m3": 8000.0,
+    "dynamic_friction": 0.24,
+    "restitution": 0.01,
+    "static_friction": 0.32
+  },
+  "qualification_required": [
+    "legacy_analytic_pickup_parity",
+    "single_arm_retention_parity",
+    "two_arm_handover_parity",
+    "mid_air_transport_retention_parity",
+    "native_Isaac_contact_and_CCD_evidence"
+  ],
+  "rigid_body": {
+    "ccd": true,
+    "solver_position_iterations": 24,
+    "solver_velocity_iterations": 8,
+    "speculative_ccd": true
+  },
+  "schema": "dr.anmar.needle-t1-compatibility-physics.v1",
+  "status": "unqualified_candidate"
+}

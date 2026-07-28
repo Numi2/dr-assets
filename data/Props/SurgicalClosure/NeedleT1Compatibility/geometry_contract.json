@@ -1,0 +1,75 @@
+{
+  "active_replacement": false,
+  "asset_id": "dranmar-needle-t1-legacy-envelope-candidate-v1",
+  "clinical_validation": false,
+  "collision": {
+    "capsule_count": 96,
+    "render_mesh_collision_authority": false,
+    "representation": "continuous_compound_capsules"
+  },
+  "coordinate_system": {
+    "needle_plane": "XY",
+    "units": "meters",
+    "up_axis": "Z"
+  },
+  "legacy_envelope": {
+    "centerline_arc_length_m": 0.0601740656868589,
+    "centerline_arc_radians": 3.141592653589793,
+    "centerline_radius_m": 0.019154,
+    "circle_center_m": [
+      0.02004,
+      0.0,
+      0.0
+    ],
+    "midpoint_position_m": [
+      0.0008859999999999979,
+      0.0,
+      0.0
+    ],
+    "tail_position_m": [
+      0.02004,
+      0.019154,
+      0.0
+    ],
+    "tip_position_m": [
+      0.02004,
+      -0.019154,
+      0.0
+    ]
+  },
+  "promotion_gate": "pickup_handover_retention_parity_required",
+  "render_geometry": {
+    "arc_resolution": 384,
+    "body_diameter_m": 0.00165,
+    "normal_interpolation": "vertex",
+    "radial_resolution": 32,
+    "shape": "single_connected_watertight_half_circle_taper_point",
+    "taper_length_m": 0.005,
+    "tip_curvature_radius_m": 2.5e-05,
+    "uv_interpolation": "faceVarying"
+  },
+  "runtime_spawn_contract": {
+    "candidate_root_orientation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "candidate_scale_xyz": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "legacy_active_asset": "data/Props/Surgical_needle/needle_sdf.usd",
+    "legacy_active_scale_xyz": [
+      0.4,
+      0.4,
+      0.4
+    ],
+    "path_only_substitution_allowed": false,
+    "promotion_requires_composed_world_space_frame_parity": true
+  },
+  "schema": "dr.anmar.needle-t1-compatibility-geometry.v1",
+  "status": "inactive_qualification_candidate",
+  "version": "1.1.0"
+}

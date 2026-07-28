@@ -29,7 +29,7 @@ from typing import Final, Iterable
 
 
 CATALOG_SCHEMA: Final = "dr.anmar.sim-ready-asset-catalog.v1"
-CATALOG_VERSION: Final = "0.7.2"
+CATALOG_VERSION: Final = "0.8.0"
 CATALOG_ROOT_ENV: Final = "DRANMAR_ASSET_DATA_ROOT"
 CATALOG_CACHE_ENV: Final = "DRANMAR_ASSET_CACHE_DIR"
 I4H_REFERENCE_RELEASE: Final = "v0.7.0"
@@ -38,7 +38,15 @@ I4H_REFERENCE_COMMIT: Final = "b0b7ad39f26490d58d12407cfa74b3c9ad861769"
 _DEFAULT_DATA_ROOT = Path(__file__).resolve().parents[3] / "data"
 _HASH_SKIP_NAMES = frozenset({".gitattributes", ".gitignore", ".DS_Store"})
 _HASH_SKIP_DIRS = frozenset({".git", "__pycache__"})
-_USD_REFERENCE_RE = re.compile(r"@([^@]+)@")
+_USD_REFERENCE_RE = re.compile(r"@([^@\r\n]*)@")
+
+
+def _iter_usd_asset_references(text: str) -> Iterable[str]:
+    """Yield non-empty USD asset paths without spanning empty ``@@`` values."""
+
+    for reference in _USD_REFERENCE_RE.findall(text):
+        if reference:
+            yield reference
 
 
 @dataclass(frozen=True)
@@ -71,6 +79,15 @@ class DrAnmarAssetDescriptor:
 
 
 DRANMAR_SIM_READY_ASSETS: Final[dict[str, DrAnmarAssetDescriptor]] = {
+    "needle_ready_tissue": DrAnmarAssetDescriptor(
+        "dranmar-needle-ready-tissue-v2",
+        "Props/SurgicalTissue/NeedleReadyTissueUnit",
+        "needle_ready_tissue_unit.usda",
+        None,
+        None,
+        interaction_frames="interaction_frames.json",
+        physics_profile="physics_profile.json",
+    ),
     "wound_preparation": DrAnmarAssetDescriptor(
         "dranmar-wound-preparation-robot-v1",
         "Props/SurgicalPreparation/WoundPreparationRobot",
@@ -268,7 +285,7 @@ def validate_usd_dependency_closure(asset_name: str) -> dict[str, object]:
             # Binary .usd layers require OpenUSD resolution at native
             # qualification time; they are still included in the folder hash.
             continue
-        for reference in _USD_REFERENCE_RE.findall(text):
+        for reference in _iter_usd_asset_references(text):
             if "://" in reference:
                 continue
             references_checked += 1

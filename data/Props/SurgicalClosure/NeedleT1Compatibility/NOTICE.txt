@@ -1,0 +1,14 @@
+DrAnmar Needle T1 Compatibility Candidate 1.1.0
+
+The geometry, topology, compound collision layout, textures, mass-property
+integration, frames, and authoring code were independently created by the
+Dr.Anmar project. No vendor needle mesh, texture, patient data, or proprietary
+medical-device geometry is included.
+
+The unmodified NVIDIA OpenPBR 1.1 MaterialX base class and its MIT-0 license
+are redistributed from PhysicalAI-SimReady-Materials v0.2.0. See
+`vendor/nvidia_physicalai_simready_materials_v0_2_0/PROVENANCE.md`. No NVIDIA
+texture, geometry, patient data, or clinical calibration is redistributed.
+
+This package is an inactive research candidate and is not clinically validated
+or approved for patient care.

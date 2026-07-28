@@ -1,0 +1,87 @@
+#usda 1.0
+(
+    defaultPrim = "DrAnmarT1ReferenceRig"
+    doc = "Neutral render-reference camera and soft surgical-field lighting for DrAnmar T1 asset review."
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "DrAnmarT1ReferenceRig" (
+    assetInfo = {
+        string name = "DrAnmarT1ReferenceORRig"
+        string version = "1.2.0"
+    }
+    customData = {
+        string drAnmarAssetRole = "render_reference_only"
+        bool drAnmarClinicalValidation = false
+        bool drAnmarPhysicsAuthority = false
+        string drAnmarLightingIntent = "neutral_soft_4300K_surgical_field_asset_review"
+        string drAnmarQualification = "source_authored_native_RTX_review_pending"
+    }
+    kind = "component"
+)
+{
+    def Scope "Lighting"
+    {
+        def DomeLight "NeutralAmbient"
+        {
+            color3f inputs:color = (0.91, 0.94, 1)
+            float inputs:exposure = 0
+            float inputs:intensity = 0.18
+            bool inputs:normalize = true
+        }
+
+        def RectLight "SurgicalKey"
+        {
+            color3f inputs:color = (1, 1, 1)
+            float inputs:colorTemperature = 4300
+            bool inputs:enableColorTemperature = true
+            float inputs:exposure = 0
+            float inputs:height = 0.42
+            float inputs:intensity = 1450
+            bool inputs:normalize = true
+            float inputs:width = 0.90
+            matrix4d xformOp:transform = ((0.678280103, 0.734803445, 0, 0), (-0.568724222, 0.524976205, 0.633208294, 0), (0.465283635, -0.429492586, 0.773981432, 0), (0.52, -0.48, 1.32, 1))
+            uniform token[] xformOpOrder = ["xformOp:transform"]
+        }
+
+        def RectLight "SoftFill"
+        {
+            color3f inputs:color = (1, 1, 1)
+            float inputs:colorTemperature = 5000
+            bool inputs:enableColorTemperature = true
+            float inputs:exposure = 0
+            float inputs:height = 0.48
+            float inputs:intensity = 650
+            bool inputs:normalize = true
+            float inputs:width = 0.72
+            matrix4d xformOp:transform = ((0.296399215, -0.955064137, 0, 0), (0.684967727, 0.212576191, 0.696871994, 0), (-0.665557449, -0.206552312, 0.717195527, 0), (-0.58, -0.18, 1.08, 1))
+            uniform token[] xformOpOrder = ["xformOp:transform"]
+        }
+
+        def RectLight "EdgeSeparation"
+        {
+            color3f inputs:color = (1, 1, 1)
+            float inputs:colorTemperature = 4600
+            bool inputs:enableColorTemperature = true
+            float inputs:exposure = 0
+            float inputs:height = 0.30
+            float inputs:intensity = 520
+            bool inputs:normalize = true
+            float inputs:width = 0.62
+            matrix4d xformOp:transform = ((-0.984783559, 0.173785334, 0, 0), (-0.123282632, -0.698601583, 0.70481006, 0), (0.122485652, 0.69408536, 0.709396066, 0), (0.12, 0.68, 1.15, 1))
+            uniform token[] xformOpOrder = ["xformOp:transform"]
+        }
+    }
+
+    def Camera "ReferenceCamera"
+    {
+        float2 clippingRange = (0.05, 8)
+        double focalLength = 58
+        float horizontalAperture = 20.955
+        token projection = "perspective"
+        float verticalAperture = 15.2908
+        matrix4d xformOp:transform = ((0.734803445, 0.678280103, 0, 0), (-0.291389523, 0.315671983, 0.903019017, 0), (0.612499832, -0.663541484, 0.429600576, 0), (0.72, -0.78, 0.96, 1))
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+}

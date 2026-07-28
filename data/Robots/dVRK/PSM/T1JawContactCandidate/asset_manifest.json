@@ -1,0 +1,76 @@
+{
+  "active_replacement": false,
+  "asset_id": "dranmar-psm-t1-jaw-contact-candidate-v1",
+  "asset_version": "1.0.0",
+  "base_dependency": {
+    "bytes": 22251170,
+    "modified": false,
+    "repository_path": "data/Robots/dVRK/PSM/psm_col.usd",
+    "sha256": "87330b0e46e5554d53fe1b840f2db38a9bdbf00a79ca464159009406156ca0d4"
+  },
+  "clinical_validation": false,
+  "dependency_complete_directory": false,
+  "dependency_lock_complete": true,
+  "generator": {
+    "repository_path": "tools/generate_psm_t1_jaw_contact_candidate.py",
+    "sha256": "9a93d1dddcf6a5a5c675673f6d225cbb40d3697efe4491f25d06242161259d8d",
+    "standard_library_only": true
+  },
+  "instrument_calibration": false,
+  "license": "BSD-3-Clause",
+  "members": {
+    "LICENSE.txt": {
+      "bytes": 1613,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "9c69bf1f27dd03eeed8dd8aa2fa8a86702f6608b7f6397e8ea9d4c6a1d895c76"
+    },
+    "NOTICE.txt": {
+      "bytes": 477,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "781b64e321e7d34307a89e75fdc5179dfd103696a6dfb9839abccaf45fccd705"
+    },
+    "README.md": {
+      "bytes": 1283,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "c43c9b83f4eeba583978b0f5853df6572ff746b40b2d0b4a5920370374bcffc1"
+    },
+    "dependency_lock.json": {
+      "bytes": 694,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "9149380dc3600c13b17268a97750fc1d1f4a4c9dd1032441e812c6f63a68f2a4"
+    },
+    "friction_hypothesis.json": {
+      "bytes": 2195,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "e0eb907306bca65e7ebc7a507a8df33687338c81169dfd50153f51a612b2617d"
+    },
+    "provenance.json": {
+      "bytes": 705,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "be5f535ebc8b9c726fcab137edcea65f8ccd923edd592eda8cc3182fa58081a9"
+    },
+    "psm_t1_jaw_contact_candidate.usda": {
+      "bytes": 971,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "14e6e956109de5bedb33f16e133ddf4758c0008dd1fc364092cca37b77e2e2de"
+    },
+    "qualification_contract.json": {
+      "bytes": 3063,
+      "license": "BSD-3-Clause",
+      "provenance": "independently_authored_DrAnmar_candidate",
+      "sha256": "25c2f1cc5ac8e29790f3b51bc13414d0ecaaeac22e237c9077857de82a6d2a41"
+    }
+  },
+  "package_role": "inactive_overlay_with_external_hash_locked_base",
+  "physics_calibration": false,
+  "runtime_references": [],
+  "schema": "dr.anmar.psm-t1-jaw-contact-candidate-manifest.v1",
+  "status": "inactive_unqualified_candidate"
+}

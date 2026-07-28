@@ -1,0 +1,11 @@
+Dr.Anmar T1 operating-table collider candidate 1.0.0
+
+Status: inactive, unqualified research candidate.
+
+The local proxy geometry, generator, contracts, and documentation were authored
+by Dr.Anmar Project Developers under BSD-3-Clause. The package composes exact,
+unchanged, hash-locked repository foundations; their licenses and provenance
+are recorded in dependency_lock.json.
+
+No native Isaac/PhysX qualification, physics calibration, instrument
+calibration, clinical validation, or activation claim is made.

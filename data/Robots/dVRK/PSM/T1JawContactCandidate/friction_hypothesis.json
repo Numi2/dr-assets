@@ -1,0 +1,62 @@
+{
+  "asset_id": "dranmar-psm-t1-jaw-contact-candidate-v1",
+  "asset_version": "1.0.0",
+  "calibration_status": "uncalibrated_engineering_hypothesis",
+  "candidate_seed": {
+    "dynamic_friction": 0.45,
+    "dynamic_to_static_ratio": 0.75,
+    "static_friction": 0.6
+  },
+  "contact_model": {
+    "adhesion": 0.0,
+    "cohesion": 0.0,
+    "magnetism": 0.0,
+    "model": "ordinary_coulomb_friction",
+    "restitution": "inherited_from_locked_base_value_0.0",
+    "suction": 0.0
+  },
+  "engineering_rationale": [
+    "The seed restores the physical ordering static friction greater than or equal to dynamic friction.",
+    "The seed is intentionally below unity so friction cannot silently replace bilateral grasp geometry or normal force.",
+    "The collision meshes do not resolve serration teeth. The envelope is only an effective steel/serrated-jaw research hypothesis and does not claim measured material identification.",
+    "Activation requires native contact and task qualification; no clinical, instrument, or physics-calibration claim is made."
+  ],
+  "forbidden_shortcuts": {
+    "adhesion": true,
+    "contact_state_teleport": true,
+    "force_injection": true,
+    "magnetism": true,
+    "object_attachment": true,
+    "suction": true
+  },
+  "randomization_envelope": {
+    "constraints": [
+      "0 <= dynamic_friction <= static_friction <= 0.90",
+      "sample dynamic friction as static friction times the sampled ratio",
+      "do not tune on evaluation seeds",
+      "do not change adhesion, cohesion, magnetism, suction, or attachment"
+    ],
+    "dynamic_friction": {
+      "derived_absolute_maximum": 0.81,
+      "derived_absolute_minimum": 0.22749999999999998,
+      "formula": "static_friction * dynamic_to_static_ratio"
+    },
+    "dynamic_to_static_ratio": {
+      "distribution": "uniform",
+      "maximum": 0.9,
+      "minimum": 0.65
+    },
+    "restitution": {
+      "distribution": "uniform",
+      "maximum": 0.05,
+      "minimum": 0.0,
+      "note": "sensitivity-only; candidate USDA inherits zero"
+    },
+    "static_friction": {
+      "distribution": "uniform",
+      "maximum": 0.9,
+      "minimum": 0.35
+    }
+  },
+  "status": "inactive_unqualified_candidate"
+}

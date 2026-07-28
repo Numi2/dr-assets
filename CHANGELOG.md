@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 0.8.0 — 2026-07-27
+
+- Added the canonical DrAnmar Needle-Ready Tissue Unit with training, contact,
+  and validation OpenUSD TetMesh LODs.
+- Made all LODs exactly point-nested and all surface, bulk, and fascia
+  interfaces conform to tetrahedral faces.
+- Added stable semantic coordinates, anchor, wound-edge, safe-bite, contact,
+  material, and fiber sets plus deterministic generation and qualification
+  contracts.
+- Kept puncture, tract, thread-passage, tear, calibration, and clinical claims
+  fail-closed.
+
 - Brought contact-owned vessel and bowel state transitions onto the repository
   front page.
 - Added a compact researcher brief covering implemented authority boundaries,

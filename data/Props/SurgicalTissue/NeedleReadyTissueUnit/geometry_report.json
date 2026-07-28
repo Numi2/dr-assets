@@ -1,0 +1,269 @@
+{
+  "schema": "dr.anmar.needle-ready-tissue-geometry-report.v2",
+  "asset_id": "dranmar-needle-ready-tissue-v2",
+  "asset_name": "DrAnmar Needle-Ready Tissue Unit",
+  "asset_version": "2.2.0",
+  "generator": {
+    "path": "tools/generate_needle_ready_tissue.py",
+    "sha256": "ae9a1452fc65f4866f33c23eb62851eb304ec02f48dd187227da7c3d759536bc",
+    "dependency_policy": "Python_standard_library_only",
+    "deterministic": true
+  },
+  "contract": "geometry_contract.json",
+  "contract_sha256": "b4a1e94dd29e7ed1ea643358e454530bf7a3ba379ddcca17e933a1ef25119866",
+  "root_usd": "needle_ready_tissue_unit.usda",
+  "root_usd_sha256": "c0a8ac38066b3272b817c16afd655bb31e41538a891c6ee30d468a011b88745a",
+  "lods": {
+    "training": {
+      "usd": "needle_ready_tissue_training.usda",
+      "usd_sha256": "5d13933d13f72d5999607f40ebfc34f23113578eeb5a9ebe98cb6822a91e141c",
+      "point_count": 560,
+      "tetrahedron_count": 1944,
+      "surface_triangle_count": 792,
+      "connected_components": 2,
+      "volume_m3": 1.7546118355903682e-05,
+      "mass_kg_seed": 0.018423424273698866,
+      "minimum_tetra_volume_m3": 3.9209340183439564e-09,
+      "local_thickness_range_m": [
+        0.005843425163105873,
+        0.006168292035722602
+      ],
+      "rest_wound_gap_range_m": [
+        0.003918535325745575,
+        0.00612832681654904
+      ],
+      "visual_schema_normal_count": 2376,
+      "tetrahedron_quality": {
+        "minimum_mean_ratio": 0.34054921891817236,
+        "p01_mean_ratio": 0.3452302040213051,
+        "median_mean_ratio": 0.4153251710233069,
+        "minimum_scaled_jacobian": 0.1224825715451153,
+        "p01_scaled_jacobian": 0.12417694948063394,
+        "median_scaled_jacobian": 0.168557678045236,
+        "maximum_edge_ratio": 7.402172210853091,
+        "p99_edge_ratio": 7.332994458660359,
+        "median_edge_ratio": 6.7093347586061896
+      },
+      "tetrahedron_quality_gates": {
+        "minimum_mean_ratio": 0.33,
+        "minimum_scaled_jacobian": 0.12,
+        "maximum_edge_ratio": 7.5
+      },
+      "node_set_counts": {
+        "anchor_outer": 80,
+        "left_flap": 280,
+        "right_flap": 280,
+        "top_surface": 140,
+        "bottom_surface": 140,
+        "wound_edge": 80,
+        "wound_edge_top": 20,
+        "safe_bite_top": 32,
+        "contact_roi_top": 48
+      },
+      "element_set_counts": {
+        "layer_fascia": 648,
+        "layer_bulk": 648,
+        "layer_surface": 648,
+        "safe_bite_volume": 276,
+        "contact_roi_volume": 642
+      },
+      "face_set_counts": {
+        "safe_bite_surface": 32,
+        "unsafe_edge_surface": 32,
+        "contact_roi_surface": 80,
+        "wound_surface": 108
+      },
+      "material_face_counts": {
+        "surface": 216,
+        "bulk": 252,
+        "fascia": 216,
+        "wound_surface": 36,
+        "wound_bulk": 36,
+        "wound_fascia": 36
+      },
+      "layer_tetrahedron_counts": {
+        "fascia": 648,
+        "bulk": 648,
+        "surface": 648
+      }
+    },
+    "contact": {
+      "usd": "needle_ready_tissue_contact.usda",
+      "usd_sha256": "b234193e135f016e83a8c2b7dbbd1245a6b4e3c0671c21b7d23fb52861af409e",
+      "point_count": 2470,
+      "tetrahedron_count": 10368,
+      "surface_triangle_count": 2688,
+      "connected_components": 2,
+      "volume_m3": 1.754621009085489e-05,
+      "mass_kg_seed": 0.018423520595397636,
+      "minimum_tetra_volume_m3": 9.149929270456385e-10,
+      "local_thickness_range_m": [
+        0.005843425163105873,
+        0.006168292035722602
+      ],
+      "rest_wound_gap_range_m": [
+        0.003918535325745575,
+        0.00612832681654904
+      ],
+      "visual_schema_normal_count": 8064,
+      "tetrahedron_quality": {
+        "minimum_mean_ratio": 0.5026569092095158,
+        "p01_mean_ratio": 0.5195135541326374,
+        "median_mean_ratio": 0.6635579856778115,
+        "minimum_scaled_jacobian": 0.23199621339789583,
+        "p01_scaled_jacobian": 0.24110196740006706,
+        "median_scaled_jacobian": 0.39586626067724645,
+        "maximum_edge_ratio": 3.8829943222139525,
+        "p99_edge_ratio": 3.799623661131962,
+        "median_edge_ratio": 2.889517431317206
+      },
+      "tetrahedron_quality_gates": {
+        "minimum_mean_ratio": 0.5,
+        "minimum_scaled_jacobian": 0.23,
+        "maximum_edge_ratio": 4.0
+      },
+      "node_set_counts": {
+        "anchor_outer": 380,
+        "left_flap": 1235,
+        "right_flap": 1235,
+        "top_surface": 494,
+        "bottom_surface": 494,
+        "wound_edge": 190,
+        "wound_edge_top": 38,
+        "safe_bite_top": 90,
+        "contact_roi_top": 150
+      },
+      "element_set_counts": {
+        "layer_fascia": 2592,
+        "layer_bulk": 5184,
+        "layer_surface": 2592,
+        "safe_bite_volume": 1562,
+        "contact_roi_volume": 3836
+      },
+      "face_set_counts": {
+        "safe_bite_surface": 128,
+        "unsafe_edge_surface": 96,
+        "contact_roi_surface": 320,
+        "wound_surface": 288
+      },
+      "material_face_counts": {
+        "surface": 864,
+        "bulk": 672,
+        "fascia": 864,
+        "wound_surface": 72,
+        "wound_bulk": 144,
+        "wound_fascia": 72
+      },
+      "layer_tetrahedron_counts": {
+        "fascia": 2592,
+        "bulk": 5184,
+        "surface": 2592
+      }
+    },
+    "validation": {
+      "usd": "needle_ready_tissue_validation.usda",
+      "usd_sha256": "09500cf0e47807b823ea0d7ff84c664dbda10cfe57e194da291a1c7014bfe54c",
+      "point_count": 16650,
+      "tetrahedron_count": 82944,
+      "surface_triangle_count": 10752,
+      "connected_components": 2,
+      "volume_m3": 1.754621238963741e-05,
+      "mass_kg_seed": 0.01842352300911928,
+      "minimum_tetra_volume_m3": 1.0680045164243175e-10,
+      "local_thickness_range_m": [
+        0.005842962323770445,
+        0.0061714383552351915
+      ],
+      "rest_wound_gap_range_m": [
+        0.003918535325745575,
+        0.00612832681654904
+      ],
+      "visual_schema_normal_count": 32256,
+      "tetrahedron_quality": {
+        "minimum_mean_ratio": 0.5006210115703613,
+        "p01_mean_ratio": 0.5186303948759147,
+        "median_mean_ratio": 0.662251241298769,
+        "minimum_scaled_jacobian": 0.23033276998400706,
+        "p01_scaled_jacobian": 0.24084678701903756,
+        "median_scaled_jacobian": 0.3950757237691085,
+        "maximum_edge_ratio": 3.8972274309578183,
+        "p99_edge_ratio": 3.8033849025889817,
+        "median_edge_ratio": 2.792515746449596
+      },
+      "tetrahedron_quality_gates": {
+        "minimum_mean_ratio": 0.5,
+        "minimum_scaled_jacobian": 0.22,
+        "maximum_edge_ratio": 4.0
+      },
+      "node_set_counts": {
+        "anchor_outer": 1998,
+        "left_flap": 8325,
+        "right_flap": 8325,
+        "top_surface": 1850,
+        "bottom_surface": 1850,
+        "wound_edge": 666,
+        "wound_edge_top": 74,
+        "safe_bite_top": 310,
+        "contact_roi_top": 620
+      },
+      "element_set_counts": {
+        "layer_fascia": 20736,
+        "layer_bulk": 41472,
+        "layer_surface": 20736,
+        "safe_bite_volume": 13446,
+        "contact_roi_volume": 29416
+      },
+      "face_set_counts": {
+        "safe_bite_surface": 591,
+        "unsafe_edge_surface": 372,
+        "contact_roi_surface": 1240,
+        "wound_surface": 1152
+      },
+      "material_face_counts": {
+        "surface": 3456,
+        "bulk": 2688,
+        "fascia": 3456,
+        "wound_surface": 288,
+        "wound_bulk": 576,
+        "wound_fascia": 288
+      },
+      "layer_tetrahedron_counts": {
+        "fascia": 20736,
+        "bulk": 41472,
+        "surface": 20736
+      }
+    }
+  },
+  "semantic_coordinate_system": "(component,u,v,w)",
+  "lods_point_nested": true,
+  "material_interfaces_conforming": true,
+  "qualification_scope": "source_static_only",
+  "stable_capabilities": [
+    "layer-conforming tetrahedral geometry",
+    "nested deterministic geometry LODs",
+    "stable semantic coordinates across LODs",
+    "wound-edge approach and bite-region planning labels",
+    "correlated independently irregular wound lips",
+    "multi-scale rest shape and spatially varying thickness",
+    "depth-resolved exposed wound material subsets",
+    "explicit face-varying smooth schema normals"
+  ],
+  "native_requalification_pending": [
+    "intact deformation",
+    "two-way rigid-soft contact",
+    "outer-band fixture and retraction",
+    "Fabric-synchronized visual deformation",
+    "measured performance and memory by LOD"
+  ],
+  "gated_capabilities": [
+    "puncture",
+    "persistent needle tract",
+    "thread passage",
+    "cutting",
+    "suture pullout",
+    "tear and cheese-wire failure",
+    "patient-specific mechanics",
+    "clinical use"
+  ],
+  "clinical_validation": false
+}

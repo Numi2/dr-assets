@@ -1,0 +1,656 @@
+#usda 1.0
+(
+    defaultPrim = "psm"
+    doc = "Inactive DrAnmar T1 link-local PSM collider candidate; render and articulation remain externally composed."
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "psm" (
+    prepend references = @../../../../Props/SurgicalScene/T1/psm_visual_v1.usda@</psm>
+)
+{
+    custom bool dranmar:candidate:active = false
+    custom string dranmar:candidate:assetId = "dranmar-psm-t1-collider-candidate-v1"
+    custom string dranmar:candidate:qualificationContract = "./qualification_contract.json"
+    custom string dranmar:candidate:status = "inactive_unqualified_candidate"
+    custom string dranmar:candidate:runtimeQuaternionOrder = "xyzw"
+    custom string dranmar:candidate:usdQuaternionOrder = "wxyz"
+    custom string dranmar:candidate:version = "1.0.0"
+    over "psm_remote_center_link"
+    {
+        over "visuals_xform"
+        {
+            over "visuals"
+            {
+                bool physics:collisionEnabled = false
+            }
+        }
+        def Scope "DrAnmarT1ColliderCandidate"
+        {
+            custom bool dranmar:candidate:active = false
+            custom string dranmar:candidate:geometryContract = "../../geometry_contract.json"
+            def Sphere "RemoteCenter" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "exact analytic replacement for the locked spherical envelope"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.015, -0.015, -0.015), (0.015, 0.015, 0.015)]
+                double radius = 0.015
+                double3 xformOp:translate = (0, 0, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+        }
+    }
+    over "psm_pitch_end_link"
+    {
+        over "visuals_xform"
+        {
+            over "visuals"
+            {
+                bool physics:collisionEnabled = false
+            }
+        }
+        def Scope "DrAnmarT1ColliderCandidate"
+        {
+            custom bool dranmar:candidate:active = false
+            custom string dranmar:candidate:geometryContract = "../../geometry_contract.json"
+            def Cube "RemoteRod" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "isolated remote-center-side component; open span remains empty"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (-0.000699976, -0.034829933, -3.1447e-05)
+                double3 xformOp:scale = (0.010899996, 0.003899984, 0.010899998)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "PitchHousingA" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "first occupied pitch-housing segment"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.010174548, 0.0862211965, -7.0445e-06)
+                double3 xformOp:scale = (0.044452098, 0.035408183, 0.060399987)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "PitchHousingB" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "central pitch-housing segment"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.0275500065, 0.133476062, -1.5405e-06)
+                double3 xformOp:scale = (0.079899991, 0.041924159, 0.077906769)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "PitchHousingC" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "third occupied pitch-housing segment"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.050415667, 0.17105219, 4.815e-06)
+                double3 xformOp:scale = (0.034168658, 0.031749233, 0.077905502)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "PitchEndBlock" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "separate distal block; 298 mm empty mechanical span is preserved"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.046299971, 0.511746137, 6.7644e-05)
+                double3 xformOp:scale = (0.0364, 0.054259295, 0.071899988)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+    }
+    over "psm_main_insertion_link"
+    {
+        over "visuals_xform"
+        {
+            over "visuals"
+            {
+                bool physics:collisionEnabled = false
+            }
+        }
+        def Scope "DrAnmarT1ColliderCandidate"
+        {
+            custom bool dranmar:candidate:active = false
+            custom string dranmar:candidate:geometryContract = "../../geometry_contract.json"
+            def Cube "InsertionA" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise occupied insertion-housing slice"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.020925, -1.0999e-05, -0.0422405015)
+                double3 xformOp:scale = (0.01565, 0.0833, 0.019851001)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "InsertionB" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise occupied insertion-housing slice"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.0165000005, -8e-06, -0.021776499)
+                double3 xformOp:scale = (0.006800001, 0.068500004, 0.017559)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "InsertionC" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise occupied insertion-housing slice"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.0165000005, -4.9995e-06, -0.0015805)
+                double3 xformOp:scale = (0.006800001, 0.068499999, 0.018447)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "InsertionD" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise occupied insertion-housing slice"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.0170000005, -1.0005e-06, 0.017696)
+                double3 xformOp:scale = (0.005800001, 0.083300001, 0.015898)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "InsertionE" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise occupied insertion-housing slice"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.022925, 3.0005e-06, 0.0392685005)
+                double3 xformOp:scale = (0.01165, 0.083300001, 0.019833001)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "InsertionF" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise occupied insertion-housing slice"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.0185000005, 8.5015e-06, 0.0598560005)
+                double3 xformOp:scale = (0.002800001, 0.064517001, 0.020577999)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+    }
+    over "psm_main_insertion_link_2"
+    {
+        over "visuals_xform"
+        {
+            over "tool_main_insert"
+            {
+                bool physics:collisionEnabled = false
+            }
+        }
+        def Scope "DrAnmarT1ColliderCandidate"
+        {
+            custom bool dranmar:candidate:active = false
+            custom string dranmar:candidate:geometryContract = "../../geometry_contract.json"
+            def Cube "MainHousingA" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise occupied main-insertion housing slice"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.0013395005, -9.0005e-06, -0.0482020005)
+                double3 xformOp:scale = (0.033943001, 0.064499999, 0.018703999)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "MainHousingB" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise occupied main-insertion housing slice"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.0012055005, 0, -0.0300004995)
+                double3 xformOp:scale = (0.034211001, 0.070911998, 0.018296999)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "MainHousingC" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise occupied main-insertion housing slice"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.0003945, 0, -0.0120025)
+                double3 xformOp:scale = (0.034011, 0.073681998, 0.018295)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "MainHousingD" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise occupied main-insertion housing slice"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.000371, 0, 0.005999)
+                double3 xformOp:scale = (0.034058, 0.073681998, 0.018294)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "MainHousingE" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise occupied main-insertion housing slice"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.000626, 0, 0.0240005)
+                double3 xformOp:scale = (0.033548, 0.065324004, 0.018299)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "MainHousingF" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise occupied main-insertion housing slice"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.0012625, -1.5e-06, 0.0422134995)
+                double3 xformOp:scale = (0.032275, 0.050111, 0.018725003)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+    }
+    over "psm_main_insertion_link_3"
+    {
+        over "visuals_xform"
+        {
+            over "visuals"
+            {
+                bool physics:collisionEnabled = false
+            }
+        }
+        def Scope "DrAnmarT1ColliderCandidate"
+        {
+            custom bool dranmar:candidate:active = false
+            custom string dranmar:candidate:geometryContract = "../../geometry_contract.json"
+            def Capsule "InsertionShaft" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "analytic shaft with locked endpoint and radial support bounds"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.00571, -0.00571, -0.184151), (0.00571, 0.00571, 0.184151)]
+                uniform token axis = "Z"
+                double height = 0.356882
+                double radius = 0.00571
+                double3 xformOp:translate = (0, 7e-06, 0.22285)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+        }
+    }
+    over "psm_tool_roll_link"
+    {
+        over "visuals_xform"
+        {
+            over "visuals"
+            {
+                bool physics:collisionEnabled = false
+            }
+        }
+        over "collisions_xform"
+        {
+            over "collisions"
+            {
+                bool physics:collisionEnabled = false
+            }
+        }
+        def Scope "DrAnmarT1ColliderCandidate"
+        {
+            custom bool dranmar:candidate:active = false
+            custom string dranmar:candidate:geometryContract = "../../geometry_contract.json"
+            def Capsule "RollShaft" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "continuous slender roll shaft"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.004178, -0.004178, -0.236093), (0.004178, 0.004178, 0.236093)]
+                uniform token axis = "Z"
+                double height = 0.46383
+                double radius = 0.004178
+                double3 xformOp:translate = (0, 0, -0.240928)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+            def Capsule "DistalCollar" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "separate distal collar around the roll shaft"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.005565, -0.005565, -0.010668), (0.005565, 0.005565, 0.010668)]
+                uniform token axis = "Z"
+                double height = 0.010206
+                double radius = 0.005565
+                double3 xformOp:translate = (0, 0, -0.445017)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+            def Cylinder "DistalFlange" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "thin distal flange retained without widening the whole shaft"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.00794, -0.00794, -0.001981), (0.00794, 0.00794, 0.001981)]
+                uniform token axis = "Z"
+                double height = 0.003962
+                double radius = 0.00794
+                double3 xformOp:translate = (0, 0, -0.439886)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+            def Capsule "RollHousing" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "proximal roll housing"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.00418, -0.00418, -0.005399866), (0.00418, 0.00418, 0.005399866)]
+                uniform token axis = "Z"
+                double height = 0.002439732
+                double radius = 0.00418
+                double3 xformOp:translate = (0, 0, -0.003499134)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+        }
+    }
+    over "psm_tool_pitch_link"
+    {
+        over "collisions_xform"
+        {
+            over "collisions"
+            {
+                bool physics:collisionEnabled = false
+            }
+        }
+        def Scope "DrAnmarT1ColliderCandidate"
+        {
+            custom bool dranmar:candidate:active = false
+            custom string dranmar:candidate:geometryContract = "../../geometry_contract.json"
+            def Cube "PitchWristA" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise wrist housing segment"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (-0.00061, -4.80335e-05, -9.9435e-06)
+                double3 xformOp:scale = (0.00502, 0.006330067, 0.008460113)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "PitchWristB" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise wrist housing segment"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.0042, -2.345e-07, 0)
+                double3 xformOp:scale = (0.004998, 0.006600469, 0.0066)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "PitchWristC" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "piecewise wrist housing segment"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.008966, -5.003e-05, 0)
+                double3 xformOp:scale = (0.00493, 0.006496698, 0.00612)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+    }
+    over "psm_tool_yaw_link"
+    {
+        over "visuals_xform"
+        {
+            over "tool_yaw_link"
+            {
+                bool physics:collisionEnabled = false
+            }
+        }
+        def Scope "DrAnmarT1ColliderCandidate"
+        {
+            custom bool dranmar:candidate:active = false
+            custom string dranmar:candidate:geometryContract = "../../geometry_contract.json"
+            def Capsule "YawPin" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "analytic yaw pin at the locked render envelope"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.00065, -0.00065, -0.0027305), (0.00065, 0.00065, 0.0027305)]
+                uniform token axis = "Z"
+                double height = 0.004161
+                double radius = 0.00065
+                double3 xformOp:translate = (2.5e-06, -5.71e-07, 0.0001215)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+        }
+    }
+    over "psm_tool_gripper1_link"
+    {
+        over "collisions_xform"
+        {
+            over "collisions"
+            {
+                bool physics:collisionEnabled = false
+            }
+        }
+        def Scope "DrAnmarT1ColliderCandidate"
+        {
+            custom bool dranmar:candidate:active = false
+            custom string dranmar:candidate:geometryContract = "../../geometry_contract.json"
+            def Mesh "JawProximal" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "convex proximal jaw body; follows link-local taper"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.002599, -0.002599, -0.002094), (0.002593, 0.0042, 0.001105)]
+                uniform token physics:approximation = "convexHull"
+                int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+                int[] faceVertexIndices = [0, 2, 1, 0, 3, 2, 4, 5, 6, 4, 6, 7, 0, 1, 5, 0, 5, 4, 1, 2, 6, 1, 6, 5, 2, 3, 7, 2, 7, 6, 3, 0, 4, 3, 4, 7]
+                point3f[] points = [
+                    (-0.002599, -0.002599, -0.002094),
+                    (0.002593, -0.002599, -0.002094),
+                    (0.002593, -0.002599, 8.7e-05),
+                    (-0.002599, -0.002599, 8.7e-05),
+                    (-0.0019, 0.0042, -0.002094),
+                    (0.00185, 0.0042, -0.002094),
+                    (0.00185, 0.0042, 0.001105),
+                    (-0.0019, 0.0042, 0.001105)
+                ]
+                uniform token subdivisionScheme = "none"
+            }
+            def Mesh "JawDistal" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "convex distal contact jaw; no attachment or adhesion"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.0019, 0.0038, -0.002094), (0.00185, 0.0103, 0.001105)]
+                uniform token physics:approximation = "convexHull"
+                int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+                int[] faceVertexIndices = [0, 2, 1, 0, 3, 2, 4, 5, 6, 4, 6, 7, 0, 1, 5, 0, 5, 4, 1, 2, 6, 1, 6, 5, 2, 3, 7, 2, 7, 6, 3, 0, 4, 3, 4, 7]
+                point3f[] points = [
+                    (-0.0019, 0.0038, -0.002094),
+                    (0.00185, 0.0038, -0.002094),
+                    (0.00185, 0.0038, 0.001105),
+                    (-0.0019, 0.0038, 0.001105),
+                    (-0.000163, 0.0103, -0.001044),
+                    (0.0016, 0.0103, -0.001044),
+                    (0.0016, 0.0103, 0.001018),
+                    (-0.000163, 0.0103, 0.001018)
+                ]
+                uniform token subdivisionScheme = "none"
+            }
+        }
+    }
+    over "psm_tool_gripper2_link"
+    {
+        over "collisions_xform"
+        {
+            over "collisions"
+            {
+                bool physics:collisionEnabled = false
+            }
+        }
+        def Scope "DrAnmarT1ColliderCandidate"
+        {
+            custom bool dranmar:candidate:active = false
+            custom string dranmar:candidate:geometryContract = "../../geometry_contract.json"
+            def Mesh "JawProximal" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "convex proximal jaw body; mirrored link-local taper"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.002593, -0.002599, -0.001131), (0.002599, 0.0042, 0.002069)]
+                uniform token physics:approximation = "convexHull"
+                int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+                int[] faceVertexIndices = [0, 2, 1, 0, 3, 2, 4, 5, 6, 4, 6, 7, 0, 1, 5, 0, 5, 4, 1, 2, 6, 1, 6, 5, 2, 3, 7, 2, 7, 6, 3, 0, 4, 3, 4, 7]
+                point3f[] points = [
+                    (-0.002593, -0.002599, -0.000113),
+                    (0.002599, -0.002599, -0.000113),
+                    (0.002599, -0.002599, 0.002068),
+                    (-0.002593, -0.002599, 0.002068),
+                    (-0.00185, 0.0042, -0.001131),
+                    (0.0019, 0.0042, -0.001131),
+                    (0.0019, 0.0042, 0.002069),
+                    (-0.00185, 0.0042, 0.002069)
+                ]
+                uniform token subdivisionScheme = "none"
+            }
+            def Mesh "JawDistal" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "convex distal contact jaw; no attachment or adhesion"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.00185, 0.0038, -0.001131), (0.0019, 0.0103, 0.002069)]
+                uniform token physics:approximation = "convexHull"
+                int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+                int[] faceVertexIndices = [0, 2, 1, 0, 3, 2, 4, 5, 6, 4, 6, 7, 0, 1, 5, 0, 5, 4, 1, 2, 6, 1, 6, 5, 2, 3, 7, 2, 7, 6, 3, 0, 4, 3, 4, 7]
+                point3f[] points = [
+                    (-0.00185, 0.0038, -0.001131),
+                    (0.0019, 0.0038, -0.001131),
+                    (0.0019, 0.0038, 0.002069),
+                    (-0.00185, 0.0038, 0.002069),
+                    (-0.0016, 0.0103, -0.001043),
+                    (0.000163, 0.0103, -0.001043),
+                    (0.000163, 0.0103, 0.001018),
+                    (-0.0016, 0.0103, 0.001018)
+                ]
+                uniform token subdivisionScheme = "none"
+            }
+        }
+    }
+}

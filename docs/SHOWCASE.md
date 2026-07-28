@@ -54,8 +54,12 @@ flow, pressure, leak, dwell, and physiology evidence at runtime.
 ## Reproduce the views
 
 The renderer fixes the simulation-to-GLB axis conversion at the imported scene
-root and scales the studio lights by model area, avoiding the rotated and
-overexposed previews that generic GLB viewers can produce.
+root, converts authored sRGB colors to scene-linear values, and scales neutral
+studio lights by model area. Role-based PBR materials keep organic anatomy
+matte while reserving stronger reflections for metal and glass. This avoids the
+rotated, overexposed, and artificially glossy previews that generic GLB viewers
+can produce. The result remains an inspection render of the shipped simulation
+geometry, not clinical-photorealism evidence.
 
 ```bash
 blender --background --python tools/render_showcase.py
@@ -67,4 +71,3 @@ Render a single view:
 DRANMAR_RENDER_ONLY=skin-stapler.png \
   blender --background --python tools/render_showcase.py
 ```
-

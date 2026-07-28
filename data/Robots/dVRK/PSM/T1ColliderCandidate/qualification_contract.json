@@ -1,0 +1,59 @@
+{
+  "activation": {
+    "active_replacement": false,
+    "allowed_after_all_required_suites_pass": true,
+    "decision_owner": "explicit_human_review",
+    "default": "blocked",
+    "requires_native_isaac_physx_evidence": true
+  },
+  "asset_id": "dranmar-psm-t1-collider-candidate-v1",
+  "asset_version": "1.0.0",
+  "evidence_integrity": {
+    "archive": [
+      "resolved_base_and_candidate_hashes",
+      "runtime_configuration_hash",
+      "seed_lists",
+      "per_episode_metrics",
+      "contact_telemetry",
+      "video_linked_failure_taxonomy"
+    ],
+    "paired_baseline_and_candidate_seeds": true,
+    "pre_registered_thresholds": true,
+    "reward_contract_must_remain_identical": true
+  },
+  "required_suites": {
+    "articulation_and_joint_parity": [
+      "body_count_and_names",
+      "joint_count_names_types_limits_and_axes",
+      "default_link_and_tool_transforms",
+      "mass_center_of_mass_and_inertia"
+    ],
+    "contact_stability": [
+      "penetration_depth_distribution_m",
+      "contact_impulse_distribution_ns",
+      "solver_divergence_and_nan_count",
+      "high_velocity_tunneling_count"
+    ],
+    "task_noninferiority": [
+      "analytic_pickup_first_attempt_success",
+      "conditional_mid_air_retention_given_pickup",
+      "transport_completion",
+      "receiver_retention_after_handover",
+      "drop_and_regrasp_rates"
+    ],
+    "wrist_and_jaw_contact": [
+      "bilateral_jaw_contact_duty_cycle",
+      "per_jaw_normal_force_n",
+      "needle_relative_slip_distance_m",
+      "false_contact_and_self_contact_count"
+    ]
+  },
+  "status": "inactive_unqualified_candidate",
+  "validation_boundaries": {
+    "clinical_validation": false,
+    "instrument_calibration": false,
+    "native_isaac_spawn_qualified": false,
+    "physics_calibration": false,
+    "source_static_generation_is_qualification": false
+  }
+}

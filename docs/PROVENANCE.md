@@ -21,6 +21,14 @@ an upstream ORBIT-Surgical release.
 
 ## NVIDIA foundations
 
+The Needle-Ready Tissue Unit uses the OpenUSD TetMesh representation consumed
+by Isaac Lab deformables and is qualified against NVIDIA Newton VBD and Warp.
+Its runtime integration follows Isaac Lab's deformable and coupled rigid-soft
+patterns. The tissue geometry, topology, LOD mappings, and semantic fields are
+independently authored Dr.Anmar content; no NVIDIA geometry is redistributed.
+SoftMimicGen was reviewed as an Apache-2.0 architectural reference, but no
+SoftMimicGen geometry or code is copied into the tissue asset.
+
 NVIDIA Isaac Sim, Isaac Lab, PhysX, and Isaac for Healthcare provide simulation
 runtime, solver, sensor, workflow, or catalog foundations used or targeted by
 this work. They are external dependencies and remain owned by their respective
@@ -36,4 +44,3 @@ Asset families contain local `LICENSE.txt`, `NOTICE.txt`, manifests, and README
 files. Those local notices are authoritative for the files in their directory.
 Do not detach a USD entrypoint from its notices or dependency folder when
 redistributing it.
-

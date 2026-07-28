@@ -1,0 +1,97 @@
+{
+  "asset_id": "dranmar-needle-22mm-half-circle-taper-category-candidate-v1",
+  "bounds_m": {
+    "maximum": [
+      0.007267793487093112,
+      0.007182817496043394,
+      0.000265
+    ],
+    "minimum": [
+      4.177770803848051e-19,
+      -0.007020794303047933,
+      -0.000265
+    ]
+  },
+  "face_varying_metric_uv_count": 209280,
+  "face_varying_uv_count": 209280,
+  "finite_tip_position_m": [
+    4.287989015771313e-19,
+    -0.0070028174960433945,
+    0.0
+  ],
+  "generated_geometry": "dranmar_needle_22mm_half_circle_taper_candidate_geometry.usdc",
+  "mesh_mass_properties": {
+    "center_of_mass_m": [
+      0.005082775105752093,
+      0.00034357039212393555,
+      1.083322401254242e-11
+    ],
+    "density_kg_m3": 8000.0,
+    "diagonal_inertia_kg_m2": [
+      9.243254319979731e-11,
+      6.560015086384497e-10,
+      7.474090170740597e-10
+    ],
+    "includes_true_swage_recess": true,
+    "inertia_tensor_kg_m2": [
+      [
+        6.524657457673468e-10,
+        4.449881576203158e-11,
+        2.7461180881343877e-18
+      ],
+      [
+        4.449881576203158e-11,
+        9.596830607090053e-11,
+        1.3635826204732058e-17
+      ],
+      [
+        2.7461180881343877e-18,
+        1.3635826204732058e-17,
+        7.474090170740592e-10
+      ]
+    ],
+    "mass_kg": 3.230037764112291e-05,
+    "principal_axes_convention": {
+      "openusd_serialization": "wxyz",
+      "runtime": "xyzw"
+    },
+    "principal_axes_usd_wxyz": [
+      6.668486515491831e-09,
+      -0.6785249389045027,
+      -0.7345773664391249,
+      2.226766871261332e-08
+    ],
+    "principal_axes_xyzw": [
+      -0.6785249389045027,
+      -0.7345773664391249,
+      2.226766871261332e-08,
+      6.668486515491831e-09
+    ],
+    "source": "actual_connected_watertight_render_mesh_tetrahedral_integration",
+    "volume_m3": 4.037547205140363e-09
+  },
+  "schema": "dr.anmar.needle-22mm-half-circle-taper-report.v1",
+  "swage_mouth_center_m": [
+    4.287989015771313e-19,
+    0.0070028174960433945,
+    0.0
+  ],
+  "swage_recess_bottom_center_m": [
+    0.000818127391690508,
+    0.006954863079447155,
+    0.0
+  ],
+  "topology": {
+    "boundary_edge_count": 0,
+    "connected_component_count": 1,
+    "edge_count": 104640,
+    "minimum_triangle_area_m2": 6.319733444613211e-13,
+    "nonmanifold_edge_count": 0,
+    "signed_volume_m3": 4.037547205140363e-09,
+    "triangle_count": 69760,
+    "vertex_count": 34882,
+    "watertight": true
+  },
+  "true_swage_recess": true,
+  "vertex_normal_count": 34882
+}

@@ -1,0 +1,340 @@
+{
+  "schema": "dr.anmar.needle-ready-tissue-geometry-contract.v2",
+  "id": "dranmar-needle-ready-tissue-v2",
+  "name": "DrAnmar Needle-Ready Tissue Unit",
+  "version": "2.2.0",
+  "status": "source_static_geometry_qualified_native_physics_requalification_pending",
+  "purpose": "A solver-neutral layered deformable tissue unit for post-handover needle approach, contact, intact deformation, bite planning and future topology-capable needle passage research.",
+  "coordinate_system": {
+    "units": "metres",
+    "up_axis": "Z",
+    "handedness": "right",
+    "semantic_coordinates": "(component,u,v,w)",
+    "component_encoding": {
+      "0": "left_flap",
+      "1": "right_flap"
+    },
+    "u_direction": "outer-to-wound on the left flap and wound-to-outer on the right flap",
+    "v_direction": "negative-Y to positive-Y",
+    "w_direction": "deep fascia to top surface"
+  },
+  "geometry": {
+    "overall_width_m": 0.07,
+    "depth_m": 0.045,
+    "thickness_m": 0.006,
+    "rest_wound_gap_m": 0.004,
+    "wound_bevel_m": 0.001,
+    "wound_irregularity_amplitude_m": 0.00032,
+    "wound_irregularity_wavelength_m": 0.018,
+    "wound_lip_independent_amplitude_m": 0.00008,
+    "surface_topography_amplitude_m": 0.00014,
+    "surface_topography_wavelength_m": 0.022,
+    "surface_secondary_topography_amplitude_m": 0.00004,
+    "thickness_variation_amplitude_m": 0.00018,
+    "components": 2,
+    "tetrahedra_per_structured_cell": 6
+  },
+  "layers": [
+    {
+      "id": "fascia",
+      "depth_fraction": [
+        0.0,
+        0.18
+      ],
+      "role": "deep load-bearing layer",
+      "constitutive_target": "anisotropic_visco_hyperelastic_with_suture_holding"
+    },
+    {
+      "id": "bulk",
+      "depth_fraction": [
+        0.18,
+        0.82
+      ],
+      "role": "compliant hydrated bulk tissue",
+      "constitutive_target": "nearly_incompressible_visco_hyperelastic"
+    },
+    {
+      "id": "surface",
+      "depth_fraction": [
+        0.82,
+        1.0
+      ],
+      "role": "tough outer layer and primary needle-contact surface",
+      "constitutive_target": "anisotropic_visco_hyperelastic_with_fracture"
+    }
+  ],
+  "lods": {
+    "training": {
+      "intent": "large-batch policy training and early curriculum",
+      "cells_per_flap_x": 6,
+      "cells_y": 9,
+      "z_fractions": [
+        0.0,
+        0.18,
+        0.82,
+        1.0
+      ],
+      "wound_edge_refinement_power": 1.1,
+      "expected_points": 560,
+      "expected_tetrahedra": 1944,
+      "quality_gates": {
+        "minimum_mean_ratio": 0.33,
+        "minimum_scaled_jacobian": 0.12,
+        "maximum_edge_ratio": 7.5
+      }
+    },
+    "contact": {
+      "intent": "needle approach, contact, grasp and intact-deformation native qualification candidate",
+      "cells_per_flap_x": 12,
+      "cells_y": 18,
+      "z_fractions": [
+        0.0,
+        0.18,
+        0.5,
+        0.82,
+        1.0
+      ],
+      "wound_edge_refinement_power": 1.1,
+      "expected_points": 2470,
+      "expected_tetrahedra": 10368,
+      "quality_gates": {
+        "minimum_mean_ratio": 0.5,
+        "minimum_scaled_jacobian": 0.23,
+        "maximum_edge_ratio": 4.0
+      }
+    },
+    "validation": {
+      "intent": "mesh-convergence and rendered inspection reference",
+      "cells_per_flap_x": 24,
+      "cells_y": 36,
+      "z_fractions": [
+        0.0,
+        0.09,
+        0.18,
+        0.34,
+        0.5,
+        0.66,
+        0.82,
+        0.91,
+        1.0
+      ],
+      "wound_edge_refinement_power": 1.1,
+      "expected_points": 16650,
+      "expected_tetrahedra": 82944,
+      "quality_gates": {
+        "minimum_mean_ratio": 0.5,
+        "minimum_scaled_jacobian": 0.22,
+        "maximum_edge_ratio": 4.0
+      }
+    }
+  },
+  "semantics": {
+    "outer_attachment_width_m": 0.004,
+    "unsafe_edge_distance_m": 0.003,
+    "safe_bite_distance_from_wound_m": [
+      0.004,
+      0.01
+    ],
+    "contact_roi_distance_m": 0.012,
+    "longitudinal_end_margin_m": 0.003,
+    "required_node_sets": [
+      "anchor_outer",
+      "left_flap",
+      "right_flap",
+      "top_surface",
+      "bottom_surface",
+      "wound_edge",
+      "wound_edge_top",
+      "safe_bite_top",
+      "contact_roi_top"
+    ],
+    "required_face_sets": [
+      "safe_bite_surface",
+      "unsafe_edge_surface",
+      "contact_roi_surface",
+      "wound_surface"
+    ],
+    "required_element_sets": [
+      "layer_fascia",
+      "layer_bulk",
+      "layer_surface",
+      "safe_bite_volume",
+      "contact_roi_volume"
+    ]
+  },
+  "physics": {
+    "density_kg_m3_seed": 1050.0,
+    "density_range_kg_m3": [
+      980.0,
+      1120.0
+    ],
+    "youngs_modulus_pa_seed": 180000.0,
+    "youngs_modulus_range_pa": [
+      60000.0,
+      650000.0
+    ],
+    "poisson_ratio_seed": 0.47,
+    "poisson_ratio_range": [
+      0.44,
+      0.49
+    ],
+    "friction_seed": 0.3,
+    "calibration_status": "research_defaults_unvalidated",
+    "intact_backend": "nvidia_newton_vbd_with_isaac_lab_adapter",
+    "topology_backend_target": "cressim_mpm_or_other_qualified_topology_capable_backend",
+    "backend_neutral_geometry": true
+  },
+  "appearance": {
+    "intent": "matte hydrated tissue without metallic or wet-plastic appearance",
+    "materials": {
+      "surface": {
+        "diffuse_color": [
+          0.5,
+          0.145,
+          0.125
+        ],
+        "roughness": 0.82
+      },
+      "bulk": {
+        "diffuse_color": [
+          0.63,
+          0.245,
+          0.205
+        ],
+        "roughness": 0.86
+      },
+      "fascia": {
+        "diffuse_color": [
+          0.68,
+          0.51,
+          0.34
+        ],
+        "roughness": 0.88
+      },
+      "wound_surface": {
+        "diffuse_color": [
+          0.46,
+          0.12,
+          0.095
+        ],
+        "roughness": 0.82
+      },
+      "wound_bulk": {
+        "diffuse_color": [
+          0.54,
+          0.19,
+          0.15
+        ],
+        "roughness": 0.84
+      },
+      "wound_fascia": {
+        "diffuse_color": [
+          0.61,
+          0.39,
+          0.25
+        ],
+        "roughness": 0.87
+      }
+    },
+    "metallic": 0.0,
+    "subsurface_scattering_target": true,
+    "subsurface_scattering_authored": false
+  },
+  "capabilities": {
+    "stable": [
+      "layer-conforming tetrahedral geometry",
+      "nested deterministic geometry LODs",
+      "stable semantic coordinates across LODs",
+      "wound-edge approach and bite-region planning labels",
+      "correlated independently irregular wound lips",
+      "multi-scale rest shape and spatially varying thickness",
+      "depth-resolved exposed wound material subsets",
+      "explicit face-varying smooth schema normals"
+    ],
+    "native_requalification_pending": [
+      "intact deformation",
+      "two-way rigid-soft contact",
+      "outer-band fixture and retraction",
+      "Fabric-synchronized visual deformation",
+      "measured performance and memory by LOD"
+    ],
+    "gated": [
+      "puncture",
+      "persistent needle tract",
+      "thread passage",
+      "cutting",
+      "suture pullout",
+      "tear and cheese-wire failure",
+      "patient-specific mechanics",
+      "clinical use"
+    ]
+  },
+  "qualification": {
+    "policy": "fail_closed",
+    "geometry_gates": [
+      "all tetrahedra have positive nonzero volume",
+      "all material interfaces coincide with tetrahedral faces",
+      "exactly two watertight connected components",
+      "material face subsets partition the full surface",
+      "wound-wall face subsets resolve surface, bulk and fascia depth",
+      "rest wound gap remains positive and bounded",
+      "local thickness remains positive and bounded",
+      "required semantic sets are present and nonempty",
+      "training and contact point sets are exact subsets of validation",
+      "OpenUSD stages parse and contain exactly one TetMesh per selected LOD",
+      "generated hashes are deterministic"
+    ],
+    "native_intact_gates": [
+      "finite Newton VBD state",
+      "zero inverted tetrahedra after fixture and retraction",
+      "bounded global volume error",
+      "deterministic replay evidence",
+      "measured step time and memory by LOD"
+    ],
+    "blocked_until_physical_data": [
+      "force-displacement calibration",
+      "puncture force-depth agreement",
+      "pullout and cyclic tear agreement",
+      "patient and tissue-site distributions",
+      "clinical validity"
+    ]
+  },
+  "provenance": {
+    "geometry": "independently authored deterministic Dr.Anmar procedural geometry upgraded from dr-anmar-suturable-tissue-v1",
+    "third_party_geometry_copied": false,
+    "nvidia_components_used": [
+      "OpenUSD TetMesh representation used by Isaac Lab deformables",
+      "NVIDIA Newton VBD intact-deformation runtime",
+      "NVIDIA Warp GPU kernel runtime",
+      "Isaac Lab deformable asset and coupled rigid-soft integration patterns"
+    ],
+    "open_source_references": [
+      {
+        "name": "NVIDIA Isaac Lab",
+        "license": "BSD-3-Clause",
+        "usage": "runtime architecture and deformable-asset integration patterns"
+      },
+      {
+        "name": "NVIDIA Newton",
+        "license": "Apache-2.0",
+        "usage": "native VBD runtime"
+      },
+      {
+        "name": "NVIDIA Warp",
+        "license": "Apache-2.0",
+        "usage": "GPU computation runtime"
+      },
+      {
+        "name": "NVIDIA SoftMimicGen",
+        "license": "Apache-2.0",
+        "usage": "reference only for surgical-deformable task organization; no geometry or code copied"
+      },
+      {
+        "name": "CRESSim-MPM",
+        "license": "BSD-3-Clause",
+        "usage": "future topology-capable backend candidate; no code copied into this asset"
+      }
+    ]
+  },
+  "clinical_validation": false
+}

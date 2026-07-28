@@ -1,0 +1,382 @@
+#usda 1.0
+(
+    subLayers = [
+        @./dranmar_needle_22mm_half_circle_taper_candidate_physics.usda@
+    ]
+    defaultPrim = "DrAnmarNeedle22HalfCircleTaperCandidate"
+    doc = "PhysX-specific CCD, solver, contact-offset and conservative material-combine layer."
+    kilogramsPerUnit = 1
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+over "DrAnmarNeedle22HalfCircleTaperCandidate" (
+    prepend apiSchemas = ["PhysxRigidBodyAPI"]
+)
+{
+    bool physxRigidBody:enableCCD = true
+    bool physxRigidBody:enableSpeculativeCCD = true
+    float physxRigidBody:linearDamping = 0.003
+    float physxRigidBody:angularDamping = 0.006
+    int physxRigidBody:solverPositionIterationCount = 24
+    int physxRigidBody:solverVelocityIterationCount = 8
+    float physxRigidBody:maxDepenetrationVelocity = 0.5
+
+    over "PhysicsMaterials"
+    {
+        over "NeedleSteelPhysics" (
+            prepend apiSchemas = ["PhysxMaterialAPI"]
+        )
+        {
+            uniform token physxMaterial:frictionCombineMode = "min"
+            uniform token physxMaterial:restitutionCombineMode = "min"
+        }
+    }
+
+    over "Collision"
+    {
+        over "C000" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 5e-06
+            float physxCollision:restOffset = 0
+        }
+        over "C001" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 6.23634285208e-06
+            float physxCollision:restOffset = 0
+        }
+        over "C002" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 8.95607640268e-06
+            float physxCollision:restOffset = 0
+        }
+        over "C003" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.19171662198e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C004" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.48169463688e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C005" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C006" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C007" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C008" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C009" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C010" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C011" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C012" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C013" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C014" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C015" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C016" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C017" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C018" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C019" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C020" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C021" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C022" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C023" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C024" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C025" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C026" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C027" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C028" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C029" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C030" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C031" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C032" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C033" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C034" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C035" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C036" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C037" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C038" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C039" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C040" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C041" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C042" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C043" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.5e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C044" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.45581959898e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C045" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.44e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C046" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.44e-05
+            float physxCollision:restOffset = 0
+        }
+        over "C047" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 1.44e-05
+            float physxCollision:restOffset = 0
+        }
+        over "PreciseTaperTip" (
+            prepend apiSchemas = ["PhysxCollisionAPI"]
+        )
+        {
+            float physxCollision:contactOffset = 5e-06
+            float physxCollision:restOffset = 0
+        }
+    }
+}

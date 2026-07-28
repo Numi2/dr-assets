@@ -1,0 +1,29 @@
+#usda 1.0
+(
+    defaultPrim = "psm"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "psm" (
+    prepend references = @../psm_col.usd@</psm>
+)
+{
+    custom bool dranmar:candidate:active = false
+    custom string dranmar:candidate:assetId = "dranmar-psm-t1-jaw-contact-candidate-v1"
+    custom string dranmar:candidate:qualificationContract = "./qualification_contract.json"
+    custom string dranmar:candidate:status = "inactive_unqualified_candidate"
+    custom string dranmar:candidate:version = "1.0.0"
+
+    over "Looks"
+    {
+        over "PhysicsMaterial"
+        {
+            custom string dranmar:candidate:calibrationStatus = "uncalibrated_engineering_hypothesis"
+            custom string dranmar:candidate:contactModel = "coulomb_only_no_adhesion"
+            custom string dranmar:candidate:frictionHypothesis = "./friction_hypothesis.json"
+            float physics:dynamicFriction = 0.45
+            float physics:staticFriction = 0.60
+        }
+    }
+}

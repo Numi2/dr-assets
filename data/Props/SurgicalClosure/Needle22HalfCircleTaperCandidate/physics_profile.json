@@ -1,0 +1,169 @@
+{
+  "active_replacement": false,
+  "asset_id": "dranmar-needle-22mm-half-circle-taper-category-candidate-v1",
+  "clinical_validation": false,
+  "collision": {
+    "adaptive_partition_m": [
+      0.00075,
+      0.001055,
+      0.00136,
+      0.001665,
+      0.00197,
+      0.002275,
+      0.00258,
+      0.0028849999999999995,
+      0.00319,
+      0.003495,
+      0.0038,
+      0.0046,
+      0.0054,
+      0.006200000000000001,
+      0.007,
+      0.0078,
+      0.0086,
+      0.0094,
+      0.0102,
+      0.011000000000000001,
+      0.0118,
+      0.0121125,
+      0.012425,
+      0.012737499999999999,
+      0.013049999999999999,
+      0.0133625,
+      0.013675,
+      0.0139875,
+      0.0143,
+      0.014612499999999999,
+      0.014924999999999999,
+      0.0152375,
+      0.01555,
+      0.015862499999999998,
+      0.016175,
+      0.0164875,
+      0.0168,
+      0.01728,
+      0.017759999999999998,
+      0.01824,
+      0.018719999999999997,
+      0.0192,
+      0.0196,
+      0.019999999999999997,
+      0.020399999999999998,
+      0.0208,
+      0.0212,
+      0.021599999999999998,
+      0.022
+    ],
+    "capsule_count": 32,
+    "capsule_height_semantics": "cylinder_spine_excluding_hemispherical_caps",
+    "contact_offset_range_m": [
+      5e-06,
+      1.5e-05
+    ],
+    "grasp_convex_segment_count": 16,
+    "maximum_curvature_sagitta_m": 1.1420867560285763e-05,
+    "maximum_segment_span_m": 0.0008000000000000004,
+    "rest_offset_m": 0.0,
+    "segment_count": 48,
+    "separate_precise_tip_shape_count": 1
+  },
+  "layer_contract": {
+    "base": "dranmar_needle_22mm_half_circle_taper_candidate_base.usda",
+    "default_variant": "none",
+    "entry": "dranmar_needle_22mm_half_circle_taper_candidate.usda",
+    "geometry": "dranmar_needle_22mm_half_circle_taper_candidate_geometry.usdc",
+    "materials": "dranmar_needle_22mm_half_circle_taper_candidate_materials.usda",
+    "physics": "dranmar_needle_22mm_half_circle_taper_candidate_physics.usda",
+    "physx": "dranmar_needle_22mm_half_circle_taper_candidate_physx.usda",
+    "variant_choices": [
+      "none",
+      "physics",
+      "physx"
+    ],
+    "variant_set": "Physics"
+  },
+  "mass_properties": {
+    "center_of_mass_m": [
+      0.005082775105752093,
+      0.00034357039212393555,
+      1.083322401254242e-11
+    ],
+    "density_kg_m3": 8000.0,
+    "diagonal_inertia_kg_m2": [
+      9.243254319979731e-11,
+      6.560015086384497e-10,
+      7.474090170740597e-10
+    ],
+    "includes_true_swage_recess": true,
+    "inertia_tensor_kg_m2": [
+      [
+        6.524657457673468e-10,
+        4.449881576203158e-11,
+        2.7461180881343877e-18
+      ],
+      [
+        4.449881576203158e-11,
+        9.596830607090053e-11,
+        1.3635826204732058e-17
+      ],
+      [
+        2.7461180881343877e-18,
+        1.3635826204732058e-17,
+        7.474090170740592e-10
+      ]
+    ],
+    "mass_kg": 3.230037764112291e-05,
+    "principal_axes_convention": {
+      "openusd_serialization": "wxyz",
+      "runtime": "xyzw"
+    },
+    "principal_axes_usd_wxyz": [
+      6.668486515491831e-09,
+      -0.6785249389045027,
+      -0.7345773664391249,
+      2.226766871261332e-08
+    ],
+    "principal_axes_xyzw": [
+      -0.6785249389045027,
+      -0.7345773664391249,
+      2.226766871261332e-08,
+      6.668486515491831e-09
+    ],
+    "source": "actual_connected_watertight_render_mesh_tetrahedral_integration",
+    "volume_m3": 4.037547205140363e-09
+  },
+  "material": {
+    "adhesion": false,
+    "class": "surgical_stainless_steel_engineering_proxy",
+    "density_kg_m3": 8000.0,
+    "dynamic_friction": 0.2,
+    "implicit_attachment": false,
+    "magnetism": false,
+    "max_combine_forbidden": true,
+    "ordered_friction": true,
+    "physx_friction_combine_mode": "min",
+    "physx_restitution_combine_mode": "min",
+    "restitution": 0.01,
+    "static_friction": 0.28,
+    "suction": false
+  },
+  "native_qualified": false,
+  "physics_calibration": false,
+  "qualification_required": [
+    "native_Isaac_PhysX_load_and_contact_evidence",
+    "analytic_pickup_first_attempt_parity",
+    "single_arm_mid_air_retention",
+    "two_arm_handover_retention",
+    "safe_bite_approach_without_premature_contact",
+    "calibrated_puncture_force_displacement_evidence"
+  ],
+  "rigid_body": {
+    "ccd": true,
+    "max_depenetration_velocity_m_s": 0.5,
+    "solver_position_iterations": 24,
+    "solver_velocity_iterations": 8,
+    "speculative_ccd": true
+  },
+  "schema": "dr.anmar.needle-22mm-half-circle-taper-physics.v1",
+  "status": "inactive_unqualified_category_candidate"
+}

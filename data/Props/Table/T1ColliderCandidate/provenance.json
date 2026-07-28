@@ -1,0 +1,22 @@
+{
+  "asset_id": "dranmar-table-t1-collider-candidate-v1",
+  "asset_version": "1.0.0",
+  "authorship": "Collision proxy geometry, composition, contracts, generator, and tests were independently authored by Dr.Anmar Project Developers.",
+  "external_downloads": [],
+  "generator": "tools/generate_t1_collider_candidates.py",
+  "locked_measurement_sources": {
+    "table_collision_foundation": {
+      "path": "data/Props/Table/table.usd",
+      "sha256": "78f61603d0605896c9076d0a2b16bc97fd6f0109783a3b1e2dd1cfd86698b7c4"
+    },
+    "table_visual_overlay": {
+      "path": "data/Props/SurgicalScene/T1/table_visual_v1.usda",
+      "sha256": "9d0eea19c3e01941e5119a2f2f6e8f3a32abaff34eec9548c7f2fb34bd50edfe"
+    }
+  },
+  "patient_or_clinical_data": false,
+  "provider": "Dr.Anmar Project Developers",
+  "source_method": "Deterministic analytic primitives and low-poly convex envelopes derived from exact, hash-locked OpenUSD render bounds.",
+  "third_party_geometry_or_code_added": false,
+  "validation_boundary": "Source-static package only; not native-physics qualified, physics-calibrated, instrument-calibrated, or clinically validated."
+}

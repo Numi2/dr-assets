@@ -1,0 +1,660 @@
+#usda 1.0
+(
+    defaultPrim = "psm"
+    doc = "DrAnmar T1 render-only PSM material overlay; referenced articulation and physics remain authoritative."
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "psm" (
+    prepend references = @../../../Robots/dVRK/PSM/psm_col.usd@</psm>
+    assetInfo = {
+        string name = "DrAnmarT1PSMVisualOverlay"
+        string version = "1.2.0"
+    }
+    customData = {
+        string drAnmarAssetRole = "render_overlay_only"
+        string drAnmarBaseAssetSha256 = "87330b0e46e5554d53fe1b840f2db38a9bdbf00a79ca464159009406156ca0d4"
+        bool drAnmarClinicalValidation = false
+        bool drAnmarPhysicsAuthority = false
+        bool drAnmarPreservesJointAndLinkTransforms = true
+        int drAnmarClearedDanglingMaterialBindings = 100
+    }
+    kind = "component"
+)
+{
+    def Scope "DrAnmarT1Looks" (
+        prepend references = @./materials.usda@</DrAnmarT1VisualMaterials>
+    )
+    {
+    }
+
+    over "psm_main_insertion_link"
+    {
+        over "visuals_xform"
+        {
+            over "visuals" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </psm/DrAnmarT1Looks/MattePolymer> (
+                    bindMaterialAs = "strongerThanDescendants"
+                )
+            }
+        }
+    }
+
+    over "psm_main_insertion_link_2"
+    {
+        over "visuals_xform"
+        {
+            over "tool_main_insert" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </psm/DrAnmarT1Looks/ShaftSatinSteel> (
+                    bindMaterialAs = "strongerThanDescendants"
+                )
+                over "Shape_030"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_031"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_032"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_033"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_034"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_035"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_037"
+                {
+                    rel material:binding = None
+                }
+            }
+        }
+    }
+
+    over "psm_main_insertion_link_3"
+    {
+        over "visuals_xform"
+        {
+            over "visuals" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </psm/DrAnmarT1Looks/MattePolymer> (
+                    bindMaterialAs = "strongerThanDescendants"
+                )
+            }
+        }
+    }
+
+    over "psm_pitch_end_link"
+    {
+        over "visuals_xform"
+        {
+            over "visuals" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </psm/DrAnmarT1Looks/MattePolymer> (
+                    bindMaterialAs = "strongerThanDescendants"
+                )
+            }
+        }
+    }
+
+    over "psm_tool_gripper1_link"
+    {
+        over "visuals_xform"
+        {
+            over "gripper_right" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </psm/DrAnmarT1Looks/JawSatinSteel> (
+                    bindMaterialAs = "strongerThanDescendants"
+                )
+                over "Shape_022"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_037"
+                {
+                    rel material:binding = None
+                }
+            }
+        }
+    }
+
+    over "psm_tool_gripper2_link"
+    {
+        over "visuals_xform"
+        {
+            over "gripper_left" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </psm/DrAnmarT1Looks/JawSatinSteel> (
+                    bindMaterialAs = "strongerThanDescendants"
+                )
+                over "Shape_006"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_037"
+                {
+                    rel material:binding = None
+                }
+            }
+        }
+    }
+
+    over "psm_tool_pitch_link"
+    {
+        over "visuals_xform"
+        {
+            over "tool_pitch_link" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </psm/DrAnmarT1Looks/WristSatinSteel> (
+                    bindMaterialAs = "strongerThanDescendants"
+                )
+                over "Shape_001"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_002"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_003"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_005"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_007"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_008"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_009"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_010"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_011"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_012"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_013"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_014"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_015"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_016"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_018"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_019"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_020"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_021"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_023"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_024"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_025"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_027"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_028"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_029"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_036"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_037"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_038"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_041"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_042"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_043"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_044"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_045"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_046"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_047"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_048"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_049"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_050"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_051"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_052"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_053"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_054"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_055"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_056"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_057"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_058"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_059"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_060"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_061"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_062"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_063"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_064"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_065"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_066"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_067"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_068"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_069"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_070"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_071"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_072"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_073"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_074"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_075"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_076"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_077"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_078"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_079"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_080"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_081"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_082"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_083"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_084"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_085"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_086"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_087"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_088"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_089"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_090"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_091"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_092"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_093"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_094"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_095"
+                {
+                    rel material:binding = None
+                }
+            }
+        }
+    }
+
+    over "psm_tool_roll_link"
+    {
+        over "visuals_xform"
+        {
+            over "tool_roll_link" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </psm/DrAnmarT1Looks/WristSatinSteel> (
+                    bindMaterialAs = "strongerThanDescendants"
+                )
+                over "Shape"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_017"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_019"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_037"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_039"
+                {
+                    rel material:binding = None
+                }
+
+                over "Shape_040"
+                {
+                    rel material:binding = None
+                }
+            }
+        }
+    }
+
+    over "psm_tool_yaw_link"
+    {
+        over "visuals_xform"
+        {
+            over "tool_yaw_link" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </psm/DrAnmarT1Looks/WristSatinSteel> (
+                    bindMaterialAs = "strongerThanDescendants"
+                )
+                over "Shape_037"
+                {
+                    rel material:binding = None
+                }
+            }
+        }
+    }
+}

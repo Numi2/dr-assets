@@ -1,0 +1,43 @@
+{
+  "schema": "dr.anmar.needle-ready-tissue-physics-profile.v2",
+  "asset_id": "dranmar-needle-ready-tissue-v2",
+  "version": "2.2.0",
+  "status": "research_defaults_pending_bench_calibration",
+  "intact_deformation": {
+    "preferred_runtime": "nvidia_newton_vbd",
+    "isaac_lab_adapter": "DeformableObjectCfg plus NewtonDeformableBodyPropertiesCfg",
+    "density_kg_m3_seed": 1050.0,
+    "youngs_modulus_pa_seed": 180000.0,
+    "poisson_ratio_seed": 0.47,
+    "newton_k_damp_adapter_seed": 0.01,
+    "particle_radius_m_by_lod": {
+      "training": 0.0025,
+      "contact": 0.0015,
+      "validation": 0.00075
+    },
+    "recommended_dt_s": 0.001,
+    "recommended_vbd_iterations": 8,
+    "particle_self_contact": false,
+    "two_way_rigid_soft_coupling": true
+  },
+  "contact": {
+    "dynamic_friction_seed": 0.3,
+    "static_friction_seed": 0.42,
+    "wetness_randomization_required": true,
+    "needle_tip_contact_requires_contact_or_validation_lod": true
+  },
+  "topology": {
+    "supported_by_intact_runtime": false,
+    "required_for": [
+      "puncture",
+      "persistent_tract",
+      "thread_passage",
+      "cutting",
+      "tear"
+    ],
+    "candidate_runtime": "cressim_mpm_or_other_qualified_topology_capable_backend",
+    "promotion_gate": "persistent-tract and force-depth qualification must pass before task success can include puncture"
+  },
+  "calibration_status": "research_defaults_unvalidated",
+  "clinical_validation": false
+}

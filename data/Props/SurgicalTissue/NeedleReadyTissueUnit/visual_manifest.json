@@ -1,0 +1,351 @@
+{
+  "asset_id": "dranmar-needle-ready-tissue-visual-v1",
+  "asset_version": "1.1.0",
+  "base_asset": {
+    "asset_id": "dranmar-needle-ready-tissue-v2",
+    "asset_version": "2.2.0"
+  },
+  "base_physics_sha256": {
+    "needle_ready_tissue_contact.usda": "b234193e135f016e83a8c2b7dbbd1245a6b4e3c0671c21b7d23fb52861af409e",
+    "needle_ready_tissue_training.usda": "5d13933d13f72d5999607f40ebfc34f23113578eeb5a9ebe98cb6822a91e141c",
+    "needle_ready_tissue_unit.usda": "c0a8ac38066b3272b817c16afd655bb31e41538a891c6ee30d468a011b88745a",
+    "needle_ready_tissue_validation.usda": "09500cf0e47807b823ea0d7ff84c664dbda10cfe57e194da291a1c7014bfe54c"
+  },
+  "clinical_validation": false,
+  "default_lod": "validation",
+  "generator": {
+    "dependency_versions": {
+      "Pillow": "11.3.0",
+      "numpy": "2.2.6"
+    },
+    "path": "tools/generate_needle_ready_tissue_visuals.py",
+    "seeded": true,
+    "sha256": "cbbc7cecfd38c9387b1357923ef5497abeb768010039e854a5c4ca804c22084f"
+  },
+  "license": "mixed",
+  "license_sources": {
+    "DrAnmar": "visual/LICENSE.txt",
+    "NVIDIA_PhysicalAI_SimReady_Materials": "visual/vendor/nvidia_physicalai_simready_materials_v0_2_0/LICENSE.md"
+  },
+  "licenses": [
+    "Apache-2.0",
+    "MIT-0"
+  ],
+  "materials": {
+    "coat_weight": 0.0,
+    "nvidia_source": "PhysicalAI_SimReady_Materials_v0.2.0",
+    "portable_context": "UsdPreviewSurface",
+    "primary_context": "OpenPBR_1.1_MaterialX",
+    "specular_policy": "restrained_and_rough_no_uniform_wet_gloss",
+    "subsurface_policy": "texture_modulated_volumetric_research_seed_not_clinically_calibrated",
+    "thin_walled": false,
+    "wound_material_policy": "depth_resolved_surface_bulk_fascia"
+  },
+  "members": {
+    "needle_ready_tissue_contact_visual.usda": {
+      "bytes": 210286,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "ed47ff2f4727b54949615e06736668f159ef7226bc5c8df0578ebbea76254425"
+    },
+    "needle_ready_tissue_training_visual.usda": {
+      "bytes": 65920,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "dc9c645363ac34aa87e4d9c3c93f8778cc850b7931bbce9dd9904459eeb8704c"
+    },
+    "needle_ready_tissue_validation_visual.usda": {
+      "bytes": 869002,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "32712d533d0f6729ca7d5dc5a0c099693402dbf14fa764baaec543a53d4723c4"
+    },
+    "needle_ready_tissue_visual_unit.usda": {
+      "bytes": 1286,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "0a68710b9fb053dd4180775b1e8ba2742ee70741e7316e15469e94c40276540d"
+    },
+    "visual/LICENSE.txt": {
+      "bytes": 569,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "ae1ce51674ad38ce87569cc28bbce44eff62d60a375b6f3cb12dd9095f901ee8"
+    },
+    "visual/NOTICE.txt": {
+      "bytes": 823,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "99496285caa79f74fe0e681bb5f2a4f85c0e7cf6febed91fba2c74fb613b1195"
+    },
+    "visual/README.md": {
+      "bytes": 2683,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "83218b59fc2262661d5f1d21a8c35c331c60bacd3b871679fce1e299b362ca8a"
+    },
+    "visual/materials.usda": {
+      "bytes": 33490,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "65017eb3ccbddeab2e5708f9fbad202649f0e8d7403dd16bcf61be4defdb9c9d"
+    },
+    "visual/support_cassette.usda": {
+      "bytes": 28108,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "4754db7ea31b8647ce1270884037909c7edc2466451190fad4d0784241a2d922"
+    },
+    "visual/textures/bulk_basecolor.png": {
+      "bytes": 3477415,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "b635be2add4c862bf0d0928cfab03c178ff851dcdd7968df18fcd68d4edc8290"
+    },
+    "visual/textures/bulk_normal.png": {
+      "bytes": 5961542,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "f98de69c9f2659817f530653f82e410d70203ed71393db573e7eee94c22dbbf1"
+    },
+    "visual/textures/bulk_roughness.png": {
+      "bytes": 460076,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "6f276ee96f0986ff172c4dcb69117027f5c8ed5918453e8ac809fe86d02221f2"
+    },
+    "visual/textures/bulk_subsurface_weight.png": {
+      "bytes": 251634,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "51a6578b17e008396fbe2e5cc60ecc207fa8dfd20d3924fbbad57451511cb0f2"
+    },
+    "visual/textures/cassette_basecolor.png": {
+      "bytes": 242970,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "b736a3b7fdda4e572e272dab8b6648effb14f979664dfdc6492541f4f246dd79"
+    },
+    "visual/textures/cassette_normal.png": {
+      "bytes": 1315141,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "4f5478716f6ba51883c4fb18b6a17b815c5544f5e2f33f99d54f3be1aad15003"
+    },
+    "visual/textures/cassette_roughness.png": {
+      "bytes": 205351,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "2d29c89f01d4956ceb1430a8a80b6321d0a428f22114794e9373eec705441045"
+    },
+    "visual/textures/drape_basecolor.png": {
+      "bytes": 3471526,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "9532d4fcf00809e4129d61cc9fba5936d537558918b19514dc78dd09910ca03a"
+    },
+    "visual/textures/drape_normal.png": {
+      "bytes": 10125094,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "483ee6c16c22df3b72837676948418e5e3f4bc665a9444e4cea5299d6376b6f2"
+    },
+    "visual/textures/drape_roughness.png": {
+      "bytes": 310320,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "fd7335d229bae2d300a235cd01bf5da03dd7d9ac729d0eb4624529f5a6e4b3b1"
+    },
+    "visual/textures/fascia_basecolor.png": {
+      "bytes": 4073817,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "17ff2688081e050492aa2c54e6080dd981a929051457eaf4c2861a9da004fa8d"
+    },
+    "visual/textures/fascia_normal.png": {
+      "bytes": 7782007,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "2fc21f359ef4a49278bf956a65579906da73fad1f01b7bfab797ff856ac85872"
+    },
+    "visual/textures/fascia_roughness.png": {
+      "bytes": 406497,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "52e054e6599eaadafb4482bd516748ee40464f5a6defc7b18e6a242ac694b29d"
+    },
+    "visual/textures/fascia_subsurface_weight.png": {
+      "bytes": 157902,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "3105862a71746514c324c631eafcf54a391f12f091f00cc44caa581c1590e05e"
+    },
+    "visual/textures/surface_basecolor.png": {
+      "bytes": 890467,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "d943342a3c420431854d74c0d3846b2e90bba82b87b477c2bd75183e8535c193"
+    },
+    "visual/textures/surface_normal.png": {
+      "bytes": 2707767,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "5c259ef3684eb3552c2af8c0ccf5444c37c1c255e20cf8e601aed3d8d0e82871"
+    },
+    "visual/textures/surface_roughness.png": {
+      "bytes": 487735,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "ca68fa51018eab0bcde61144e3b62564704c55c00f9137577eeacf6cd0064d29"
+    },
+    "visual/textures/surface_subsurface_weight.png": {
+      "bytes": 255600,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "5628e8e649b2144ce5c28738a804e7a7fc6ca9f6adf38f96de261efbe4e2edf7"
+    },
+    "visual/textures/wound_bulk_basecolor.png": {
+      "bytes": 3637667,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "47ef3669643b782376ec20434a97b2b404a47cd0e6cee05085d25717ea376ccf"
+    },
+    "visual/textures/wound_bulk_normal.png": {
+      "bytes": 5960815,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "c2815fb1f6d0e9f3c0b7330ada15912bd6f4083775432a4f7ba48c3a647b25b4"
+    },
+    "visual/textures/wound_bulk_roughness.png": {
+      "bytes": 483287,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "01e0e74337640588e032bd6adbb6d5bce5ed91d504e7b42220fd6efda63b3521"
+    },
+    "visual/textures/wound_bulk_subsurface_weight.png": {
+      "bytes": 274328,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "7c2669b629391976b8bc2f0992bb644e9cf1d06ccb32ec4e3f6b4481bdda3968"
+    },
+    "visual/textures/wound_fascia_basecolor.png": {
+      "bytes": 4043097,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "daba30f91ad53bf0284d9fb993e93cc21df7c690ba59fa3a985825b60e02b242"
+    },
+    "visual/textures/wound_fascia_normal.png": {
+      "bytes": 7104246,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "8e9f19926d3e9a85cbe9219f3add90d7bac8f82d1bd3863f52567fe2bc400fa3"
+    },
+    "visual/textures/wound_fascia_roughness.png": {
+      "bytes": 438742,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "a0ea004e3e37fd4daf27bcfd36bd9cd06edcbc88c3771c0f17cc4be4cd8d211f"
+    },
+    "visual/textures/wound_fascia_subsurface_weight.png": {
+      "bytes": 189766,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "e3063c025406a3203fe4a2187159b886cecf3ea2de52904e4e56bded2fcb1824"
+    },
+    "visual/textures/wound_surface_basecolor.png": {
+      "bytes": 790922,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "3d94a9a67288b9d92660a98d0c8c09a33746c5e45d592994d1a88d4a387d857e"
+    },
+    "visual/textures/wound_surface_normal.png": {
+      "bytes": 1578185,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "c7c93bf1a691026bfa59d2fe6da0e770f4c458a87115a4b86777ba1a60b850ec"
+    },
+    "visual/textures/wound_surface_roughness.png": {
+      "bytes": 500264,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "575bf6a21c1ec8c1689757eb8c4b33ac14846fe7d9fb34d2cfb755336122dacf"
+    },
+    "visual/textures/wound_surface_subsurface_weight.png": {
+      "bytes": 254834,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "7d16f9c888961ceb8b41b5f8f4c0c918bdb537235bf1da0f65aafdd9626513c0"
+    },
+    "visual/vendor/nvidia_physicalai_simready_materials_v0_2_0/LICENSE.md": {
+      "bytes": 1090,
+      "license": "MIT-0",
+      "provenance": "vendored_unchanged_from_NVIDIA_PhysicalAI_SimReady_Materials_v0.2.0",
+      "sha256": "18f74283f08ff1ed39a9c46dbe2622146d45f771023c3dbd9c631bb058e1421b"
+    },
+    "visual/vendor/nvidia_physicalai_simready_materials_v0_2_0/PROVENANCE.md": {
+      "bytes": 1268,
+      "license": "Apache-2.0",
+      "provenance": "deterministically_generated_or_authored_by_DrAnmar",
+      "sha256": "f447b09e4c9e7e1f795726c1a3189afe058aaba3d5233e3a6625385bc696acea"
+    },
+    "visual/vendor/nvidia_physicalai_simready_materials_v0_2_0/Skin_Medium_normal.jpg": {
+      "bytes": 667256,
+      "license": "MIT-0",
+      "provenance": "vendored_unchanged_from_NVIDIA_PhysicalAI_SimReady_Materials_v0.2.0",
+      "sha256": "a881565f49e80e5c486f84fbd1e87595515199d67063009e68415e791d190bc5"
+    },
+    "visual/vendor/nvidia_physicalai_simready_materials_v0_2_0/open_pbr_uber_base_class.usda": {
+      "bytes": 47772,
+      "license": "MIT-0",
+      "provenance": "vendored_unchanged_from_NVIDIA_PhysicalAI_SimReady_Materials_v0.2.0",
+      "sha256": "bb76ff9fa9cd74b86b6be4ed3c6ed79cdca15eff6d603ca571bdf9ce21e10c5f"
+    }
+  },
+  "physics_authority": false,
+  "primary_usd": "needle_ready_tissue_visual_unit.usda",
+  "provenance": {
+    "geometry": "visual_overlays_reference_independently_authored_DrAnmar_base_geometry",
+    "nvidia": {
+      "license": "MIT-0",
+      "member_sha256": {
+        "LICENSE.md": "18f74283f08ff1ed39a9c46dbe2622146d45f771023c3dbd9c631bb058e1421b",
+        "Skin_Medium_normal.jpg": "a881565f49e80e5c486f84fbd1e87595515199d67063009e68415e791d190bc5",
+        "open_pbr_uber_base_class.usda": "bb76ff9fa9cd74b86b6be4ed3c6ed79cdca15eff6d603ca571bdf9ce21e10c5f"
+      },
+      "release": "v0.2.0",
+      "release_archive": "Skin.zip",
+      "release_archive_sha256": "e6831eb8129179d9d05be80a582fe0f5824a7c2d9f5252db0f7f4a3102082380",
+      "repository": "https://github.com/NVIDIA-Omniverse/PhysicalAI-SimReady-Materials",
+      "use": "unchanged_OpenPBR_base_and_bounded_surface_micro_normal_input"
+    },
+    "textures": "DrAnmar_seeded_procedural_maps_plus_bounded_NVIDIA_skin_micro_normal_input_no_patient_imagery"
+  },
+  "schema": "dr.anmar.visual-asset-manifest.v1",
+  "support": {
+    "asset": "visual/support_cassette.usda",
+    "attachment_band_abs_x_m": [
+      0.031,
+      0.035
+    ],
+    "attachment_sides": [
+      "left",
+      "right"
+    ],
+    "collision_authority": false,
+    "explained_tissue_to_table_gap_m": 0.017,
+    "geometry": "paired_rounded_jaws_with_support_posts_and_folded_subdivision_drape",
+    "physics_authority": false,
+    "purpose": "render"
+  },
+  "texture_color_contract": {
+    "basecolor": "sRGB",
+    "normal": "raw_tangent_space_OpenGL_lossless_PNG",
+    "roughness": "raw",
+    "subsurface_weight": "raw"
+  },
+  "texture_encoding": {
+    "basecolor_roughness_subsurface_normal": "lossless_PNG"
+  },
+  "texture_resolution_px": 2048,
+  "visual_only": true
+}

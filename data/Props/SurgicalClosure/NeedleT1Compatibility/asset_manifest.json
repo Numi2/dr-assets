@@ -1,0 +1,181 @@
+{
+  "active_replacement": false,
+  "asset_id": "dranmar-needle-t1-legacy-envelope-candidate-v1",
+  "asset_version": "1.1.0",
+  "clinical_validation": false,
+  "dependency_complete_directory": true,
+  "generator": {
+    "dependencies": {
+      "Pillow": "11.3.0",
+      "numpy": "2.2.6"
+    },
+    "deterministic": true,
+    "path": "tools/generate_needle_t1_compatibility.py",
+    "sha256": "37fa68d91337d25dfa55d236e8e241a96cfb8292dfaaeea0fe067c877ab1e1f8",
+    "texture_size_px": 2048
+  },
+  "license": "mixed",
+  "licenses": {
+    "DrAnmar_authored_members": "Apache-2.0",
+    "NVIDIA_OpenPBR_members": "MIT-0"
+  },
+  "material_contexts": {
+    "fallback": "UsdPreviewSurface",
+    "mdl_only_claim": false,
+    "native_rtx_appearance_qualified": false,
+    "primary": "OpenPBR_1.1_MaterialX_inherited"
+  },
+  "material_input_contract": {
+    "openpbr_input_mode": "uv_texture_maps",
+    "openpbr_texture_inputs": [
+      "base_color_texture_file",
+      "specular_roughness_texture_file",
+      "geometry_normal_texture_file"
+    ],
+    "texture_color_contract": {
+      "basecolor": "sRGB",
+      "normal": "raw_tangent_space_renderer_orientation_pending_native_validation",
+      "roughness": "raw"
+    },
+    "uv_authored": true
+  },
+  "members": {
+    "LICENSE.txt": {
+      "bytes": 11358,
+      "license": "Apache-2.0",
+      "provenance": "canonical_Apache-2.0_text",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    "NOTICE.txt": {
+      "bytes": 720,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "659360e90d688fe7bb6633c1615d0dfa8471e93aebb7f73aefeb59c9d74da677"
+    },
+    "README.md": {
+      "bytes": 2719,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "065c15c2c47a6888795220513c6e6e1904888f995865570fef6e0aa091014d96"
+    },
+    "dranmar_needle_t1_compatibility.usda": {
+      "bytes": 4259809,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "77cb6e29150788169a79d986c21dfea8952080093d9a6e82d4201727a9221919"
+    },
+    "geometry_contract.json": {
+      "bytes": 1809,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "472406a95f4f3dafad2d00dbfc07f8b9431810d72275b6f913945df05ea99ded"
+    },
+    "geometry_report.json": {
+      "bytes": 2172,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "8addf6bb29758d7d10fcda97e44f20cd073c2ab5c212aa1805f88f3e7182159d"
+    },
+    "interaction_frames.json": {
+      "bytes": 1913,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "d4363e31f505278bd21df7b0e3e94b4643e74739b1eb6a2955de34564d502966"
+    },
+    "physics_profile.json": {
+      "bytes": 2317,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "1c68c6876f05c82641c5863a10c3bd91867d7a5dfd7e1f356474afe9c04f1aa1"
+    },
+    "textures/needle_satin_basecolor.png": {
+      "bytes": 462998,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "25a98979ac573937988ecd99a173a66d152468b2ea2802aa48276a69d97d00f7"
+    },
+    "textures/needle_satin_normal.png": {
+      "bytes": 1681990,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "8193a63246d5ce16cb9bef524ced25f46fb99b623d377abb21a10aa231718b21"
+    },
+    "textures/needle_satin_roughness.png": {
+      "bytes": 243327,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "ab0d05efb83411d86a1aa3cf912685a3e6913a867de7ecc97006339e77bef5f6"
+    },
+    "vendor/nvidia_physicalai_simready_materials_v0_2_0/LICENSE.md": {
+      "bytes": 1090,
+      "license": "MIT-0",
+      "provenance": "verbatim_NVIDIA_PhysicalAI_SimReady_Materials_v0.2.0",
+      "sha256": "18f74283f08ff1ed39a9c46dbe2622146d45f771023c3dbd9c631bb058e1421b"
+    },
+    "vendor/nvidia_physicalai_simready_materials_v0_2_0/PROVENANCE.md": {
+      "bytes": 967,
+      "license": "Apache-2.0",
+      "provenance": "independently_generated_by_DrAnmar",
+      "sha256": "2ee6641f3cc7bcc65638b82cc5a07d37430f442534c43d065b3ae968255d34e8"
+    },
+    "vendor/nvidia_physicalai_simready_materials_v0_2_0/open_pbr_uber_base_class.usda": {
+      "bytes": 47772,
+      "license": "MIT-0",
+      "provenance": "verbatim_NVIDIA_PhysicalAI_SimReady_Materials_v0.2.0",
+      "sha256": "bb76ff9fa9cd74b86b6be4ed3c6ed79cdca15eff6d603ca571bdf9ce21e10c5f"
+    }
+  },
+  "preserved_source_assets": {
+    "data/Props/SurgicalClosure/Needle/dranmar_needle.usda": {
+      "bytes": 1449840,
+      "modified_by_generator": false,
+      "sha256": "6be56beeee3bf51928e36162b18a8b88ed76447a1a366338df37dd8887687bce"
+    },
+    "data/Props/Surgical_needle/needle.usd": {
+      "bytes": 904041,
+      "modified_by_generator": false,
+      "sha256": "144f8cc5d33dc412bee16f41d6223a070bbe3d1d704c792cfb440dc9c641dd21"
+    },
+    "data/Props/Surgical_needle/needle_sdf.usd": {
+      "bytes": 898597,
+      "modified_by_generator": false,
+      "sha256": "5cdcd64042695815390d77c112a932801144c6f7530d3ce87b672247f91dbf6f"
+    }
+  },
+  "primary_usd": "dranmar_needle_t1_compatibility.usda",
+  "provenance": {
+    "geometry": "independent_parametric_DrAnmar_authoring",
+    "textures": "seeded_procedural_no_vendor_or_patient_imagery",
+    "vendor_assets_modified": false
+  },
+  "quaternion_contract": {
+    "explicit_conversion_fields": true,
+    "openusd_quat_serialization": "wxyz",
+    "runtime_and_JSON_canonical": "xyzw"
+  },
+  "schema": "dr.anmar.sim-ready-asset-manifest.v3",
+  "status": "inactive_qualification_candidate",
+  "vendor_dependencies": {
+    "nvidia_physicalai_simready_materials": {
+      "destination_root": "vendor/nvidia_physicalai_simready_materials_v0_2_0",
+      "license": "MIT-0",
+      "material_interface": "OpenPBR_1.1_MaterialX",
+      "members": {
+        "LICENSE.md": {
+          "copied_byte_identical": true,
+          "modified_by_generator": false,
+          "sha256": "18f74283f08ff1ed39a9c46dbe2622146d45f771023c3dbd9c631bb058e1421b"
+        },
+        "open_pbr_uber_base_class.usda": {
+          "copied_byte_identical": true,
+          "modified_by_generator": false,
+          "sha256": "bb76ff9fa9cd74b86b6be4ed3c6ed79cdca15eff6d603ca571bdf9ce21e10c5f"
+        }
+      },
+      "provider": "NVIDIA",
+      "release": "v0.2.0",
+      "source_root": "data/Props/SurgicalTissue/NeedleReadyTissueUnit/visual/vendor/nvidia_physicalai_simready_materials_v0_2_0",
+      "upstream": "https://github.com/NVIDIA-Omniverse/PhysicalAI-SimReady-Materials"
+    }
+  }
+}

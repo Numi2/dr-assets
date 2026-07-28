@@ -32,6 +32,7 @@ from .laparotomy_sponge import *
 from .dranmar_asset_catalog import *
 from .dranmar_camera_scheduler import *
 from .needle_thread import *
+from .needle_ready_tissue import *
 from .psm import *
 from .skin_adhesive import *
 from .skin_stapler import *

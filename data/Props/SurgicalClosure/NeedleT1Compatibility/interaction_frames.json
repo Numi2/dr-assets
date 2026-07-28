@@ -1,0 +1,112 @@
+{
+  "coordinate_convention": {
+    "frame_axes": "local_X_forward_local_Z_needle_plane_normal",
+    "openusd_orientation_field": "orientation_usd_wxyz",
+    "openusd_quaternion_serialization": "wxyz",
+    "runtime_orientation_field": "orientation_xyzw",
+    "runtime_quaternion_order": "xyzw",
+    "units": "meters",
+    "up_axis": "Z"
+  },
+  "needle_driver_grasp": {
+    "arc_fraction_from_tip": 0.65,
+    "orientation_usd_wxyz": [
+      0.8526401643540924,
+      0.0,
+      0.0,
+      0.5224985647159488
+    ],
+    "orientation_xyzw": [
+      0.0,
+      0.0,
+      0.5224985647159488,
+      0.8526401643540924
+    ],
+    "position_m": [
+      0.002973661035696004,
+      0.008695734032011284,
+      0.0
+    ],
+    "role": "candidate_driver_grasp",
+    "tangent_toward_tail_world": [
+      0.4539904997395471,
+      0.8910065241883677,
+      0.0
+    ]
+  },
+  "needle_plane": {
+    "normal_world": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "orientation_usd_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "orientation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_m": [
+      0.02004,
+      0.0,
+      0.0
+    ],
+    "role": "needle_plane_reference"
+  },
+  "needle_tail": {
+    "orientation_usd_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "orientation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_m": [
+      0.02004,
+      0.019154,
+      0.0
+    ],
+    "role": "blunt_attachment_end_reference"
+  },
+  "needle_tip": {
+    "bodyward_tangent_world": [
+      -1.0,
+      0.0,
+      0.0
+    ],
+    "forward_axis_world": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "orientation_usd_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "orientation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_m": [
+      0.02004,
+      -0.019154,
+      0.0
+    ],
+    "role": "rounded_taper_tip"
+  }
+}

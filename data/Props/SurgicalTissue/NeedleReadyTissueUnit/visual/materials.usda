@@ -1,0 +1,743 @@
+#usda 1.0
+(
+    defaultPrim = "NeedleReadyTissueVisualMaterials"
+    doc = "DrAnmar visual-only research materials; procedural and not clinically color-calibrated."
+    metersPerUnit = 1
+    subLayers = [
+        @./vendor/nvidia_physicalai_simready_materials_v0_2_0/open_pbr_uber_base_class.usda@
+    ]
+    upAxis = "Z"
+)
+
+def Scope "NeedleReadyTissueVisualMaterials" (
+    customData = {
+        string drAnmarAssetRole = "render_materials_only"
+        bool drAnmarClinicalValidation = false
+        bool drAnmarPhysicsAuthority = false
+        string drAnmarPrimaryMaterialContext = "OpenPBR_1_1_MaterialX"
+        string drAnmarTextureColorContract = "basecolor_sRGB_roughness_and_normal_raw"
+    }
+)
+{
+        def Material "Surface" (
+            inherits = </open_pbr_uber_base>
+        )
+        {
+            token outputs:surface.connect = </NeedleReadyTissueVisualMaterials/Surface/PreviewSurface.outputs:surface>
+
+            float inputs:base_weight = 1
+            color3f inputs:base_color = (0.55, 0.215, 0.185)
+            asset inputs:base_color_texture_file = @textures/surface_basecolor.png@ (
+                colorSpace = "sRGB"
+            )
+            float inputs:base_diffuse_roughness = 0.18
+            float inputs:base_metalness = 0
+            float inputs:specular_weight = 0.16
+            color3f inputs:specular_color = (1, 1, 1)
+            float inputs:specular_roughness = 0.74
+            asset inputs:specular_roughness_texture_file = @textures/surface_roughness.png@ (
+                colorSpace = "raw"
+            )
+            float inputs:specular_ior = 1.38
+            float inputs:subsurface_weight = 0.48
+            asset inputs:subsurface_weight_texture_file = @textures/surface_subsurface_weight.png@ (
+                colorSpace = "raw"
+            )
+            color3f inputs:subsurface_color = (0.67, 0.3, 0.24)
+            float inputs:subsurface_radius = 0.00078
+            color3f inputs:subsurface_radius_scale = (1, 0.461538462, 0.230769231)
+            float inputs:coat_weight = 0
+            bool inputs:geometry_thin_walled = false
+            float inputs:geometry_normal_scale = 1
+            asset inputs:geometry_normal_texture_file = @textures/surface_normal.png@ (
+                colorSpace = "raw"
+            )
+            bool inputs:geometry_normal_texture_flip_g = false
+
+            def Shader "PreviewSurface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor.connect = </NeedleReadyTissueVisualMaterials/Surface/BaseColorTexture.outputs:rgb>
+                float inputs:metallic = 0
+                float inputs:roughness.connect = </NeedleReadyTissueVisualMaterials/Surface/RoughnessTexture.outputs:r>
+                float inputs:ior = 1.38
+                float inputs:clearcoat = 0
+                float inputs:clearcoatRoughness = 1
+                normal3f inputs:normal.connect = </NeedleReadyTissueVisualMaterials/Surface/NormalTexture.outputs:rgb>
+                token outputs:surface
+            }
+
+            def Shader "Texcoord"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                token inputs:varname = "st"
+                float2 outputs:result
+            }
+
+            def Shader "BaseColorTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/surface_basecolor.png@
+                token inputs:sourceColorSpace = "sRGB"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Surface/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float3 outputs:rgb
+            }
+
+            def Shader "RoughnessTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/surface_roughness.png@
+                token inputs:sourceColorSpace = "raw"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Surface/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float outputs:r
+            }
+
+            def Shader "NormalTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/surface_normal.png@
+                token inputs:sourceColorSpace = "raw"
+                float4 inputs:scale = (2, 2, 2, 1)
+                float4 inputs:bias = (-1, -1, -1, 0)
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Surface/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                normal3f outputs:rgb
+            }
+        }
+
+        def Material "Bulk" (
+            inherits = </open_pbr_uber_base>
+        )
+        {
+            token outputs:surface.connect = </NeedleReadyTissueVisualMaterials/Bulk/PreviewSurface.outputs:surface>
+
+            float inputs:base_weight = 1
+            color3f inputs:base_color = (0.6, 0.275, 0.235)
+            asset inputs:base_color_texture_file = @textures/bulk_basecolor.png@ (
+                colorSpace = "sRGB"
+            )
+            float inputs:base_diffuse_roughness = 0.18
+            float inputs:base_metalness = 0
+            float inputs:specular_weight = 0.14
+            color3f inputs:specular_color = (1, 1, 1)
+            float inputs:specular_roughness = 0.77
+            asset inputs:specular_roughness_texture_file = @textures/bulk_roughness.png@ (
+                colorSpace = "raw"
+            )
+            float inputs:specular_ior = 1.38
+            float inputs:subsurface_weight = 0.58
+            asset inputs:subsurface_weight_texture_file = @textures/bulk_subsurface_weight.png@ (
+                colorSpace = "raw"
+            )
+            color3f inputs:subsurface_color = (0.7, 0.34, 0.27)
+            float inputs:subsurface_radius = 0.001
+            color3f inputs:subsurface_radius_scale = (1, 0.48, 0.24)
+            float inputs:coat_weight = 0
+            bool inputs:geometry_thin_walled = false
+            float inputs:geometry_normal_scale = 1
+            asset inputs:geometry_normal_texture_file = @textures/bulk_normal.png@ (
+                colorSpace = "raw"
+            )
+            bool inputs:geometry_normal_texture_flip_g = false
+
+            def Shader "PreviewSurface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor.connect = </NeedleReadyTissueVisualMaterials/Bulk/BaseColorTexture.outputs:rgb>
+                float inputs:metallic = 0
+                float inputs:roughness.connect = </NeedleReadyTissueVisualMaterials/Bulk/RoughnessTexture.outputs:r>
+                float inputs:ior = 1.38
+                float inputs:clearcoat = 0
+                float inputs:clearcoatRoughness = 1
+                normal3f inputs:normal.connect = </NeedleReadyTissueVisualMaterials/Bulk/NormalTexture.outputs:rgb>
+                token outputs:surface
+            }
+
+            def Shader "Texcoord"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                token inputs:varname = "st"
+                float2 outputs:result
+            }
+
+            def Shader "BaseColorTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/bulk_basecolor.png@
+                token inputs:sourceColorSpace = "sRGB"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Bulk/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float3 outputs:rgb
+            }
+
+            def Shader "RoughnessTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/bulk_roughness.png@
+                token inputs:sourceColorSpace = "raw"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Bulk/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float outputs:r
+            }
+
+            def Shader "NormalTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/bulk_normal.png@
+                token inputs:sourceColorSpace = "raw"
+                float4 inputs:scale = (2, 2, 2, 1)
+                float4 inputs:bias = (-1, -1, -1, 0)
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Bulk/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                normal3f outputs:rgb
+            }
+        }
+
+        def Material "Fascia" (
+            inherits = </open_pbr_uber_base>
+        )
+        {
+            token outputs:surface.connect = </NeedleReadyTissueVisualMaterials/Fascia/PreviewSurface.outputs:surface>
+
+            float inputs:base_weight = 1
+            color3f inputs:base_color = (0.68, 0.51, 0.37)
+            asset inputs:base_color_texture_file = @textures/fascia_basecolor.png@ (
+                colorSpace = "sRGB"
+            )
+            float inputs:base_diffuse_roughness = 0.18
+            float inputs:base_metalness = 0
+            float inputs:specular_weight = 0.1
+            color3f inputs:specular_color = (1, 1, 1)
+            float inputs:specular_roughness = 0.82
+            asset inputs:specular_roughness_texture_file = @textures/fascia_roughness.png@ (
+                colorSpace = "raw"
+            )
+            float inputs:specular_ior = 1.38
+            float inputs:subsurface_weight = 0.28
+            asset inputs:subsurface_weight_texture_file = @textures/fascia_subsurface_weight.png@ (
+                colorSpace = "raw"
+            )
+            color3f inputs:subsurface_color = (0.71, 0.55, 0.4)
+            float inputs:subsurface_radius = 0.00056
+            color3f inputs:subsurface_radius_scale = (1, 0.517857143, 0.267857143)
+            float inputs:coat_weight = 0
+            bool inputs:geometry_thin_walled = false
+            float inputs:geometry_normal_scale = 1
+            asset inputs:geometry_normal_texture_file = @textures/fascia_normal.png@ (
+                colorSpace = "raw"
+            )
+            bool inputs:geometry_normal_texture_flip_g = false
+
+            def Shader "PreviewSurface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor.connect = </NeedleReadyTissueVisualMaterials/Fascia/BaseColorTexture.outputs:rgb>
+                float inputs:metallic = 0
+                float inputs:roughness.connect = </NeedleReadyTissueVisualMaterials/Fascia/RoughnessTexture.outputs:r>
+                float inputs:ior = 1.38
+                float inputs:clearcoat = 0
+                float inputs:clearcoatRoughness = 1
+                normal3f inputs:normal.connect = </NeedleReadyTissueVisualMaterials/Fascia/NormalTexture.outputs:rgb>
+                token outputs:surface
+            }
+
+            def Shader "Texcoord"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                token inputs:varname = "st"
+                float2 outputs:result
+            }
+
+            def Shader "BaseColorTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/fascia_basecolor.png@
+                token inputs:sourceColorSpace = "sRGB"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Fascia/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float3 outputs:rgb
+            }
+
+            def Shader "RoughnessTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/fascia_roughness.png@
+                token inputs:sourceColorSpace = "raw"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Fascia/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float outputs:r
+            }
+
+            def Shader "NormalTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/fascia_normal.png@
+                token inputs:sourceColorSpace = "raw"
+                float4 inputs:scale = (2, 2, 2, 1)
+                float4 inputs:bias = (-1, -1, -1, 0)
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Fascia/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                normal3f outputs:rgb
+            }
+        }
+
+        def Material "WoundSurface" (
+            inherits = </open_pbr_uber_base>
+        )
+        {
+            token outputs:surface.connect = </NeedleReadyTissueVisualMaterials/WoundSurface/PreviewSurface.outputs:surface>
+
+            float inputs:base_weight = 1
+            color3f inputs:base_color = (0.46, 0.12, 0.095)
+            asset inputs:base_color_texture_file = @textures/wound_surface_basecolor.png@ (
+                colorSpace = "sRGB"
+            )
+            float inputs:base_diffuse_roughness = 0.18
+            float inputs:base_metalness = 0
+            float inputs:specular_weight = 0.18
+            color3f inputs:specular_color = (1, 1, 1)
+            float inputs:specular_roughness = 0.7
+            asset inputs:specular_roughness_texture_file = @textures/wound_surface_roughness.png@ (
+                colorSpace = "raw"
+            )
+            float inputs:specular_ior = 1.38
+            float inputs:subsurface_weight = 0.56
+            asset inputs:subsurface_weight_texture_file = @textures/wound_surface_subsurface_weight.png@ (
+                colorSpace = "raw"
+            )
+            color3f inputs:subsurface_color = (0.58, 0.16, 0.12)
+            float inputs:subsurface_radius = 0.00092
+            color3f inputs:subsurface_radius_scale = (1, 0.445652174, 0.217391304)
+            float inputs:coat_weight = 0
+            bool inputs:geometry_thin_walled = false
+            float inputs:geometry_normal_scale = 1
+            asset inputs:geometry_normal_texture_file = @textures/wound_surface_normal.png@ (
+                colorSpace = "raw"
+            )
+            bool inputs:geometry_normal_texture_flip_g = false
+
+            def Shader "PreviewSurface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor.connect = </NeedleReadyTissueVisualMaterials/WoundSurface/BaseColorTexture.outputs:rgb>
+                float inputs:metallic = 0
+                float inputs:roughness.connect = </NeedleReadyTissueVisualMaterials/WoundSurface/RoughnessTexture.outputs:r>
+                float inputs:ior = 1.38
+                float inputs:clearcoat = 0
+                float inputs:clearcoatRoughness = 1
+                normal3f inputs:normal.connect = </NeedleReadyTissueVisualMaterials/WoundSurface/NormalTexture.outputs:rgb>
+                token outputs:surface
+            }
+
+            def Shader "Texcoord"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                token inputs:varname = "st"
+                float2 outputs:result
+            }
+
+            def Shader "BaseColorTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/wound_surface_basecolor.png@
+                token inputs:sourceColorSpace = "sRGB"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/WoundSurface/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float3 outputs:rgb
+            }
+
+            def Shader "RoughnessTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/wound_surface_roughness.png@
+                token inputs:sourceColorSpace = "raw"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/WoundSurface/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float outputs:r
+            }
+
+            def Shader "NormalTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/wound_surface_normal.png@
+                token inputs:sourceColorSpace = "raw"
+                float4 inputs:scale = (2, 2, 2, 1)
+                float4 inputs:bias = (-1, -1, -1, 0)
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/WoundSurface/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                normal3f outputs:rgb
+            }
+        }
+
+        def Material "WoundBulk" (
+            inherits = </open_pbr_uber_base>
+        )
+        {
+            token outputs:surface.connect = </NeedleReadyTissueVisualMaterials/WoundBulk/PreviewSurface.outputs:surface>
+
+            float inputs:base_weight = 1
+            color3f inputs:base_color = (0.54, 0.19, 0.15)
+            asset inputs:base_color_texture_file = @textures/wound_bulk_basecolor.png@ (
+                colorSpace = "sRGB"
+            )
+            float inputs:base_diffuse_roughness = 0.18
+            float inputs:base_metalness = 0
+            float inputs:specular_weight = 0.16
+            color3f inputs:specular_color = (1, 1, 1)
+            float inputs:specular_roughness = 0.73
+            asset inputs:specular_roughness_texture_file = @textures/wound_bulk_roughness.png@ (
+                colorSpace = "raw"
+            )
+            float inputs:specular_ior = 1.38
+            float inputs:subsurface_weight = 0.62
+            asset inputs:subsurface_weight_texture_file = @textures/wound_bulk_subsurface_weight.png@ (
+                colorSpace = "raw"
+            )
+            color3f inputs:subsurface_color = (0.65, 0.25, 0.19)
+            float inputs:subsurface_radius = 0.00108
+            color3f inputs:subsurface_radius_scale = (1, 0.462962963, 0.222222222)
+            float inputs:coat_weight = 0
+            bool inputs:geometry_thin_walled = false
+            float inputs:geometry_normal_scale = 1
+            asset inputs:geometry_normal_texture_file = @textures/wound_bulk_normal.png@ (
+                colorSpace = "raw"
+            )
+            bool inputs:geometry_normal_texture_flip_g = false
+
+            def Shader "PreviewSurface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor.connect = </NeedleReadyTissueVisualMaterials/WoundBulk/BaseColorTexture.outputs:rgb>
+                float inputs:metallic = 0
+                float inputs:roughness.connect = </NeedleReadyTissueVisualMaterials/WoundBulk/RoughnessTexture.outputs:r>
+                float inputs:ior = 1.38
+                float inputs:clearcoat = 0
+                float inputs:clearcoatRoughness = 1
+                normal3f inputs:normal.connect = </NeedleReadyTissueVisualMaterials/WoundBulk/NormalTexture.outputs:rgb>
+                token outputs:surface
+            }
+
+            def Shader "Texcoord"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                token inputs:varname = "st"
+                float2 outputs:result
+            }
+
+            def Shader "BaseColorTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/wound_bulk_basecolor.png@
+                token inputs:sourceColorSpace = "sRGB"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/WoundBulk/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float3 outputs:rgb
+            }
+
+            def Shader "RoughnessTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/wound_bulk_roughness.png@
+                token inputs:sourceColorSpace = "raw"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/WoundBulk/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float outputs:r
+            }
+
+            def Shader "NormalTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/wound_bulk_normal.png@
+                token inputs:sourceColorSpace = "raw"
+                float4 inputs:scale = (2, 2, 2, 1)
+                float4 inputs:bias = (-1, -1, -1, 0)
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/WoundBulk/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                normal3f outputs:rgb
+            }
+        }
+
+        def Material "WoundFascia" (
+            inherits = </open_pbr_uber_base>
+        )
+        {
+            token outputs:surface.connect = </NeedleReadyTissueVisualMaterials/WoundFascia/PreviewSurface.outputs:surface>
+
+            float inputs:base_weight = 1
+            color3f inputs:base_color = (0.61, 0.39, 0.25)
+            asset inputs:base_color_texture_file = @textures/wound_fascia_basecolor.png@ (
+                colorSpace = "sRGB"
+            )
+            float inputs:base_diffuse_roughness = 0.18
+            float inputs:base_metalness = 0
+            float inputs:specular_weight = 0.12
+            color3f inputs:specular_color = (1, 1, 1)
+            float inputs:specular_roughness = 0.79
+            asset inputs:specular_roughness_texture_file = @textures/wound_fascia_roughness.png@ (
+                colorSpace = "raw"
+            )
+            float inputs:specular_ior = 1.38
+            float inputs:subsurface_weight = 0.36
+            asset inputs:subsurface_weight_texture_file = @textures/wound_fascia_subsurface_weight.png@ (
+                colorSpace = "raw"
+            )
+            color3f inputs:subsurface_color = (0.68, 0.43, 0.29)
+            float inputs:subsurface_radius = 0.00066
+            color3f inputs:subsurface_radius_scale = (1, 0.5, 0.242424242)
+            float inputs:coat_weight = 0
+            bool inputs:geometry_thin_walled = false
+            float inputs:geometry_normal_scale = 1
+            asset inputs:geometry_normal_texture_file = @textures/wound_fascia_normal.png@ (
+                colorSpace = "raw"
+            )
+            bool inputs:geometry_normal_texture_flip_g = false
+
+            def Shader "PreviewSurface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor.connect = </NeedleReadyTissueVisualMaterials/WoundFascia/BaseColorTexture.outputs:rgb>
+                float inputs:metallic = 0
+                float inputs:roughness.connect = </NeedleReadyTissueVisualMaterials/WoundFascia/RoughnessTexture.outputs:r>
+                float inputs:ior = 1.38
+                float inputs:clearcoat = 0
+                float inputs:clearcoatRoughness = 1
+                normal3f inputs:normal.connect = </NeedleReadyTissueVisualMaterials/WoundFascia/NormalTexture.outputs:rgb>
+                token outputs:surface
+            }
+
+            def Shader "Texcoord"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                token inputs:varname = "st"
+                float2 outputs:result
+            }
+
+            def Shader "BaseColorTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/wound_fascia_basecolor.png@
+                token inputs:sourceColorSpace = "sRGB"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/WoundFascia/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float3 outputs:rgb
+            }
+
+            def Shader "RoughnessTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/wound_fascia_roughness.png@
+                token inputs:sourceColorSpace = "raw"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/WoundFascia/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float outputs:r
+            }
+
+            def Shader "NormalTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/wound_fascia_normal.png@
+                token inputs:sourceColorSpace = "raw"
+                float4 inputs:scale = (2, 2, 2, 1)
+                float4 inputs:bias = (-1, -1, -1, 0)
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/WoundFascia/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                normal3f outputs:rgb
+            }
+        }
+
+        def Material "Drape" (
+            inherits = </open_pbr_uber_base>
+        )
+        {
+            token outputs:surface.connect = </NeedleReadyTissueVisualMaterials/Drape/PreviewSurface.outputs:surface>
+
+            float inputs:base_weight = 1
+            color3f inputs:base_color = (0.055, 0.3, 0.34)
+            asset inputs:base_color_texture_file = @textures/drape_basecolor.png@ (
+                colorSpace = "sRGB"
+            )
+            float inputs:base_diffuse_roughness = 0.18
+            float inputs:base_metalness = 0
+            float inputs:specular_weight = 0.08
+            color3f inputs:specular_color = (1, 1, 1)
+            float inputs:specular_roughness = 0.84
+            asset inputs:specular_roughness_texture_file = @textures/drape_roughness.png@ (
+                colorSpace = "raw"
+            )
+            float inputs:specular_ior = 1.38
+            float inputs:subsurface_weight = 0
+            color3f inputs:subsurface_color = (0.055, 0.3, 0.34)
+            float inputs:subsurface_radius = 0
+            color3f inputs:subsurface_radius_scale = (1, 1, 1)
+            float inputs:coat_weight = 0
+            bool inputs:geometry_thin_walled = false
+            float inputs:geometry_normal_scale = 1
+            asset inputs:geometry_normal_texture_file = @textures/drape_normal.png@ (
+                colorSpace = "raw"
+            )
+            bool inputs:geometry_normal_texture_flip_g = false
+
+            def Shader "PreviewSurface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor.connect = </NeedleReadyTissueVisualMaterials/Drape/BaseColorTexture.outputs:rgb>
+                float inputs:metallic = 0
+                float inputs:roughness.connect = </NeedleReadyTissueVisualMaterials/Drape/RoughnessTexture.outputs:r>
+                float inputs:ior = 1.38
+                float inputs:clearcoat = 0
+                float inputs:clearcoatRoughness = 1
+                normal3f inputs:normal.connect = </NeedleReadyTissueVisualMaterials/Drape/NormalTexture.outputs:rgb>
+                token outputs:surface
+            }
+
+            def Shader "Texcoord"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                token inputs:varname = "st"
+                float2 outputs:result
+            }
+
+            def Shader "BaseColorTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/drape_basecolor.png@
+                token inputs:sourceColorSpace = "sRGB"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Drape/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float3 outputs:rgb
+            }
+
+            def Shader "RoughnessTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/drape_roughness.png@
+                token inputs:sourceColorSpace = "raw"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Drape/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float outputs:r
+            }
+
+            def Shader "NormalTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/drape_normal.png@
+                token inputs:sourceColorSpace = "raw"
+                float4 inputs:scale = (2, 2, 2, 1)
+                float4 inputs:bias = (-1, -1, -1, 0)
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Drape/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                normal3f outputs:rgb
+            }
+        }
+
+        def Material "Cassette" (
+            inherits = </open_pbr_uber_base>
+        )
+        {
+            token outputs:surface.connect = </NeedleReadyTissueVisualMaterials/Cassette/PreviewSurface.outputs:surface>
+
+            float inputs:base_weight = 1
+            color3f inputs:base_color = (0.065, 0.08, 0.088)
+            asset inputs:base_color_texture_file = @textures/cassette_basecolor.png@ (
+                colorSpace = "sRGB"
+            )
+            float inputs:base_diffuse_roughness = 0.18
+            float inputs:base_metalness = 0
+            float inputs:specular_weight = 0.14
+            color3f inputs:specular_color = (1, 1, 1)
+            float inputs:specular_roughness = 0.72
+            asset inputs:specular_roughness_texture_file = @textures/cassette_roughness.png@ (
+                colorSpace = "raw"
+            )
+            float inputs:specular_ior = 1.38
+            float inputs:subsurface_weight = 0
+            color3f inputs:subsurface_color = (0.065, 0.08, 0.088)
+            float inputs:subsurface_radius = 0
+            color3f inputs:subsurface_radius_scale = (1, 1, 1)
+            float inputs:coat_weight = 0
+            bool inputs:geometry_thin_walled = false
+            float inputs:geometry_normal_scale = 1
+            asset inputs:geometry_normal_texture_file = @textures/cassette_normal.png@ (
+                colorSpace = "raw"
+            )
+            bool inputs:geometry_normal_texture_flip_g = false
+
+            def Shader "PreviewSurface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor.connect = </NeedleReadyTissueVisualMaterials/Cassette/BaseColorTexture.outputs:rgb>
+                float inputs:metallic = 0
+                float inputs:roughness.connect = </NeedleReadyTissueVisualMaterials/Cassette/RoughnessTexture.outputs:r>
+                float inputs:ior = 1.38
+                float inputs:clearcoat = 0
+                float inputs:clearcoatRoughness = 1
+                normal3f inputs:normal.connect = </NeedleReadyTissueVisualMaterials/Cassette/NormalTexture.outputs:rgb>
+                token outputs:surface
+            }
+
+            def Shader "Texcoord"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                token inputs:varname = "st"
+                float2 outputs:result
+            }
+
+            def Shader "BaseColorTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/cassette_basecolor.png@
+                token inputs:sourceColorSpace = "sRGB"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Cassette/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float3 outputs:rgb
+            }
+
+            def Shader "RoughnessTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/cassette_roughness.png@
+                token inputs:sourceColorSpace = "raw"
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Cassette/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float outputs:r
+            }
+
+            def Shader "NormalTexture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @textures/cassette_normal.png@
+                token inputs:sourceColorSpace = "raw"
+                float4 inputs:scale = (2, 2, 2, 1)
+                float4 inputs:bias = (-1, -1, -1, 0)
+                float2 inputs:st.connect = </NeedleReadyTissueVisualMaterials/Cassette/Texcoord.outputs:result>
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                normal3f outputs:rgb
+            }
+        }
+}

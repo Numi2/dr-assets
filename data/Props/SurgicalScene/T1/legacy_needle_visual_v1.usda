@@ -1,0 +1,45 @@
+#usda 1.0
+(
+    defaultPrim = "Needle"
+    doc = "Compatibility-only render overlay for the legacy T1 needle; not a geometry or dynamics promotion."
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Needle" (
+    prepend references = @../../Surgical_needle/needle_sdf.usd@</Needle>
+    assetInfo = {
+        string name = "DrAnmarT1LegacyNeedleVisualOverlay"
+        string version = "1.2.0"
+    }
+    customData = {
+        string drAnmarAssetRole = "render_overlay_only"
+        string drAnmarBaseAssetSha256 = "5cdcd64042695815390d77c112a932801144c6f7530d3ce87b672247f91dbf6f"
+        bool drAnmarClinicalValidation = false
+        bool drAnmarCompatibilityOnly = true
+        bool drAnmarGeometryPromotion = false
+        bool drAnmarPhysicsAuthority = false
+        string drAnmarGeometryStatus = "legacy_disconnected_shells_no_topology_repair"
+        string drAnmarReplacementTarget = "DrAnmar watertight needle after grasp and retention parity"
+    }
+    kind = "component"
+)
+{
+    def Scope "DrAnmarT1Looks" (
+        prepend references = @./materials.usda@</DrAnmarT1VisualMaterials>
+    )
+    {
+    }
+
+    over "Needle"
+    {
+        over "Needle" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Needle/DrAnmarT1Looks/NeedleSatinSteel> (
+                bindMaterialAs = "strongerThanDescendants"
+            )
+        }
+    }
+}

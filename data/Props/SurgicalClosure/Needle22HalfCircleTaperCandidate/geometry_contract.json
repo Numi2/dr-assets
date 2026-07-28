@@ -1,0 +1,123 @@
+{
+  "active_replacement": false,
+  "asset_id": "dranmar-needle-22mm-half-circle-taper-category-candidate-v1",
+  "centerline": {
+    "arc_length_m": 0.022,
+    "arc_radians": 3.141592653589793,
+    "plane": "XY",
+    "radius_m": 0.0070028174960433945,
+    "shape": "one_half_circle"
+  },
+  "clinical_validation": false,
+  "collision": {
+    "grasp_convex_segment_count": 16,
+    "render_mesh_collision_authority": false,
+    "representation": "adaptive_48_segments_plus_precise_taper_tip",
+    "segment_count": 48,
+    "tip_shape": "separate_convex_hull_from_authored_taper"
+  },
+  "design_authority": {
+    "comparison_only_not_averaged": {
+      "different_body_diameter_m": 0.00052,
+      "different_collision_capsule_count": 40,
+      "path": "physics_next/needles/dr-anmar-needle-v1.json",
+      "sha256": "309981bb46ab14c86a6964d58dd623d9756c972f7ca83f7f0d1771af66d60d85"
+    },
+    "selected_dimensional_input": {
+      "fields_adopted": [
+        "centerline_arc_length_m_0p022",
+        "body_diameter_m_0p00053",
+        "collision_segment_count_48"
+      ],
+      "path": "data/Props/SurgicalClosure/Needle/physics_profile.json",
+      "sha256": "746b3199e63cc42fefe42b94e883fb329f88c5f50c82844aa77c8573c39e9b6e"
+    }
+  },
+  "manufacturer_category_provenance": {
+    "accessed_utc_date": "2026-07-28",
+    "category_facts_used": [
+      "22_mm_is_published_as_needle_length",
+      "one_half_circle_curvature_category",
+      "taper_point_category",
+      "longitudinal_ribbing_is_described_as_resisting_turning_rocking_and_twisting",
+      "swaging_is_described_as_a_smooth_factory_attachment"
+    ],
+    "document": "157677-230117-AH Suture Catalog",
+    "example_catalog_designations_not_modeled_as_twins": [
+      "SH-1",
+      "CT-3"
+    ],
+    "not_sourced_from_catalog": [
+      "body_diameter",
+      "tip_taper_length",
+      "swage_dimensions",
+      "rib_dimensions",
+      "mass_properties",
+      "friction",
+      "collision",
+      "textures"
+    ],
+    "provider": "Johnson & Johnson MedTech / Ethicon",
+    "url": "https://www.jnjmedtech.com/system/files/pdf/157677-230117-AH-Suture-Catalog-157677-230117.pdf"
+  },
+  "manufacturer_digital_twin": false,
+  "native_qualified": false,
+  "nominal_22_mm_semantics": "centerline_arc_length",
+  "physics_calibration": false,
+  "render_geometry": {
+    "arc_resolution": 512,
+    "body_diameter_m": 0.00053,
+    "grasp_land": {
+      "cross_section": "smoothly_blended_flattened_superellipse",
+      "end_distance_m": 0.0164,
+      "longitudinal_rib_count_per_face": 3,
+      "preferred_frame_arc_fraction": 0.65,
+      "rib_height_m": 1.1e-05,
+      "start_distance_m": 0.0122
+    },
+    "metric_uv_primvar": "primvars:stMeters",
+    "normal_interpolation": "vertex",
+    "radial_resolution": 64,
+    "repeated_uv_primvar": "primvars:st",
+    "shape": "single_connected_watertight_swept_half_circle",
+    "swage": {
+      "cosmetic_overlapping_cylinder": false,
+      "full_reduction_distance_m": 0.0206,
+      "outer_diameter_m": 0.00036,
+      "recess_depth_m": 0.00082,
+      "recess_diameter_m": 0.00021,
+      "transition_start_distance_m": 0.0192,
+      "type": "reduced_outer_body_with_true_blind_recess"
+    },
+    "texture_repeat_m": 0.0015,
+    "tip": {
+      "curvature_radius_m": 1.8e-05,
+      "taper_end_distance_m": 0.0038,
+      "type": "finite_curvature_taper_point"
+    },
+    "uv_interpolation": "faceVarying"
+  },
+  "runtime_spawn_contract": {
+    "orientation_usd_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "orientation_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "root_scale_op_authored": false,
+    "scale_xyz": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "schema": "dr.anmar.needle-22mm-half-circle-taper-geometry.v1",
+  "status": "inactive_unqualified_category_candidate",
+  "version": "1.0.0"
+}

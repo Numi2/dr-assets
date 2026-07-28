@@ -6,8 +6,9 @@ Run with Blender:
     blender --background --python tools/render_showcase.py
 
 The script deliberately renders shipped geometry rather than concept art.
-It uses a consistent dark studio, a three-point light rig, and per-asset camera
-angles selected to reveal the procedural work surface.
+It uses a neutral clinical-studio light rig, restrained physically based
+materials, and per-asset camera angles selected to reveal the procedural work
+surface without tinting the assets with brand colors.
 """
 
 from __future__ import annotations
@@ -154,10 +155,19 @@ RENDERS = (
 
 def _rgb(hex_color: str) -> tuple[float, float, float, float]:
     value = hex_color.lstrip("#")
-    return (
+    srgb = (
         int(value[0:2], 16) / 255.0,
         int(value[2:4], 16) / 255.0,
         int(value[4:6], 16) / 255.0,
+    )
+
+    def to_linear(channel: float) -> float:
+        if channel <= 0.04045:
+            return channel / 12.92
+        return ((channel + 0.055) / 1.055) ** 2.4
+
+    return (
+        *(to_linear(channel) for channel in srgb),
         1.0,
     )
 
@@ -180,7 +190,15 @@ def _bounds() -> tuple[Vector, Vector]:
     return low, high
 
 
-def _material(name: str, color: str, roughness: float, metallic: float = 0.0):
+def _material(
+    name: str,
+    color: str,
+    roughness: float,
+    metallic: float = 0.0,
+    *,
+    subsurface_weight: float = 0.0,
+    ior_level: float = 0.5,
+):
     material = bpy.data.materials.new(name)
     material.diffuse_color = _rgb(color)
     material.use_nodes = True
@@ -188,7 +206,232 @@ def _material(name: str, color: str, roughness: float, metallic: float = 0.0):
     shader.inputs["Base Color"].default_value = _rgb(color)
     shader.inputs["Roughness"].default_value = roughness
     shader.inputs["Metallic"].default_value = metallic
+    if "Subsurface Weight" in shader.inputs:
+        shader.inputs["Subsurface Weight"].default_value = subsurface_weight
+    if "IOR Level" in shader.inputs:
+        shader.inputs["IOR Level"].default_value = ior_level
     return material
+
+
+def _realistic_materials() -> dict[str, bpy.types.Material]:
+    return {
+        "aluminum": _material(
+            "Brushed Aluminum", "#8c9499", 0.30, 0.72
+        ),
+        "blood": _material(
+            "Blood",
+            "#4a0709",
+            0.52,
+            subsurface_weight=0.03,
+            ior_level=0.28,
+        ),
+        "bowel": _material(
+            "Bowel Tissue",
+            "#a95f58",
+            0.72,
+            subsurface_weight=0.12,
+            ior_level=0.22,
+        ),
+        "drape": _material("Surgical Drape", "#1f6670", 0.72),
+        "fat": _material(
+            "Subcutaneous Fat",
+            "#cba66d",
+            0.76,
+            subsurface_weight=0.08,
+            ior_level=0.18,
+        ),
+        "floor": _material("Clinical Floor", "#343a3e", 0.62, 0.04),
+        "gallbladder": _material(
+            "Gallbladder",
+            "#4b5632",
+            0.68,
+            subsurface_weight=0.07,
+            ior_level=0.22,
+        ),
+        "graphite": _material(
+            "Graphite Mechanism", "#20262b", 0.34, 0.30
+        ),
+        "liver": _material(
+            "Liver Tissue",
+            "#651c1c",
+            0.68,
+            subsurface_weight=0.10,
+            ior_level=0.24,
+        ),
+        "nerve": _material("Peripheral Nerve", "#c6a858", 0.48),
+        "monitor": _material(
+            "Monitor Housing", "#151b20", 0.30, 0.22
+        ),
+        "polymer": _material(
+            "Medical White Polymer", "#bfc4c7", 0.36, 0.02
+        ),
+        "screen": _material(
+            "Inactive Clinical Display", "#071218", 0.22, 0.12
+        ),
+        "skin": _material(
+            "Skin",
+            "#9a5b49",
+            0.74,
+            subsurface_weight=0.08,
+            ior_level=0.20,
+        ),
+        "spleen": _material(
+            "Spleen",
+            "#562839",
+            0.70,
+            subsurface_weight=0.09,
+            ior_level=0.22,
+        ),
+        "stomach": _material(
+            "Stomach",
+            "#9a554f",
+            0.72,
+            subsurface_weight=0.11,
+            ior_level=0.22,
+        ),
+        "steel": _material(
+            "Surgical Stainless Steel", "#798287", 0.22, 0.86
+        ),
+        "tissue": _material(
+            "Exposed Soft Tissue",
+            "#81372f",
+            0.72,
+            subsurface_weight=0.10,
+            ior_level=0.22,
+        ),
+        "tubing": _material("Medical Tubing", "#9eb8b5", 0.46),
+        "urinary": _material(
+            "Urinary Tissue",
+            "#a96e68",
+            0.72,
+            subsurface_weight=0.09,
+            ior_level=0.22,
+        ),
+        "vessel": _material(
+            "Vessel Wall",
+            "#731019",
+            0.70,
+            subsurface_weight=0.05,
+            ior_level=0.22,
+        ),
+    }
+
+
+def _material_key(object_name: str) -> str:
+    name = object_name.lower()
+    if name == "floor" or name.endswith("_floor"):
+        return "floor"
+    if "blood" in name or "bleed" in name or "leak" in name:
+        return "blood"
+    if "subcutaneous_fat" in name or name.endswith("_fat"):
+        return "fat"
+    if "liver" in name:
+        return "liver"
+    if any(
+        token in name
+        for token in ("bowel", "colon", "intestin", "mesentery")
+    ) or name in {"proximal", "distal"}:
+        return "bowel"
+    if "gallbladder" in name:
+        return "gallbladder"
+    if "stomach" in name or "pancreas" in name:
+        return "stomach"
+    if "spleen" in name or "kidney" in name or "diaphragm" in name:
+        return "spleen"
+    if "bladder" in name or "ureter" in name:
+        return "urinary"
+    if "nerve" in name:
+        return "nerve"
+    if "vessel" in name or "arter" in name or "vein" in name:
+        return "vessel"
+    if any(token in name for token in ("skin", "patient_torso", "abdomen")):
+        return "skin"
+    if any(
+        token in name
+        for token in (
+            "aperture",
+            "fascia",
+            "lesion",
+            "organ",
+            "tissue",
+            "tumor",
+            "wound",
+        )
+    ):
+        return "tissue"
+    if any(token in name for token in ("drape", "mattress", "pad")):
+        return "drape"
+    if "monitor_screen" in name or name.endswith("_screen"):
+        return "screen"
+    if any(token in name for token in ("monitor", "pump_rack")):
+        return "monitor"
+    if name.startswith("trace_"):
+        return "tubing"
+    if name.startswith("line_") or "tube" in name or "catheter" in name:
+        return "tubing"
+    if any(
+        token in name
+        for token in (
+            "blade",
+            "clip",
+            "coupler",
+            "jaw",
+            "needle",
+            "pusher",
+            "shaft",
+            "staple",
+            "tool_",
+            "wire",
+        )
+    ):
+        return "steel"
+    if any(
+        token in name
+        for token in ("joint", "motor", "dock_", "grip", "rubber")
+    ):
+        return "graphite"
+    if any(
+        token in name
+        for token in (
+            "base",
+            "carriage",
+            "column",
+            "frame",
+            "housing",
+            "pedestal",
+            "rail",
+            "ring",
+            "rotor",
+            "table",
+        )
+    ):
+        return "aluminum"
+    return "polymer"
+
+
+def _apply_realistic_materials() -> None:
+    materials = _realistic_materials()
+    mesh_objects = [
+        obj for obj in bpy.context.scene.objects if obj.type == "MESH"
+    ]
+    for obj in mesh_objects:
+        material = materials[_material_key(obj.name)]
+        if obj.data.materials:
+            obj.data.materials[0] = material
+            while len(obj.data.materials) > 1:
+                obj.data.materials.pop(index=1)
+        else:
+            obj.data.materials.append(material)
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in mesh_objects:
+        obj.select_set(True)
+    if mesh_objects:
+        bpy.context.view_layer.objects.active = mesh_objects[0]
+        bpy.ops.object.shade_smooth_by_angle(
+            angle=math.radians(32.0),
+            keep_sharp_edges=True,
+        )
+    bpy.ops.object.select_all(action="DESELECT")
 
 
 def _area_light(
@@ -224,14 +467,14 @@ def _configure_scene(render: ShowcaseRender) -> None:
     scene.render.image_settings.color_depth = "8"
 
     scene.view_settings.look = "AgX - Medium High Contrast"
-    scene.view_settings.exposure = -0.65
+    scene.view_settings.exposure = -0.55
 
-    world = bpy.data.worlds.new("Dr.Anmar Studio")
+    world = bpy.data.worlds.new("Dr.Anmar Neutral Clinical Studio")
     scene.world = world
     world.use_nodes = True
     background = world.node_tree.nodes.get("Background")
-    background.inputs["Color"].default_value = _rgb("#07111b")
-    background.inputs["Strength"].default_value = 0.16
+    background.inputs["Color"].default_value = _rgb("#15191d")
+    background.inputs["Strength"].default_value = 0.08
 
 
 def _render(spec: ShowcaseRender) -> None:
@@ -244,6 +487,7 @@ def _render(spec: ShowcaseRender) -> None:
     for obj in tuple(bpy.context.scene.objects):
         if obj.type in {"CAMERA", "LIGHT"}:
             bpy.data.objects.remove(obj, do_unlink=True)
+    _apply_realistic_materials()
 
     # The inspection GLBs preserve the simulation's Z-up vertex convention.
     # Rotate their imported Y-up scene root into Blender's Z-up world.
@@ -278,7 +522,9 @@ def _render(spec: ShowcaseRender) -> None:
         [(0, 1, 2, 3)],
     )
     floor.location = (center.x, center.y, low.z - radius * 0.035)
-    floor.data.materials.append(_material("Midnight Floor", "#091722", 0.3, 0.08))
+    floor.data.materials.append(
+        _material("Neutral Studio Floor", "#2b3035", 0.52, 0.02)
+    )
 
     azimuth = math.radians(spec.azimuth_deg)
     elevation = math.radians(spec.elevation_deg)
@@ -299,33 +545,33 @@ def _render(spec: ShowcaseRender) -> None:
     camera.location = center + direction * radius * 2.45 * spec.margin
     _look_at(camera, center + Vector((0.0, 0.0, extent.z * 0.03)))
 
-    key_direction = Vector((-0.65, -0.45, 0.95)).normalized()
-    fill_direction = Vector((0.70, -0.30, 0.45)).normalized()
-    rim_direction = Vector((0.25, 0.85, 0.80)).normalized()
+    key_direction = Vector((-0.55, -0.40, 1.00)).normalized()
+    fill_direction = Vector((0.75, -0.25, 0.55)).normalized()
+    rim_direction = Vector((0.20, 0.85, 0.90)).normalized()
     light_scale = max(radius * radius, 0.0025)
     _area_light(
         "Key",
         center + key_direction * radius * 2.4,
         center,
-        energy=360.0 * light_scale,
-        size=radius * 1.15,
-        color="#d9efff",
+        energy=220.0 * light_scale,
+        size=radius * 1.35,
+        color="#fff7ed",
     )
     _area_light(
         "Fill",
         center + fill_direction * radius * 2.0,
         center,
-        energy=125.0 * light_scale,
-        size=radius * 1.4,
-        color="#76b900",
+        energy=70.0 * light_scale,
+        size=radius * 1.65,
+        color="#eef4f8",
     )
     _area_light(
         "Rim",
         center + rim_direction * radius * 2.2,
         center,
-        energy=185.0 * light_scale,
-        size=radius * 0.8,
-        color="#52c7ff",
+        energy=105.0 * light_scale,
+        size=radius * 1.0,
+        color="#f8fbff",
     )
 
     MEDIA.mkdir(parents=True, exist_ok=True)

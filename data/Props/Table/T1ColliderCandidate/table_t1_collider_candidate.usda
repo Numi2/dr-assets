@@ -1,0 +1,148 @@
+#usda 1.0
+(
+    defaultPrim = "Table"
+    doc = "Inactive DrAnmar T1 decomposed table collider candidate; render remains externally composed."
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Table" (
+    prepend references = @../../SurgicalScene/T1/table_visual_v1.usda@</Table>
+)
+{
+    custom bool dranmar:candidate:active = false
+    custom string dranmar:candidate:assetId = "dranmar-table-t1-collider-candidate-v1"
+    custom string dranmar:candidate:qualificationContract = "./qualification_contract.json"
+    custom string dranmar:candidate:status = "inactive_unqualified_candidate"
+    custom string dranmar:candidate:runtimeQuaternionOrder = "xyzw"
+    custom string dranmar:candidate:usdQuaternionOrder = "wxyz"
+    custom string dranmar:candidate:version = "1.0.0"
+    over "Table"
+    {
+        over "Table"
+        {
+            bool physics:collisionEnabled = false
+        }
+        def Scope "DrAnmarT1ColliderCandidate"
+        {
+            custom bool dranmar:candidate:active = false
+            custom string dranmar:candidate:geometryContract = "../../geometry_contract.json"
+            def Cube "DeckFrame" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "exact supported deck-frame AABB"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0, 0, 0.368)
+                double3 xformOp:scale = (1.74, 0.76, 0.05)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Mesh "PatientPad" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "eight-sided convex pad with exact render support bounds"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.83, -0.35, 0.3915), (0.83, 0.35, 0.4565)]
+                uniform token physics:approximation = "convexHull"
+                int[] faceVertexCounts = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+                int[] faceVertexIndices = [0, 2, 1, 8, 9, 10, 0, 3, 2, 8, 10, 11, 0, 4, 3, 8, 11, 12, 0, 5, 4, 8, 12, 13, 0, 6, 5, 8, 13, 14, 0, 7, 6, 8, 14, 15, 0, 1, 9, 0, 9, 8, 1, 2, 10, 1, 10, 9, 2, 3, 11, 2, 11, 10, 3, 4, 12, 3, 12, 11, 4, 5, 13, 4, 13, 12, 5, 6, 14, 5, 14, 13, 6, 7, 15, 6, 15, 14, 7, 0, 8, 7, 8, 15]
+                point3f[] points = [
+                    (-0.79, -0.35, 0.3915),
+                    (0.79, -0.35, 0.3915),
+                    (0.83, -0.31, 0.3915),
+                    (0.83, 0.31, 0.3915),
+                    (0.79, 0.35, 0.3915),
+                    (-0.79, 0.35, 0.3915),
+                    (-0.83, 0.31, 0.3915),
+                    (-0.83, -0.31, 0.3915),
+                    (-0.79, -0.35, 0.4565),
+                    (0.79, -0.35, 0.4565),
+                    (0.83, -0.31, 0.4565),
+                    (0.83, 0.31, 0.4565),
+                    (0.79, 0.35, 0.4565),
+                    (-0.79, 0.35, 0.4565),
+                    (-0.83, 0.31, 0.4565),
+                    (-0.83, -0.31, 0.4565)
+                ]
+                uniform token subdivisionScheme = "none"
+            }
+            def Cube "SterileFieldTop" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "thin supported drape contact surface; unsupported hanging fabric is intentionally not made rigid"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0, 0, 0.458190539)
+                double3 xformOp:scale = (1.66, 0.7, 0.003381078)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "CenterColumn" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "exact center-column render bounds"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0, 0, -0.035)
+                double3 xformOp:scale = (0.22, 0.32, 0.756)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "FloorBase" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "exact floor-base render bounds"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0, 0, -0.425)
+                double3 xformOp:scale = (1.02, 0.6, 0.058)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "LeftFoot" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "separate left support foot"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (-0.61, 0, -0.42)
+                double3 xformOp:scale = (0.26, 0.16, 0.068)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+            def Cube "RightFoot" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                custom bool dranmar:candidate:active = false
+                custom string dranmar:candidate:approximation = "separate right support foot"
+                bool physics:collisionEnabled = true
+                token visibility = "invisible"
+                float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                double size = 1
+                double3 xformOp:translate = (0.61, 0, -0.42)
+                double3 xformOp:scale = (0.26, 0.16, 0.068)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+    }
+}

@@ -30,6 +30,7 @@ For rendered inspection views, see the [visual showcase](SHOWCASE.md).
 
 | Asset | Directory | Notes |
 | --- | --- | --- |
+| Needle-ready layered tissue | `data/Props/SurgicalTissue/NeedleReadyTissueUnit` | Nested training/contact/validation TetMesh LODs, wound-edge refinement, conforming layers, stable semantic sets |
 | Skin stapler | `data/Props/SurgicalClosure/SkinStapler` | Rigid and articulated lanes, standalone staple, placement frames |
 | Skin adhesive | `data/Props/SurgicalClosure/SkinAdhesive` | Applicator state, adhesive deposition and activation surfaces |
 | Closure robot | `data/Props/SurgicalClosure/ClosureRobot` | Closure tool and tissue test scene |
