@@ -77,9 +77,9 @@ def Xform "DrAnmarNeedle" (
     )
     {
         float omniphysics:density = 1300
-        float omniphysics:dynamicFriction = 0.32
+        float omniphysics:dynamicFriction = 0.01
         float omniphysics:poissonsRatio = 0.36
-        float omniphysics:staticFriction = 0.42
+        float omniphysics:staticFriction = 0.02
         float omniphysics:surfaceBendStiffness = 208000000
         float omniphysics:surfaceShearStiffness = 2817600000
         float omniphysics:surfaceStretchStiffness = 7663900000

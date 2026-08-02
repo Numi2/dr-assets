@@ -1,0 +1,81 @@
+#usda 1.0
+(
+    defaultPrim = "DrAnmarNeedle"
+    doc = "Puncture/pullout adapter using the Bench Setup v0.3 extended 120-segment Dr.Anmar suture; simulator engineering only."
+    kilogramsPerUnit = 1
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "DrAnmarNeedle"
+{
+    custom string drAnmar:taskAdapter = "puncture_pullout_v1"
+    custom string drAnmar:sourceAsset = "DrAnmar Needle System v0.3 extended"
+    custom string drAnmar:sutureRepresentation = "authored_120_segment_braided_d6_chain"
+    custom string drAnmar:tractContact = "low_friction_capsule_contact"
+    custom bool drAnmar:clinicalValidation = false
+
+    # Keep the exact needle body used by the already-qualified needle-only
+    # puncture scene.  This preserves its origin, grasp frame, 10.504 mm
+    # curvature, mass and contact contract.
+    def Xform "NeedleRigid" (
+        prepend references = @../../../source/extensions/orbit.surgical.assets/data/Props/SurgicalClosure/Needle/dranmar_needle_entry_proxy.usda@</DrAnmarNeedle>
+    )
+    {
+        float3 xformOp:scale = (1.5, 1.5, 1.5)
+        uniform token[] xformOpOrder = ["xformOp:scale"]
+    }
+
+    # Reuse the newest pull-through layout exposed by the Operation Bench.
+    # Its bundled 7 mm needle is disabled; only the intact 180 mm, 120-body
+    # braided chain and its D6 joints are composed here.  Translating the
+    # whole assembly by 3.5014 mm aligns the unscaled 4-0 strand with the
+    # validated 10.504 mm needle swage without stretching the strand.
+    def Xform "Suture" (
+        prepend references = @../../../source/extensions/orbit.surgical.assets/data/Props/SurgicalClosure/NeedleThread/dranmar_needle_thread_extended.usda@</DrAnmarNeedleThread>
+    )
+    {
+        double3 xformOp:translate = (0, 0.00350140874802, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+
+        over "NeedleLink" (
+            active = false
+        )
+        {
+        }
+
+        over "Joints"
+        {
+            over "SwageJoint" (
+                active = false
+            )
+            {
+            }
+        }
+
+        over "PhysicsMaterials"
+        {
+            over "ThreadPhysics"
+            {
+                # Wet tissue passage should contribute almost no Coulomb drag.
+                # Bending, axial compliance and segment self-contact remain.
+                float physics:staticFriction = 0.02
+                float physics:dynamicFriction = 0.01
+                uniform token physxMaterial:frictionCombineMode = "min"
+            }
+        }
+    }
+
+    # Factory swage the first v0.3 strand segment directly to the validated
+    # needle.  The source segment chain remains otherwise unchanged.
+    def PhysicsFixedJoint "FactorySwage"
+    {
+        rel physics:body0 = </DrAnmarNeedle/NeedleRigid>
+        rel physics:body1 = </DrAnmarNeedle/Suture/ThreadSegments/S000>
+        point3f physics:localPos0 = (0, 0.00700281749604, 0)
+        point3f physics:localPos1 = (-0.00075, 0, 0)
+        quatf physics:localRot0 = (0, 0, 0.707106781187, 0.707106781187)
+        quatf physics:localRot1 = (0.99999976088, 9.51387325032e-08, -0.000685319986684, 9.26043448992e-05)
+        bool physics:collisionEnabled = false
+    }
+}
